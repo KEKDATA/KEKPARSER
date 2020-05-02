@@ -2,11 +2,16 @@
 
 WIP
 
+---
+
 TWITTER ARTICLES:
+
+TWEETS_SCROLL_COUNT, START_URL - будут задаваться по запуску скрипта в будущем
 
 1) npm install
 2) npm run tsc
 3) npm run articles-parse
 
+-----
 
 page.evaluate - инъекция скрипта, вследствие чего изолирован и не имеет доступа к зависимостям проекта (например константы или хелперы)
