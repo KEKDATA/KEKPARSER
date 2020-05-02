@@ -1,0 +1,43 @@
+{
+  "extends": ["airbnb", "prettier", "plugin:node/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    // Only ESLint 6.2.0 and later support ES2020.
+    "ecmaVersion": 2020
+  },
+  "globals": {
+    "window": true,
+    "document": true
+  },
+  "plugins": ["prettier"],
+  "rules": {
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".ts"] }],
+    "no-param-reassign": "warn",
+    "no-prototype-builtins": "warn",
+    "consistent-return": "warn",
+    "no-use-before-define": "warn",
+    "no-nested-ternary": "warn",
+    "array-callback-return": "warn",
+    "prefer-destructuring": "warn",
+    "import/no-unresolved": 0,
+    "no-unused-expressions": "warn",
+    "import/extensions": 0,
+    "import/no-cycle": "warn",
+    "import/prefer-default-export": 0,
+    "global-require": "warn",
+    "no-unused-vars": "warn"
+  },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts"]
+    },
+    "import/resolver": {
+      "node": {
+        "moduleDirectory": ["node_modules"]
+      },
+      "typescript": {
+        "alwaysTryTypes": true
+      }
+    }
+  }
+}
