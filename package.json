@@ -4,7 +4,7 @@
   "description": "How to perform web-scrapping using Node.Js",
   "main": "index.js",
   "scripts": {
-    "articles-parse": "START_URL='https://twitter.com/search?q=html' ARTICLE_SCROLL_COUNT=10 babel-node src/index.js",
+    "articles-parse": "START_URL='https://twitter.com/search?q=html' TWEETS_SCROLL_COUNT=10 babel-node src/index.js",
     "tsc": "tsc --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "fix-code": "prettier --write 'src/**/*.ts'",

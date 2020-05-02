@@ -2,8 +2,8 @@ import ProcessEnv = NodeJS.ProcessEnv;
 
 const ENVIRONMENTS: ProcessEnv = process.env;
 
-export const ARTICLE_SCROLL_COUNT: number = Number(
-  ENVIRONMENTS.ARTICLE_SCROLL_COUNT,
+export const TWEETS_SCROLL_COUNT: number = Number(
+  ENVIRONMENTS.TWEETS_SCROLL_COUNT,
 );
 
-export const ARTICLE_SELECTOR: string = '[role="article"]';
+export const TWEET_SELECTOR: string = '[role="article"]';
