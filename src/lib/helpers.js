@@ -29,3 +29,6 @@ exports.scrollWithCount = async (page, scrollCount) => {
     await exports.sleep(500);
   }
 };
+exports.getTextOfChildNode = (parentNode, childNode) =>
+  parentNode.find(childNode).text();
+exports.getNormalizedThousandthValue = value => value.replace('K', '000');

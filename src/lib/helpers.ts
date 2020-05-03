@@ -38,3 +38,9 @@ export const scrollWithCount = async (page: Page, scrollCount: number) => {
     await sleep(500);
   }
 };
+
+export const getTextOfChildNode = (parentNode: Cheerio, childNode: string) =>
+  parentNode.find(childNode).text();
+
+export const getNormalizedThousandthValue = (value: string) =>
+  value.replace('K', '000');
