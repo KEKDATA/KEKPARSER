@@ -7,10 +7,17 @@ import {
   RETWEET_SELECTOR,
   TWEET_CONTENT_SELECTOR,
   TWEET_LIKE_SELECTOR,
+  TWITTER_URL,
   USER_NAME_SELECTOR,
 } from './constants';
 
 export const getTweetInfo = (tweetNode: Cheerio) => {
+  const userHref = tweetNode
+    .find(USER_NAME_SELECTOR)
+    .parent()
+    .attr('href');
+  const userUrl = `${TWITTER_URL}${userHref}`;
+
   const userName = getTextOfChildNode(tweetNode, USER_NAME_SELECTOR);
   const tweetContent = getTextOfChildNode(tweetNode, TWEET_CONTENT_SELECTOR);
   const likes = getTextOfChildNode(tweetNode, TWEET_LIKE_SELECTOR);
@@ -22,10 +29,32 @@ export const getTweetInfo = (tweetNode: Cheerio) => {
   const normalizedReplies = getNormalizedThousandthValue(replies);
 
   return {
+    userUrl,
     userName,
     tweetContent,
     likes: normalizedLikes,
     retweets: normalizedRetweets,
     replies: normalizedReplies,
   };
+};
+
+export const getTweetUploadStatus = () => {
+  const loaderSelector =
+    '.css-1dbjc4n.r-1awozwy.r-16y2uox.r-1777fci.r-utggzx.r-tvv088';
+  const loaderNode = document.querySelector(loaderSelector);
+  const isTweetsAvailable = loaderNode === null;
+
+  return isTweetsAvailable;
+};
+
+export const scrollToLastTweet = () => {
+  const tweets = document.querySelectorAll('[role="article"]');
+
+  if (tweets.length > 0) {
+    const latestTweet = tweets[tweets.length - 1];
+
+    if (latestTweet) {
+      latestTweet.scrollIntoView();
+    }
+  }
 };

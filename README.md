@@ -6,7 +6,7 @@ WIP
 
 TWITTER ARTICLES:
 
-TWEETS_SCROLL_COUNT, START_URL - будут задаваться по запуску скрипта в будущем
+TWEETS_COUNT, START_URL - будут задаваться по запуску скрипта в будущем
 
 1) npm install
 2) npm run tsc

@@ -4,6 +4,6 @@ const ENVIRONMENTS = process.env;
 exports.BROWSER_URL = ENVIRONMENTS.START_URL;
 exports.HEADLESS_BROWSER = true;
 exports.VIEWPORT_OPTIONS = {
-  width: 1024,
+  width: 1800,
   height: 800,
 };

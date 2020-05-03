@@ -31,4 +31,15 @@ exports.scrollWithCount = async (page, scrollCount) => {
 };
 exports.getTextOfChildNode = (parentNode, childNode) =>
   parentNode.find(childNode).text();
-exports.getNormalizedThousandthValue = value => value.replace('K', '000');
+exports.getNormalizedThousandthValue = value => {
+  let normalizedValue = Number(value);
+  if (value.includes('K')) {
+    const valueWithoutKFormat = Number(value.replace('K', ''));
+    normalizedValue = valueWithoutKFormat * 1000;
+  }
+  return normalizedValue;
+};
+exports.getHTML = () => document.documentElement.innerHTML;
+exports.scrollWithDefaultYDiapason = () => {
+  window.scrollBy(0, 800);
+};

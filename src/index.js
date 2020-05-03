@@ -9,6 +9,7 @@ const puppeteer_1 = __importDefault(require('puppeteer'));
 const twitter_1 = require('./twitter');
 const constants_1 = require('./lib/constants');
 const pupeteerInit = async () => {
+  console.time();
   const browser = await puppeteer_1.default.launch({
     headless: constants_1.HEADLESS_BROWSER,
   });

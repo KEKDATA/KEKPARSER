@@ -42,5 +42,19 @@ export const scrollWithCount = async (page: Page, scrollCount: number) => {
 export const getTextOfChildNode = (parentNode: Cheerio, childNode: string) =>
   parentNode.find(childNode).text();
 
-export const getNormalizedThousandthValue = (value: string) =>
-  value.replace('K', '000');
+export const getNormalizedThousandthValue = (value: string) => {
+  let normalizedValue = Number(value);
+
+  if (value.includes('K')) {
+    const valueWithoutKFormat = Number(value.replace('K', ''));
+    normalizedValue = valueWithoutKFormat * 1000;
+  }
+
+  return normalizedValue;
+};
+
+export const getHTML = () => document.documentElement.innerHTML;
+
+export const scrollWithDefaultYDiapason = () => {
+  window.scrollBy(0, 800);
+};
