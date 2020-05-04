@@ -23,10 +23,10 @@ const sentimentAnalysis = (tweets: Array<tweet>) => {
     const tweetLexicalForm = aposToLexForm(tweetContent);
 
     const casedTweet = tweetLexicalForm.toLowerCase();
-    const alphaOnlyTweet = casedTweet.replace(/[^a-zA-Z\s]+/g, '');
+    const tweetWithAlphaOnly = casedTweet.replace(/[^a-zA-Z\s]+/g, '');
 
     const tokenizedTweet = tokenizer
-      .tokenize(alphaOnlyTweet)
+      .tokenize(tweetWithAlphaOnly)
       .map(word => spellCorrector.correct(word));
 
     const tweetWithoutStopWords = stopword.removeStopwords(tokenizedTweet);
