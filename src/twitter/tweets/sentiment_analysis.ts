@@ -29,10 +29,10 @@ const sentimentAnalysis = (tweets: Array<tweet>) => {
       .tokenize(alphaOnlyTweet)
       .map(word => spellCorrector.correct(word));
 
-    const filteredReview = stopword.removeStopwords(tokenizedTweet);
+    const tweetWithoutStopWords = stopword.removeStopwords(tokenizedTweet);
 
     const analyzer = new SentimentAnalyzer('English', PorterStemmer, 'afinn');
-    const analysis = analyzer.getSentiment(filteredReview);
+    const analysis = analyzer.getSentiment(tweetWithoutStopWords);
 
     return {
       ...otherTweetInfo,
