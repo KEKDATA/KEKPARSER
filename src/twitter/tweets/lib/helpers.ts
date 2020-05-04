@@ -1,15 +1,18 @@
-import {
-  getNormalizedThousandthValue,
-  getTextOfChildNode,
-} from '../../lib/helpers';
+import { spawn, Thread, Worker } from 'threads';
+
+import { tweet } from '../types';
+import { TWITTER_URL } from '../../lib/constants';
 import {
   REPLY_SELECTOR,
   RETWEET_SELECTOR,
   TWEET_CONTENT_SELECTOR,
   TWEET_LIKE_SELECTOR,
-  TWITTER_URL,
   USER_NAME_SELECTOR,
-} from './constants';
+} from './selectors';
+import {
+  getNormalizedThousandthValue,
+  getTextOfChildNode,
+} from '../../../lib/helpers';
 
 export const getTweetInfo = (tweetNode: Cheerio) => {
   const userHref = tweetNode
@@ -57,4 +60,14 @@ export const scrollToLastTweet = () => {
       latestTweet.scrollIntoView();
     }
   }
+};
+
+export const getAnalyzedTweets = async (tweets: Array<tweet>) => {
+  const getTweetsWithSentimentAnalysis = await spawn(
+    new Worker('../sentiment_analysis'),
+  );
+  const analyzedTweets = await getTweetsWithSentimentAnalysis(tweets);
+  await Thread.terminate(getTweetsWithSentimentAnalysis);
+
+  console.log('analyzed tweets:', analyzedTweets);
 };

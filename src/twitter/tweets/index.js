@@ -7,11 +7,12 @@ var __importDefault =
 Object.defineProperty(exports, '__esModule', { value: true });
 const cheerio_1 = __importDefault(require('cheerio'));
 const ramda_1 = __importDefault(require('ramda'));
-const constants_1 = require('../lib/constants');
-const helpers_1 = require('../lib/helpers');
+const constants_1 = require('./lib/constants');
+const helpers_1 = require('./lib/helpers');
 const helpers_2 = require('../../lib/helpers');
+const selectors_1 = require('./lib/selectors');
 exports.getParsedTweets = async page => {
-  await page.waitForSelector(constants_1.TWEET_SELECTOR);
+  await page.waitForSelector(selectors_1.TWEET_SELECTOR);
   let tweetsInfo = [];
   let currentLengthOfTweets = 0;
   let previousLengthOfTweets = 0;
@@ -21,7 +22,7 @@ exports.getParsedTweets = async page => {
     const contentPage = await page.evaluate(helpers_2.getHTML);
     await page.evaluate(helpers_1.scrollToLastTweet);
     const $ = cheerio_1.default.load(contentPage);
-    $(constants_1.TWEET_SELECTOR).each((index, tweet) => {
+    $(selectors_1.TWEET_SELECTOR).each((index, tweet) => {
       const tweetNode = $(tweet);
       const tweetInfo = helpers_1.getTweetInfo(tweetNode);
       tweetsInfo.push(tweetInfo);

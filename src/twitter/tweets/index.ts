@@ -2,18 +2,18 @@ import { Page } from 'puppeteer';
 import cheerio from 'cheerio';
 import R from 'ramda';
 
+import { TWEETS_COUNT, MAX_TWEETS_EQUALS } from './lib/constants';
+
 import {
-  TWEETS_COUNT,
-  TWEET_SELECTOR,
-  MAX_TWEETS_EQUALS,
-} from '../lib/constants';
-import {
-  getTweetUploadStatus,
   getTweetInfo,
+  getTweetUploadStatus,
   scrollToLastTweet,
-} from '../lib/helpers';
-import { tweet } from '../types';
+} from './lib/helpers';
 import { getHTML, scrollWithDefaultYDiapason } from '../../lib/helpers';
+
+import { TWEET_SELECTOR } from './lib/selectors';
+
+import { tweet } from './types';
 
 export const getParsedTweets = async (page: Page) => {
   await page.waitForSelector(TWEET_SELECTOR);
