@@ -4,10 +4,10 @@ import { negativeTweets } from './airlines_dictionary/negative';
 import { positiveTweets } from './airlines_dictionary/positive';
 import { neutralTweets } from './airlines_dictionary/neutral';
 
-export const getTrainedBayesClassifier = (callback: Function) => {
+export const getTrainedBayesClassifier = (addDocumentsCallback: Function) => {
   const bayesClassifier = new BayesClassifier();
 
-  callback();
+  addDocumentsCallback();
 
   bayesClassifier.train();
 
