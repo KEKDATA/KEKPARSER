@@ -4,7 +4,8 @@
   "description": "How to perform web-scrapping using Node.Js",
   "main": "index.js",
   "scripts": {
-    "articles-parse": "START_URL='https://twitter.com/search?q=html' TWEETS_COUNT=10 babel-node src/index.js",
+    "tweets-parse-babel": "START_URL='https://twitter.com/search?q=html' TWEETS_COUNT=10 babel-node src/index.js",
+    "tweets-parse-ts": "START_URL='https://twitter.com/search?q=html' TWEETS_COUNT=10 ts-node --files src/index.ts",
     "tsc": "tsc --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "fix-code": "prettier --write 'src/**/*.ts'",
@@ -46,6 +47,7 @@
     "husky": "^4.2.5",
     "lint-staged": "^10.2.2",
     "prettier": "1.19.1",
+    "ts-node": "^8.10.1",
     "typescript": "^3.8.3"
   },
   "husky": {

@@ -4,13 +4,21 @@ WIP
 
 ---
 
-TWITTER ARTICLES:
+Для Tweets: TWEETS_COUNT, START_URL - будут задаваться по запуску скрипта в будущем
 
-TWEETS_COUNT, START_URL - будут задаваться по запуску скрипта в будущем
-
+Установка зависимостей 
 1) npm install
+
+Запуск парсинга твитов
+
+Создаем сразу js файлы с указанными параметрами транспиляции в бабеле
 2) npm run tsc
-3) npm run articles-parse
+3) npm run tweets-parse-babel
+
+или храним в памяти и сразу работаем с ts файлами
+2) npm run tweets-parse-ts
+
+
 
 -----
 
