@@ -5,19 +5,18 @@
 
 import { Page } from 'puppeteer';
 import cheerio from 'cheerio';
-import R from 'ramda';
 
-import { TWEETS_SCROLL_COUNT, TWEET_SELECTOR } from '../lib/constants';
+import { TWEET_SELECTOR } from '../lib/constants';
 import { sleep } from '../../lib/helpers';
 import { getTweetInfo } from '../lib/helpers';
-import { tweet } from '../types';
+import { Tweet } from '../types';
 
 const TWEETS = 20;
 
 export const getParsedTweets = async (page: Page) => {
   await page.waitForSelector(TWEET_SELECTOR);
 
-  const tweetsInfo: Array<tweet> = [];
+  const tweetsInfo: Array<Tweet> = [];
 
   let count = 0;
 

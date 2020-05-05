@@ -58,3 +58,9 @@ export const getHTML = () => document.documentElement.innerHTML;
 export const scrollWithDefaultYDiapason = () => {
   window.scrollBy(0, 800);
 };
+
+export const getTextWithAlphaOnly = (text: string) => {
+  const textWithAlphaOnly = text.replace(/[^a-zA-Z\s]+/g, '');
+
+  return textWithAlphaOnly;
+};

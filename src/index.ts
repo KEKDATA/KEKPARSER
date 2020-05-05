@@ -8,7 +8,6 @@ import {
 } from './lib/constants';
 
 const pupeteerInit = async () => {
-  console.time();
   const browser = await puppeteer.launch({ headless: HEADLESS_BROWSER });
   const context = await browser.createIncognitoBrowserContext();
   const page = await context.newPage();

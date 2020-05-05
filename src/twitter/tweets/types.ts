@@ -1,4 +1,4 @@
-export type tweet = {
+export type Tweet = {
   userUrl: string;
   userName: string;
   tweetContent: string;

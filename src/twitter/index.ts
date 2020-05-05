@@ -10,7 +10,5 @@ export const twitterInit = async (page: Page, browser: Browser) => {
 
   console.log('Length of tweets is:', tweets.length);
 
-  console.timeEnd();
-
   await browser.close();
 };

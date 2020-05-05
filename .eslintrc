@@ -17,7 +17,8 @@
   "rules": {
     "no-unused-vars": "warn",
     "node/no-unsupported-features/es-syntax": "warn",
-    "no-undef": "warn"
+    "no-undef": "warn",
+    "node/no-unpublished-import": "warn"
   },
   "settings": {
     "import/parsers": {

@@ -1,6 +1,7 @@
 import {
   WordTokenizer,
   PorterStemmer,
+  BayesClassifier,
   //@ts-ignore
   SentimentAnalyzer,
 } from 'natural';
@@ -11,19 +12,29 @@ import stopword from 'stopword';
 import { expose } from 'threads/worker';
 
 import { aposToLexForm } from '../../lib/lex_form_convert';
-import { tweet } from './types';
+import { Tweet } from './types';
 
-const sentimentAnalysis = (tweets: Array<tweet>) => {
+import { getTextWithAlphaOnly } from '../../lib/helpers';
+import {
+  getTrainedBayesClassifier,
+  trainOnTheAirlinesDictionary,
+} from '../../lib/bayes_classifier';
+
+const tweetsAnalysis = (tweets: Array<Tweet>) => {
   const spellCorrector = new SpellCorrector();
   spellCorrector.loadDictionary();
 
   const tokenizer = new WordTokenizer();
 
+  const bayesClassifier: BayesClassifier = getTrainedBayesClassifier(
+    trainOnTheAirlinesDictionary,
+  );
+
   const normalizedTweets = tweets.map(({ tweetContent, ...otherTweetInfo }) => {
     const tweetLexicalForm = aposToLexForm(tweetContent);
 
     const casedTweet = tweetLexicalForm.toLowerCase();
-    const tweetWithAlphaOnly = casedTweet.replace(/[^a-zA-Z\s]+/g, '');
+    const tweetWithAlphaOnly = getTextWithAlphaOnly(casedTweet);
 
     const tokenizedTweet = tokenizer
       .tokenize(tweetWithAlphaOnly)
@@ -32,16 +43,19 @@ const sentimentAnalysis = (tweets: Array<tweet>) => {
     const tweetWithoutStopWords = stopword.removeStopwords(tokenizedTweet);
 
     const analyzer = new SentimentAnalyzer('English', PorterStemmer, 'afinn');
-    const analysis = analyzer.getSentiment(tweetWithoutStopWords);
+    const sentimentCoefficient = analyzer.getSentiment(tweetWithoutStopWords);
+
+    const classifierTweetContent = bayesClassifier.classify(tweetWithAlphaOnly);
 
     return {
       ...otherTweetInfo,
       tweetContent: tweetLexicalForm,
-      analysis,
+      sentimentCoefficient,
+      classifierTweetContent,
     };
   });
 
   return normalizedTweets;
 };
 
-expose(sentimentAnalysis);
+expose(tweetsAnalysis);

@@ -1,6 +1,6 @@
 import { spawn, Thread, Worker } from 'threads';
 
-import { tweet } from '../types';
+import { Tweet } from '../types';
 import { TWITTER_URL } from '../../lib/constants';
 import {
   REPLY_SELECTOR,
@@ -62,12 +62,16 @@ export const scrollToLastTweet = () => {
   }
 };
 
-export const getAnalyzedTweets = async (tweets: Array<tweet>) => {
+export const getAnalyzedTweets = async (tweets: Array<Tweet>) => {
+  console.time();
+
   const getTweetsWithSentimentAnalysis = await spawn(
-    new Worker('../sentiment_analysis'),
+    new Worker('../tweets_analysis'),
   );
   const analyzedTweets = await getTweetsWithSentimentAnalysis(tweets);
   await Thread.terminate(getTweetsWithSentimentAnalysis);
 
   console.log('analyzed tweets:', analyzedTweets);
+
+  console.timeEnd();
 };

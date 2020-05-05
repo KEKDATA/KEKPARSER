@@ -13,12 +13,12 @@ import { getHTML, scrollWithDefaultYDiapason } from '../../lib/helpers';
 
 import { TWEET_SELECTOR } from './lib/selectors';
 
-import { tweet } from './types';
+import { Tweet } from './types';
 
 export const getParsedTweets = async (page: Page) => {
   await page.waitForSelector(TWEET_SELECTOR);
 
-  let tweetsInfo: Array<tweet> = [];
+  let tweetsInfo: Array<Tweet> = [];
 
   let currentLengthOfTweets: number = 0;
   let previousLengthOfTweets: number = 0;
@@ -70,5 +70,7 @@ export const getParsedTweets = async (page: Page) => {
     previousLengthOfTweets = tweetsInfo.length;
   }
 
-  return tweetsInfo;
+  const tweetOfTheCorrectLength = tweetsInfo.slice(0, TWEETS_COUNT);
+
+  return tweetOfTheCorrectLength;
 };
