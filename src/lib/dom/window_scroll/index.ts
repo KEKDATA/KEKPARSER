@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer';
 
-import { sleep } from '../../sleep';
+import { sleep } from '../../async';
 
 export const autoScroll = async (page: Page) => {
   await page.evaluate(async () => {

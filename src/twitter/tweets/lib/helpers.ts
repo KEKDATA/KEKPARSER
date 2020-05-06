@@ -1,7 +1,6 @@
 import { spawn, Thread, Worker } from 'threads';
 
 import { Tweet } from '../types';
-import { TWITTER_URL } from '../../lib/constants';
 import {
   REPLY_SELECTOR,
   RETWEET_SELECTOR,
@@ -11,6 +10,8 @@ import {
 } from './selectors';
 import { getNormalizedThousandthValue } from '../../../lib/normalizers';
 import { getTextOfChildNode } from '../../../lib/dom/nodes';
+
+const TWITTER_URL: string = 'https://twitter.com';
 
 export const getTweetInfo = (tweetNode: Cheerio) => {
   const userHref = tweetNode

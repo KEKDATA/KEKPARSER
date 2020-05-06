@@ -2,7 +2,7 @@ import { Page } from 'puppeteer';
 import cheerio from 'cheerio';
 import R from 'ramda';
 
-import { TWEETS_COUNT, MAX_TWEETS_EQUALS } from './lib/constants';
+import { TWEETS_COUNT, MAX_TWEETS_EQUALS } from './constants';
 
 import {
   getTweetInfo,

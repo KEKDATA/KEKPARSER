@@ -1,11 +1,7 @@
 import puppeteer from 'puppeteer';
 
 import { twitterInit } from './twitter';
-import {
-  BROWSER_URL,
-  HEADLESS_BROWSER,
-  VIEWPORT_OPTIONS,
-} from './lib/constants';
+import { BROWSER_URL, HEADLESS_BROWSER, VIEWPORT_OPTIONS } from './constants';
 
 const pupeteerInit = async () => {
   const browser = await puppeteer.launch({ headless: HEADLESS_BROWSER });
