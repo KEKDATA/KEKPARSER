@@ -7,7 +7,7 @@ import { neutralTweets } from './airlines_dictionary/neutral';
 export const getTrainedBayesClassifier = (addDocumentsCallback: Function) => {
   const bayesClassifier = new BayesClassifier();
 
-  addDocumentsCallback();
+  addDocumentsCallback(bayesClassifier);
 
   bayesClassifier.train();
 
