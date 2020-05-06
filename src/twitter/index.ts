@@ -1,12 +1,17 @@
 import { Browser, Page } from 'puppeteer';
 
 import { getParsedTweets } from './tweets';
-import { getAnalyzedTweets } from './tweets/lib/helpers';
+import {
+  getTweetsBayesClassifier,
+  getTweetsSentiments,
+} from './tweets/helpers';
 
 export const twitterInit = async (page: Page, browser: Browser) => {
+  console.time();
   const tweets = await getParsedTweets(page);
 
-  getAnalyzedTweets(tweets);
+  getTweetsSentiments(tweets);
+  getTweetsBayesClassifier(tweets);
 
   console.log('Length of tweets is:', tweets.length);
 

@@ -6,8 +6,8 @@
 import { Page } from 'puppeteer';
 import cheerio from 'cheerio';
 
-import { TWEET_SELECTOR } from '../lib/constants';
-import { getTweetInfo } from '../lib/helpers';
+import { TWEET_SELECTOR } from '../helpers/constants';
+import { getTweetInfo } from '../helpers/helpers';
 import { sleep } from '../src/lib/async';
 
 import { Tweet } from '../types';

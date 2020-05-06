@@ -7,7 +7,7 @@ import {
   TWEET_CONTENT_SELECTOR,
   TWEET_LIKE_SELECTOR,
   USER_NAME_SELECTOR,
-} from './selectors';
+} from '../constants/selectors';
 import { getNormalizedThousandthValue } from '../../../lib/normalizers';
 import { getTextOfChildNode } from '../../../lib/dom/nodes';
 
@@ -61,16 +61,28 @@ export const scrollToLastTweet = () => {
   }
 };
 
-export const getAnalyzedTweets = async (tweets: Array<Tweet>) => {
-  console.time();
-
+export const getTweetsSentiments = async (tweets: Array<Tweet>) => {
   const getTweetsWithSentimentAnalysis = await spawn(
-    new Worker('../tweets_analysis'),
+    new Worker('../tweets_sentiment_analysis'),
   );
-  const analyzedTweets = await getTweetsWithSentimentAnalysis(tweets);
+  const {
+    tweetsSentiments,
+    meanSentiment,
+  } = await getTweetsWithSentimentAnalysis(tweets);
   await Thread.terminate(getTweetsWithSentimentAnalysis);
 
-  console.log('analyzed tweets:', analyzedTweets);
+  console.log('tweets sentiments:', tweetsSentiments);
+  console.log('mean sentiment:', meanSentiment);
 
   console.timeEnd();
+};
+
+export const getTweetsBayesClassifier = async (tweets: Array<Tweet>) => {
+  const getTweetsWithBayesClassifier = await spawn(
+    new Worker('../tweets_bayes_classifier'),
+  );
+  const tweetsWithBayesClassifier = await getTweetsWithBayesClassifier(tweets);
+  await Thread.terminate(getTweetsWithBayesClassifier);
+
+  console.log('tweets bayes classifier:', tweetsWithBayesClassifier);
 };

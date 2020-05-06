@@ -1,7 +1,6 @@
 import {
   WordTokenizer,
   PorterStemmer,
-  BayesClassifier,
   //@ts-ignore
   SentimentAnalyzer,
 } from 'natural';
@@ -15,22 +14,16 @@ import { aposToLexForm } from '../../lib/lex_form_convert';
 import { Tweet } from './types';
 
 import { getTextWithAlphaOnly } from '../../lib/normalizers';
-import {
-  getTrainedBayesClassifier,
-  trainOnTheAirlinesDictionary,
-} from '../../lib/bayes_classifier';
 
-const tweetsAnalysis = (tweets: Array<Tweet>) => {
+const tweetsSentimentAnalysis = (tweets: Array<Tweet>) => {
   const spellCorrector = new SpellCorrector();
   spellCorrector.loadDictionary();
 
   const tokenizer = new WordTokenizer();
 
-  const bayesClassifier: BayesClassifier = getTrainedBayesClassifier(
-    trainOnTheAirlinesDictionary,
-  );
+  let meanSentiment = 0;
 
-  const normalizedTweets = tweets.map(({ tweetContent, ...otherTweetInfo }) => {
+  const tweetsSentiments = tweets.map(({ tweetContent }) => {
     const tweetLexicalForm = aposToLexForm(tweetContent);
 
     const casedTweet = tweetLexicalForm.toLowerCase();
@@ -45,17 +38,14 @@ const tweetsAnalysis = (tweets: Array<Tweet>) => {
     const analyzer = new SentimentAnalyzer('English', PorterStemmer, 'afinn');
     const sentimentCoefficient = analyzer.getSentiment(tweetWithoutStopWords);
 
-    const classifierTweetContent = bayesClassifier.classify(tweetWithAlphaOnly);
+    meanSentiment = sentimentCoefficient + meanSentiment;
 
-    return {
-      ...otherTweetInfo,
-      tweetContent: tweetLexicalForm,
-      sentimentCoefficient,
-      classifierTweetContent,
-    };
+    return sentimentCoefficient;
   });
 
-  return normalizedTweets;
+  meanSentiment = meanSentiment / tweets.length;
+
+  return { tweetsSentiments, meanSentiment };
 };
 
-expose(tweetsAnalysis);
+expose(tweetsSentimentAnalysis);

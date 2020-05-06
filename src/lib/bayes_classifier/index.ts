@@ -1,8 +1,8 @@
 import { BayesClassifier } from 'natural';
 
-import { negativeTweets } from './airlines_dictionary/negative';
-import { positiveTweets } from './airlines_dictionary/positive';
-import { neutralTweets } from './airlines_dictionary/neutral';
+import { negativeTweets } from './dataset/airlines_dictionary/negative';
+import { positiveTweets } from './dataset/airlines_dictionary/positive';
+import { neutralTweets } from './dataset/airlines_dictionary/neutral';
 
 export const getTrainedBayesClassifier = (addDocumentsCallback: Function) => {
   const bayesClassifier = new BayesClassifier();
@@ -14,14 +14,20 @@ export const getTrainedBayesClassifier = (addDocumentsCallback: Function) => {
   return bayesClassifier;
 };
 
-export const trainOnTheAirlinesDictionary = (classifier: BayesClassifier) => {
+export const getTrainedBayesAirlinesClassifier = () => {
+  const bayesClassifier = new BayesClassifier();
+
   negativeTweets.forEach((negativeTweet: string) =>
-    classifier.addDocument(negativeTweet, 'negative'),
+    bayesClassifier.addDocument(negativeTweet, 'negative'),
   );
   positiveTweets.forEach((positiveTweet: string) =>
-    classifier.addDocument(positiveTweet, 'positive'),
+    bayesClassifier.addDocument(positiveTweet, 'positive'),
   );
   neutralTweets.forEach((neutralTweet: string) =>
-    classifier.addDocument(neutralTweet, 'neutral'),
+    bayesClassifier.addDocument(neutralTweet, 'neutral'),
   );
+
+  bayesClassifier.train();
+
+  return bayesClassifier;
 };
