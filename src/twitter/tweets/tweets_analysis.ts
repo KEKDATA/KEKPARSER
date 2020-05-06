@@ -14,7 +14,7 @@ import { expose } from 'threads/worker';
 import { aposToLexForm } from '../../lib/lex_form_convert';
 import { Tweet } from './types';
 
-import { getTextWithAlphaOnly } from '../../lib/helpers';
+import { getTextWithAlphaOnly } from '../../lib/normalizers';
 import {
   getTrainedBayesClassifier,
   trainOnTheAirlinesDictionary,

@@ -9,8 +9,8 @@ import {
   getTweetUploadStatus,
   scrollToLastTweet,
 } from './lib/helpers';
-import { getHTML, scrollWithDefaultYDiapason } from '../../lib/helpers';
-
+import { getHTML } from '../../lib/dom/html';
+import { scrollWithDefaultYDiapason } from '../../lib/dom/window_scroll';
 import { TWEET_SELECTOR } from './lib/selectors';
 
 import { Tweet } from './types';

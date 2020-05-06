@@ -9,10 +9,8 @@ import {
   TWEET_LIKE_SELECTOR,
   USER_NAME_SELECTOR,
 } from './selectors';
-import {
-  getNormalizedThousandthValue,
-  getTextOfChildNode,
-} from '../../../lib/helpers';
+import { getNormalizedThousandthValue } from '../../../lib/normalizers';
+import { getTextOfChildNode } from '../../../lib/dom/nodes';
 
 export const getTweetInfo = (tweetNode: Cheerio) => {
   const userHref = tweetNode

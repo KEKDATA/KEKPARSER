@@ -7,8 +7,9 @@ import { Page } from 'puppeteer';
 import cheerio from 'cheerio';
 
 import { TWEET_SELECTOR } from '../lib/constants';
-import { sleep } from '../../lib/helpers';
 import { getTweetInfo } from '../lib/helpers';
+import { sleep } from '../src/lib/sleep';
+
 import { Tweet } from '../types';
 
 const TWEETS = 20;
