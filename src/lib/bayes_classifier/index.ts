@@ -15,13 +15,13 @@ export const getTrainedBayesClassifier = (addDocumentsCallback: Function) => {
 };
 
 export const trainOnTheAirlinesDictionary = (classifier: BayesClassifier) => {
-  negativeTweets.forEach(negativeTweet =>
+  negativeTweets.forEach((negativeTweet: string) =>
     classifier.addDocument(negativeTweet, 'negative'),
   );
-  positiveTweets.forEach(positiveTweet =>
+  positiveTweets.forEach((positiveTweet: string) =>
     classifier.addDocument(positiveTweet, 'positive'),
   );
-  neutralTweets.forEach(neutralTweet =>
+  neutralTweets.forEach((neutralTweet: string) =>
     classifier.addDocument(neutralTweet, 'neutral'),
   );
 };
