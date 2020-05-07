@@ -1,17 +1,15 @@
 import { BayesClassifier, NGrams } from 'natural';
 //@ts-ignore
 import SpellCorrector from 'spelling-corrector';
-import { expose } from 'threads/worker';
 
-import { aposToLexForm } from '../../lib/lex_form_convert';
-import { Tweet } from './types';
+import { aposToLexForm } from '../lex_form_convert';
 
-import { getTextWithAlphaOnly } from '../../lib/normalizers';
-import { getTrainedBayesClassifier } from '../../lib/bayes_classifier';
-import { negativesWords } from '../../lib/bayes_classifier/dataset/words/negative';
-import { positivesWords } from '../../lib/bayes_classifier/dataset/words/positive';
+import { getTextWithAlphaOnly } from '../normalizers';
+import { getTrainedBayesClassifier } from './index';
+import { negativesWords } from './dataset/words/negative';
+import { positivesWords } from './dataset/words/positive';
 
-const tweetsClassifier = (tweets: Array<Tweet>) => {
+export const getTextWithBayesClassifier = (tweets: Array<string>) => {
   const spellCorrector = new SpellCorrector();
   spellCorrector.loadDictionary();
 
@@ -30,8 +28,8 @@ const tweetsClassifier = (tweets: Array<Tweet>) => {
     },
   );
 
-  const tweetsWithBayesClassifier = tweets.map(({ tweetContent }) => {
-    const tweetLexicalForm = aposToLexForm(tweetContent);
+  const tweetsWithBayesClassifier = tweets.map(tweet => {
+    const tweetLexicalForm = aposToLexForm(tweet);
 
     const casedTweet = tweetLexicalForm.toLowerCase();
     const tweetWithAlphaOnly = getTextWithAlphaOnly(casedTweet);
@@ -43,5 +41,3 @@ const tweetsClassifier = (tweets: Array<Tweet>) => {
 
   return tweetsWithBayesClassifier;
 };
-
-expose(tweetsClassifier);

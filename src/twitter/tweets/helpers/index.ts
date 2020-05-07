@@ -61,30 +61,18 @@ export const scrollToLastTweet = () => {
   }
 };
 
-export const getTweetsSentiments = async (tweets: Array<Tweet>) => {
-  const getTweetsWithSentimentAnalysis = await spawn(
-    new Worker('../tweets_sentiment_analysis'),
+export const getSentimentTweetsWithSpellCorrector = async (
+  tweets: Array<Tweet>,
+) => {
+  const getTweetsWithSentimentsAnalysis = await spawn(
+    new Worker('../../../lib/analysis/sentiment_spell_analysis'),
   );
   const {
     tweetsSentiments,
     meanSentiment,
-  } = await getTweetsWithSentimentAnalysis(tweets);
-  await Thread.terminate(getTweetsWithSentimentAnalysis);
+  } = await getTweetsWithSentimentsAnalysis(tweets);
+  await Thread.terminate(getTweetsWithSentimentsAnalysis);
 
   console.log('tweets sentiments:', tweetsSentiments);
   console.log('mean sentiment:', meanSentiment);
-
-  console.timeEnd();
-};
-
-export const getTweetsBayesClassifier = async (tweets: Array<Tweet>) => {
-  const getTweetsWithBayesClassifier = await spawn(
-    new Worker('../tweets_bayes_classifier'),
-  );
-  const tweetsWithBayesClassifier: Array<string> = await getTweetsWithBayesClassifier(
-    tweets,
-  );
-  await Thread.terminate(getTweetsWithBayesClassifier);
-
-  console.log('tweets bayes classifier:', tweetsWithBayesClassifier);
 };
