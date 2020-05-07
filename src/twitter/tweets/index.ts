@@ -1,4 +1,4 @@
-import { Page } from 'puppeteer';
+import { Page } from 'playwright';
 
 import { getParsedTweets } from './lib/parsed_tweets';
 import { getTextWithSentimentAnalysis } from '../../lib/sentiment_analysis/sentiment_analysis';

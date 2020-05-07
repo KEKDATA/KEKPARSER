@@ -1,4 +1,4 @@
-import { Page } from 'puppeteer';
+import { Page } from 'playwright';
 import cheerio from 'cheerio';
 import R from 'ramda';
 
@@ -23,7 +23,7 @@ export const getParsedTweets = async (page: Page) => {
   let countOfEqualsPrevAndCurrentTweets: number = 0;
 
   while (tweetsInfo.length < TWEETS_COUNT) {
-    await page.waitFor(getTweetUploadStatus);
+    await page.waitForFunction(getTweetUploadStatus);
 
     const contentPage: string = await page.evaluate(getHTML);
 

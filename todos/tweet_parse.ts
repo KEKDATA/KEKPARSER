@@ -3,7 +3,7 @@
 // @ts-ignore-file
 // @ts-nocheck
 
-import { Page } from 'puppeteer';
+import { Page } from 'playwright';
 import cheerio from 'cheerio';
 
 import { TWEET_SELECTOR } from '../helpers/constants';

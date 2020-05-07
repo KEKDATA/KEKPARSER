@@ -14,8 +14,13 @@ export const getTextWithSentimentAnalysis = (tweets: Array<string>) => {
   const tokenizer = new WordTokenizer();
 
   let meanSentiment = 0;
+  let lengthOfTweets = tweets.length;
 
-  const tweetsWithSentiments = tweets.map(tweet => {
+  const tweetsWithSentiments = [];
+
+  for (let tweetIndex = 0; tweetIndex < lengthOfTweets; tweetIndex++) {
+    const tweet = tweets[tweetIndex];
+
     const tweetLexicalForm = aposToLexForm(tweet);
 
     const casedTweet = tweetLexicalForm.toLowerCase();
@@ -25,15 +30,21 @@ export const getTextWithSentimentAnalysis = (tweets: Array<string>) => {
 
     const tweetWithoutStopWords = stopword.removeStopwords(tokenizedTweet);
 
+    if (tweetWithoutStopWords.length === 0) {
+      tweetsWithSentiments.push(0);
+      lengthOfTweets = lengthOfTweets - 1;
+      continue;
+    }
+
     const analyzer = new SentimentAnalyzer('English', PorterStemmer, 'afinn');
     const sentimentCoefficient = analyzer.getSentiment(tweetWithoutStopWords);
 
-    meanSentiment = sentimentCoefficient + meanSentiment;
+    meanSentiment = Number(sentimentCoefficient) + meanSentiment;
 
-    return sentimentCoefficient;
-  });
+    tweetsWithSentiments.push(sentimentCoefficient);
+  }
 
-  meanSentiment = meanSentiment / tweets.length;
+  meanSentiment = meanSentiment / lengthOfTweets;
 
   return { tweetsWithSentiments, meanSentiment };
 };
