@@ -4,6 +4,7 @@ node_modules
 *.lock
 *.rar
 *.zip
+*.js
 .idea
 .vscode
 .project
