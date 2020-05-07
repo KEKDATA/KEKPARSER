@@ -81,7 +81,9 @@ export const getTweetsBayesClassifier = async (tweets: Array<Tweet>) => {
   const getTweetsWithBayesClassifier = await spawn(
     new Worker('../tweets_bayes_classifier'),
   );
-  const tweetsWithBayesClassifier = await getTweetsWithBayesClassifier(tweets);
+  const tweetsWithBayesClassifier: Array<string> = await getTweetsWithBayesClassifier(
+    tweets,
+  );
   await Thread.terminate(getTweetsWithBayesClassifier);
 
   console.log('tweets bayes classifier:', tweetsWithBayesClassifier);

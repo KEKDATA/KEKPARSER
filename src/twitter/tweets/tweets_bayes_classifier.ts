@@ -1,4 +1,4 @@
-import { BayesClassifier } from 'natural';
+import { BayesClassifier, NGrams } from 'natural';
 //@ts-ignore
 import SpellCorrector from 'spelling-corrector';
 import { expose } from 'threads/worker';
@@ -15,10 +15,18 @@ const tweetsClassifier = (tweets: Array<Tweet>) => {
   const spellCorrector = new SpellCorrector();
   spellCorrector.loadDictionary();
 
+  const negativesNGrams = NGrams.ngrams(negativesWords, negativesWords.length);
+  const positivesNGrams = NGrams.ngrams(positivesWords, positivesWords.length);
+
   const bayesClassifier: BayesClassifier = getTrainedBayesClassifier(
     (classifier: BayesClassifier) => {
-      classifier.addDocument(negativesWords, 'negative');
-      classifier.addDocument(positivesWords, 'positive');
+      negativesNGrams.forEach(negativeNGram => {
+        classifier.addDocument(negativeNGram, 'negative');
+      });
+
+      positivesNGrams.forEach(positiveNGram => {
+        classifier.addDocument(positiveNGram, 'positive');
+      });
     },
   );
 
