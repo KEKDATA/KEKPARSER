@@ -1,20 +1,17 @@
-import { aposToLexForm } from '../../../lib/lex_form_convert/apos_to_lex_form';
-import { getTextWithAlphaOnly } from '../../../lib/normalizers';
 import { getWordsTrigramsBayesClassifier } from '../../../lib/bayes_classifier/trigrams/words/bayes_words';
 
 export const getTextWithBayesClassifier = (tweets: Array<string>) => {
   const bayesClassifier = getWordsTrigramsBayesClassifier();
 
-  const tweetsWithBayesClassifier = tweets.map(tweet => {
-    const tweetLexicalForm = aposToLexForm(tweet);
+  const tweetsWithBayesClassifier = [];
 
-    const casedTweet = tweetLexicalForm.toLowerCase();
-    const tweetWithAlphaOnly = getTextWithAlphaOnly(casedTweet);
+  for (let tweetIndex = 0; tweetIndex < tweets.length; tweetIndex++) {
+    const tweet = tweets[tweetIndex];
 
-    const classifierTweetContent = bayesClassifier.classify(tweetWithAlphaOnly);
+    const classifierTweetContent = bayesClassifier.classify(tweet);
 
-    return classifierTweetContent;
-  });
+    tweetsWithBayesClassifier.push(classifierTweetContent);
+  }
 
   return tweetsWithBayesClassifier;
 };

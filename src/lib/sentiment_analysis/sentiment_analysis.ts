@@ -7,9 +7,6 @@ import {
 //@ts-ignore
 import stopword from 'stopword';
 
-import { aposToLexForm } from '../lex_form_convert/apos_to_lex_form';
-import { getTextWithAlphaOnly } from '../normalizers';
-
 export const getTextWithSentimentAnalysis = (tweets: Array<string>) => {
   const tokenizer = new WordTokenizer();
 
@@ -21,12 +18,7 @@ export const getTextWithSentimentAnalysis = (tweets: Array<string>) => {
   for (let tweetIndex = 0; tweetIndex < lengthOfTweets; tweetIndex++) {
     const tweet = tweets[tweetIndex];
 
-    const tweetLexicalForm = aposToLexForm(tweet);
-
-    const casedTweet = tweetLexicalForm.toLowerCase();
-    const tweetWithAlphaOnly = getTextWithAlphaOnly(casedTweet);
-
-    const tokenizedTweet = tokenizer.tokenize(tweetWithAlphaOnly);
+    const tokenizedTweet = tokenizer.tokenize(tweet);
 
     const tweetWithoutStopWords = stopword.removeStopwords(tokenizedTweet);
 
