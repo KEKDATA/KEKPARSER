@@ -1,5 +1,4 @@
 import { Page, Browser } from 'playwright';
-
 import { getFinalTweets } from './tweets';
 
 export const twitterInit = async (page: Page, browser: Browser) => {

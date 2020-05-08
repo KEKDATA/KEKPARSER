@@ -10,7 +10,7 @@ import SpellCorrector from 'spelling-corrector';
 import stopword from 'stopword';
 import { expose } from 'threads/worker';
 
-import { aposToLexForm } from '../lex_form_convert';
+import { aposToLexForm } from '../lex_form_convert/apos_to_lex_form';
 import { Tweet } from '../../twitter/tweets/types';
 
 import { getTextWithAlphaOnly } from '../normalizers';

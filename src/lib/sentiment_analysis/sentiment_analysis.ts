@@ -7,7 +7,7 @@ import {
 //@ts-ignore
 import stopword from 'stopword';
 
-import { aposToLexForm } from '../lex_form_convert';
+import { aposToLexForm } from '../lex_form_convert/apos_to_lex_form';
 import { getTextWithAlphaOnly } from '../normalizers';
 
 export const getTextWithSentimentAnalysis = (tweets: Array<string>) => {

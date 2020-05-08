@@ -4,8 +4,8 @@
   "description": "How to perform web-scrapping using Node.Js",
   "main": "index.js",
   "scripts": {
-    "tweets-parse-babel": "env-cmd babel-node src/index.js",
-    "tweets-parse-ts": "env-cmd ts-node --files src/index.ts",
+    "tweets-parse-babel": "env-cmd -f src/config/.env babel-node src/index.js",
+    "tweets-parse-ts": "env-cmd -f src/config/.env ts-node --files src/index.ts",
     "tsc": "tsc --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "fix-code": "prettier --write 'src/**/*.ts'",
@@ -22,7 +22,8 @@
     "spelling-corrector": "^3.0.0",
     "stopword": "^1.0.1",
     "threads": "^1.4.1",
-    "tiny-worker": "^2.3.0"
+    "tiny-worker": "^2.3.0",
+    "wordnet-db": "^3.1.14"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",

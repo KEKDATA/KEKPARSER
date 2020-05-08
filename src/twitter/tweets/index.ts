@@ -1,8 +1,9 @@
 import { Page } from 'playwright';
 
-import { getParsedTweets } from './lib/parsed_tweets';
 import { getTextWithSentimentAnalysis } from '../../lib/sentiment_analysis/sentiment_analysis';
-import { getTextWithBayesClassifier } from '../../lib/bayes_classifier/bayes_classifier';
+
+import { getParsedTweets } from './parsed_tweets';
+import { getTextWithBayesClassifier } from './tweets_bayes_classifier';
 
 export const getFinalTweets = async (page: Page) => {
   const parsedTweets = await getParsedTweets(page);
@@ -14,13 +15,15 @@ export const getFinalTweets = async (page: Page) => {
   const { tweetsWithSentiments, meanSentiment } = getTextWithSentimentAnalysis(
     normalizedTweetsForAnalysis,
   );
-  const tweetsBayes = getTextWithBayesClassifier(normalizedTweetsForAnalysis);
+  const tweetsWithBayesClassifier = getTextWithBayesClassifier(
+    normalizedTweetsForAnalysis,
+  );
 
   const finalTweets = [];
 
   for (let tweetIndex = 0; tweetIndex < parsedTweets.length; tweetIndex++) {
     const tweetSentiment = tweetsWithSentiments[tweetIndex];
-    const tweetBayes = tweetsBayes[tweetIndex];
+    const tweetBayes = tweetsWithBayesClassifier[tweetIndex];
     const parsedTweet = parsedTweets[tweetIndex];
 
     finalTweets.push({

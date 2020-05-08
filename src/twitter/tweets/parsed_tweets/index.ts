@@ -2,16 +2,18 @@ import { Page } from 'playwright';
 import cheerio from 'cheerio';
 import R from 'ramda';
 
-import { TWEET_SELECTOR } from '../../constants/selectors';
-import { Tweet } from '../../types';
-import { MAX_TWEETS_EQUALS, TWEETS_COUNT } from '../../constants';
+import { TWEET_SELECTOR } from '../constants/selectors';
+import { Tweet } from '../types';
+import { MAX_TWEETS_EQUALS } from '../constants';
 import {
   getTweetInfo,
   getTweetUploadStatus,
   scrollToLastTweet,
-} from '../../helpers';
-import { getHTML } from '../../../../lib/dom/html';
-import { scrollWithDefaultYDiapason } from '../../../../lib/dom/window_scroll';
+} from '../helpers';
+import { getHTML } from '../../../lib/dom/html';
+import { scrollWithDefaultYDiapason } from '../../../lib/dom/window_scroll';
+
+const TWEETS_COUNT = Number(process.env.TWEETS_COUNT);
 
 export const getParsedTweets = async (page: Page) => {
   await page.waitForSelector(TWEET_SELECTOR);
