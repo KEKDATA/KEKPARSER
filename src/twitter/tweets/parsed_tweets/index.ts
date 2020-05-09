@@ -82,7 +82,7 @@ export const getParsedTweets = async (page: Page) => {
         window.scrollBy(0, 100);
       }
 
-      return visibleTweetIndex;
+      return Promise.resolve(visibleTweetIndex);
     });
 
     if (!tweetIndex) {
