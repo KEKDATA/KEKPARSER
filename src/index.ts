@@ -11,7 +11,7 @@ const {
 
 const parseInit = async () => {
   const browser = await chromium.launch({
-    headless: Boolean(HEADLESS_BROWSER),
+    headless: HEADLESS_BROWSER == 'true',
   });
   const context = await browser.newContext();
   const page = await context.newPage();

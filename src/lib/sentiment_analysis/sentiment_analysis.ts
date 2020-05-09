@@ -9,11 +9,10 @@ import stopword from 'stopword';
 
 export const getTextWithSentimentAnalysis = (tweets: Array<string>) => {
   const tokenizer = new WordTokenizer();
-
-  let meanSentiment = 0;
-  let lengthOfTweets = tweets.length;
-
   const tweetsWithSentiments = [];
+
+  let countOfSentimentCoefficients = 0;
+  let lengthOfTweets = tweets.length;
 
   for (let tweetIndex = 0; tweetIndex < lengthOfTweets; tweetIndex++) {
     const tweet = tweets[tweetIndex];
@@ -29,14 +28,17 @@ export const getTextWithSentimentAnalysis = (tweets: Array<string>) => {
     }
 
     const analyzer = new SentimentAnalyzer('English', PorterStemmer, 'afinn');
-    const sentimentCoefficient = analyzer.getSentiment(tweetWithoutStopWords);
+    const sentimentCoefficient = Number(
+      analyzer.getSentiment(tweetWithoutStopWords),
+    );
 
-    meanSentiment = Number(sentimentCoefficient) + meanSentiment;
+    countOfSentimentCoefficients =
+      sentimentCoefficient + countOfSentimentCoefficients;
 
     tweetsWithSentiments.push(sentimentCoefficient);
   }
 
-  meanSentiment = meanSentiment / lengthOfTweets;
+  const meanSentiment = countOfSentimentCoefficients / lengthOfTweets;
 
   return { tweetsWithSentiments, meanSentiment };
 };

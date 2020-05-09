@@ -6,6 +6,7 @@ import { getTextWithAlphaOnly } from '../../lib/normalizers';
 
 import { getParsedTweets } from './parsed_tweets';
 import { getTextWithBayesClassifier } from './tweets_bayes_classifier';
+import { insertionTweetsSort } from './helpers/insetion_tweets_sort';
 
 export const getFinalTweets = async (page: Page) => {
   const parsedTweets = await getParsedTweets(page);
@@ -22,6 +23,7 @@ export const getFinalTweets = async (page: Page) => {
   const { tweetsWithSentiments, meanSentiment } = getTextWithSentimentAnalysis(
     normalizedTweetsForAnalysis,
   );
+
   const tweetsWithBayesClassifier = getTextWithBayesClassifier(
     normalizedTweetsForAnalysis,
   );
@@ -39,6 +41,13 @@ export const getFinalTweets = async (page: Page) => {
       tweetBayes,
     });
   }
+
+  const sortedSentimentCoefficients = insertionTweetsSort([...finalTweets]);
+  const minCoefficient = sortedSentimentCoefficients[0];
+  const maxCoefficient =
+    sortedSentimentCoefficients[sortedSentimentCoefficients.length - 1];
+
+  console.log(minCoefficient, maxCoefficient);
 
   return {
     finalTweets,

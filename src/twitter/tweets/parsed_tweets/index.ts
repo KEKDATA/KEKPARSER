@@ -1,17 +1,10 @@
 import { Page } from 'playwright';
 import cheerio from 'cheerio';
-import R from 'ramda';
 
 import { TWEET_SELECTOR } from '../constants/selectors';
 import { Tweet } from '../types';
-import { MAX_TWEETS_EQUALS } from '../constants';
-import {
-  getTweetInfo,
-  getTweetUploadStatus,
-  scrollToLastTweet,
-} from '../helpers';
+import { getTweetInfo, getTweetUploadStatus } from '../helpers';
 import { getHTML } from '../../../lib/dom/html';
-import { scrollWithDefaultYDiapason } from '../../../lib/dom/window_scroll';
 
 const TWEETS_COUNT = Number(process.env.TWEETS_COUNT);
 
@@ -20,57 +13,100 @@ export const getParsedTweets = async (page: Page) => {
 
   let tweetsInfo: Array<Tweet> = [];
 
-  let currentLengthOfTweets: number = 0;
-  let previousLengthOfTweets: number = 0;
-  let countOfEqualsPrevAndCurrentTweets: number = 0;
-
   while (tweetsInfo.length < TWEETS_COUNT) {
     await page.waitForFunction(getTweetUploadStatus);
 
+    const tweetIndex = await page.evaluate(() => {
+      const bannerNode = document.querySelector('[role="banner"]');
+
+      let bannerHeight = 0;
+      if (bannerNode) {
+        bannerHeight = Number(bannerNode.getBoundingClientRect().height);
+      }
+
+      //@ts-ignore
+      function getIsElementInViewport(el) {
+        const rect = el.getBoundingClientRect();
+
+        return (
+          Number(rect.top) + bannerHeight >= 0 &&
+          rect.left >= 0 &&
+          rect.bottom <=
+            (window.innerHeight || document.documentElement.clientHeight) &&
+          rect.right <=
+            (window.innerWidth || document.documentElement.clientWidth)
+        );
+      }
+
+      const tweetsNodes = Array.from(
+        document.querySelectorAll(
+          '[aria-label="Timeline: Search timeline"] > div > div',
+        ),
+      );
+
+      let visibleTweetIndex = null;
+
+      for (let i = 0; i < tweetsNodes.length; i++) {
+        const tweetNode = tweetsNodes[i];
+
+        const availableTweetNode = tweetNode.querySelector(
+          '[data-testid="tweet"]',
+        );
+
+        if (!availableTweetNode) {
+          continue;
+        }
+
+        const isElementInViewport = getIsElementInViewport(tweetNode);
+
+        if (!isElementInViewport) {
+          continue;
+        }
+
+        const indexForNextNode = i + 1;
+        const availableNextTweetNode = tweetsNodes
+          .slice(indexForNextNode)
+          .find(
+            nextNode =>
+              nextNode && nextNode.querySelector('[data-testid="tweet"]'),
+          );
+
+        if (availableNextTweetNode) {
+          visibleTweetIndex = i + 1;
+          availableNextTweetNode.scrollIntoView();
+          break;
+        }
+      }
+
+      if (!visibleTweetIndex) {
+        window.scrollBy(0, 100);
+      }
+
+      return visibleTweetIndex;
+    });
+
+    if (!tweetIndex) {
+      continue;
+    }
+
     const contentPage: string = await page.evaluate(getHTML);
 
-    await page.evaluate(scrollToLastTweet);
+    // await page.evaluate(scrollToLastTweet);
 
     const $ = cheerio.load(contentPage);
 
-    $(TWEET_SELECTOR).each((index, tweet) => {
-      const tweetNode = $(tweet);
+    const visibleTweet = $(TWEET_SELECTOR).eq(tweetIndex);
 
-      const tweetInfo = getTweetInfo(tweetNode);
+    const tweetNode = $(visibleTweet);
 
+    const tweetInfo = getTweetInfo(tweetNode);
+
+    if (tweetInfo.userName) {
       tweetsInfo.push(tweetInfo);
-    });
-
-    await page.evaluate(scrollWithDefaultYDiapason);
-
-    // Присутствует вероятность того, что могут попасть дубликаты, тк список твитов
-    // имеет структуру списка с виртуализацией, из-за этого пришлось обрабатывать пачками твиты
-    const uniqTweets = R.uniq(tweetsInfo);
-
-    tweetsInfo = [...uniqTweets];
-
-    currentLengthOfTweets = tweetsInfo.length;
-
-    // Если твиты закончились по запросу
-    const isTweetsLengthEquals =
-      currentLengthOfTweets === previousLengthOfTweets;
-
-    // Существует вероятность, при которой длина предыдущих и текущих твитов совпадает
-    // Если мы уходим в цикл с одинаковой длинной предыдущих и текущих, то допускаем
-    // выход из цикла при условии, что MAX_TWEETS_EQUALS раз предыдущая длинна и текущая
-    // были равны
-    if (countOfEqualsPrevAndCurrentTweets > MAX_TWEETS_EQUALS) {
-      break;
     }
-
-    countOfEqualsPrevAndCurrentTweets = isTweetsLengthEquals
-      ? countOfEqualsPrevAndCurrentTweets + 1
-      : 0;
-
-    previousLengthOfTweets = tweetsInfo.length;
   }
 
-  const tweetOfTheCorrectLength = tweetsInfo.slice(0, TWEETS_COUNT);
+  console.log(tweetsInfo, tweetsInfo.length);
 
-  return tweetOfTheCorrectLength;
+  return tweetsInfo;
 };
