@@ -1,6 +1,7 @@
 export type Tweet = {
   userUrl: string;
-  userName: string;
+  name: string;
+  tweetName: string;
   tweetContent: string;
   likes: number;
   retweets: number;
@@ -9,7 +10,8 @@ export type Tweet = {
 
 export type FinalTweet = {
   userUrl: string;
-  userName: string;
+  name: string;
+  tweetName: string;
   tweetContent: string;
   likes: number;
   retweets: number;

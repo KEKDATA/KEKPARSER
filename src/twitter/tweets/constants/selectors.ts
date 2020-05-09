@@ -13,4 +13,4 @@ export const TWEET_CONTENT_SELECTOR =
   '.css-901oao.r-1qd0xha.r-a023e6.r-16dba41.r-ad9z0x.r-bcqeeo.r-bnwqim.r-qvutc0';
 
 export const TWEET_CONTENT_SELECTOR_MOBILE =
-  '.css-1dbjc4n.r-1iusvr4.r-16y2uox.r-1777fci.r-5f2r5o.r-wgs6xk';
+  '.r-1b43r93.r-16dba41.r-ad9z0x.r-bcqeeo.r-bnwqim.r-qvutc0';

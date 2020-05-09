@@ -10,17 +10,16 @@ import {
 } from '../constants/selectors';
 import { getNormalizedThousandthValue } from '../../../lib/normalizers';
 import { getTextOfChildNode } from '../../../lib/dom/nodes/text_child_node';
+import { getTextOfChildNodes } from '../../../lib/dom/nodes/text_child_nodes';
 
 const TWITTER_URL: string = 'https://twitter.com';
 
 export const getTweetInfo = (tweetNode: Cheerio) => {
-  const userHref = tweetNode
-    .find(USER_NAME_SELECTOR)
-    .parent()
-    .attr('href');
-  const userUrl = `${TWITTER_URL}${userHref}`;
+  const userNameSelector = tweetNode.find(USER_NAME_SELECTOR);
 
-  const userName = getTextOfChildNode(tweetNode, USER_NAME_SELECTOR);
+  const [name, tweetName] = getTextOfChildNodes(userNameSelector);
+  const userUrl = `${TWITTER_URL}/${tweetName.replace('@', '')}`;
+
   const tweetContent = getTextOfChildNode(
     tweetNode,
     TWEET_CONTENT_SELECTOR_MOBILE,
@@ -35,7 +34,8 @@ export const getTweetInfo = (tweetNode: Cheerio) => {
 
   return {
     userUrl,
-    userName,
+    name,
+    tweetName,
     tweetContent,
     likes: normalizedLikes,
     retweets: normalizedRetweets,
