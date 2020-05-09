@@ -14,5 +14,3 @@ export const TWEET_CONTENT_SELECTOR =
 
 export const TWEET_CONTENT_SELECTOR_MOBILE =
   '.css-1dbjc4n.r-1iusvr4.r-16y2uox.r-1777fci.r-5f2r5o.r-wgs6xk';
-
-export const LOADER_SELECTOR = '[role="progressbar"]';

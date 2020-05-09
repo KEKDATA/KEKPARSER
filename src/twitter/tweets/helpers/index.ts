@@ -9,7 +9,7 @@ import {
   USER_NAME_SELECTOR,
 } from '../constants/selectors';
 import { getNormalizedThousandthValue } from '../../../lib/normalizers';
-import { getTextOfChildNode } from '../../../lib/dom/nodes';
+import { getTextOfChildNode } from '../../../lib/dom/nodes/text_child_node';
 
 const TWITTER_URL: string = 'https://twitter.com';
 
@@ -41,13 +41,6 @@ export const getTweetInfo = (tweetNode: Cheerio) => {
     retweets: normalizedRetweets,
     replies: normalizedReplies,
   };
-};
-
-export const getTweetUploadStatus = (loaderSelector: string) => {
-  const loaderNode = document.querySelector(loaderSelector);
-  const isTweetsAvailable = loaderNode === null;
-
-  return isTweetsAvailable;
 };
 
 export const scrollToLastTweet = () => {

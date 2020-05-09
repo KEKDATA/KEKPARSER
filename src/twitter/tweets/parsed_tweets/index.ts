@@ -2,15 +2,13 @@ import { Page } from 'playwright';
 import cheerio from 'cheerio';
 import R from 'ramda';
 
-import { LOADER_SELECTOR, TWEET_SELECTOR } from '../constants/selectors';
+import { TWEET_SELECTOR } from '../constants/selectors';
 import { Tweet } from '../types';
 import { MAX_TWEETS_EQUALS } from '../constants';
-import {
-  getTweetInfo,
-  getTweetUploadStatus,
-  scrollToLastTweet,
-} from '../helpers';
+import { getTweetInfo, scrollToLastTweet } from '../helpers';
 import { getHTML } from '../../../lib/dom/html';
+import { LOADER_SELECTOR } from '../../constants/selectors';
+import { checkIsTwitterContentVisible } from '../../lib/page/visible_content_check';
 
 const TWEETS_COUNT = Number(process.env.TWEETS_COUNT);
 
@@ -24,7 +22,7 @@ export const getParsedTweets = async (page: Page) => {
   let countOfEqualsPrevAndCurrentTweets: number = 0;
 
   while (tweetsInfo.length < TWEETS_COUNT) {
-    await page.waitForFunction(getTweetUploadStatus, LOADER_SELECTOR);
+    await page.waitForFunction(checkIsTwitterContentVisible, LOADER_SELECTOR);
 
     const contentPage: string = await page.evaluate(getHTML);
 
