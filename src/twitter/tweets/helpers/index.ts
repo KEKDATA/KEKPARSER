@@ -4,7 +4,7 @@ import { Tweet } from '../types';
 import {
   REPLY_SELECTOR,
   RETWEET_SELECTOR,
-  TWEET_CONTENT_SELECTOR,
+  TWEET_CONTENT_SELECTOR_MOBILE,
   TWEET_LIKE_SELECTOR,
   USER_NAME_SELECTOR,
 } from '../constants/selectors';
@@ -21,7 +21,10 @@ export const getTweetInfo = (tweetNode: Cheerio) => {
   const userUrl = `${TWITTER_URL}${userHref}`;
 
   const userName = getTextOfChildNode(tweetNode, USER_NAME_SELECTOR);
-  const tweetContent = getTextOfChildNode(tweetNode, TWEET_CONTENT_SELECTOR);
+  const tweetContent = getTextOfChildNode(
+    tweetNode,
+    TWEET_CONTENT_SELECTOR_MOBILE,
+  );
   const likes = getTextOfChildNode(tweetNode, TWEET_LIKE_SELECTOR);
   const retweets = getTextOfChildNode(tweetNode, RETWEET_SELECTOR);
   const replies = getTextOfChildNode(tweetNode, REPLY_SELECTOR);
@@ -40,9 +43,7 @@ export const getTweetInfo = (tweetNode: Cheerio) => {
   };
 };
 
-export const getTweetUploadStatus = () => {
-  const loaderSelector =
-    '.css-1dbjc4n.r-1awozwy.r-16y2uox.r-1777fci.r-utggzx.r-tvv088';
+export const getTweetUploadStatus = (loaderSelector: string) => {
   const loaderNode = document.querySelector(loaderSelector);
   const isTweetsAvailable = loaderNode === null;
 

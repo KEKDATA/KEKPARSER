@@ -23,7 +23,6 @@ export const getTextWithSentimentAnalysis = (tweets: Array<string>) => {
 
     if (tweetWithoutStopWords.length === 0) {
       tweetsWithSentiments.push(0);
-      lengthOfTweets = lengthOfTweets - 1;
       continue;
     }
 
