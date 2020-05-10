@@ -17,10 +17,17 @@ export const twitterInit = async (page: Page, browser: Browser) => {
     }
 
     case 'tweets': {
-      const { finalTweets, meanSentiment } = await getFinalTweets(page);
+      const {
+        finalTweets,
+        meanSentiment,
+        minCoefficient,
+        maxCoefficient,
+      } = await getFinalTweets(page);
 
       console.log('Tweets length:', finalTweets.length);
       console.log('Mean sentiment:', meanSentiment);
+      console.log('Min coef:', minCoefficient);
+      console.log('Max coef:', maxCoefficient);
 
       break;
     }

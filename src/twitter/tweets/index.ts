@@ -5,7 +5,7 @@ import { aposToLexForm } from '../../lib/lex_form_convert/apos_to_lex_form';
 import { getTextWithAlphaOnly } from '../../lib/normalizers';
 
 import { getParsedTweets } from './parsed_tweets';
-import { getTextWithBayesClassifier } from './tweets_bayes_classifier';
+import { getTextWithBayesClassifier } from '../../lib/bayes_classifier/bayes_classifier';
 import { insertionTweetsSort } from './helpers/insetion_tweets_sort';
 
 export const getFinalTweets = async (page: Page) => {
@@ -20,9 +20,10 @@ export const getFinalTweets = async (page: Page) => {
     return tweetWithAlphaOnly;
   });
 
-  const { tweetsWithSentiments, meanSentiment } = getTextWithSentimentAnalysis(
-    normalizedTweetsForAnalysis,
-  );
+  const {
+    dataWithSentiments: tweetsWithSentiments,
+    meanSentiment,
+  } = getTextWithSentimentAnalysis(normalizedTweetsForAnalysis);
 
   const tweetsWithBayesClassifier = getTextWithBayesClassifier(
     normalizedTweetsForAnalysis,
@@ -47,10 +48,10 @@ export const getFinalTweets = async (page: Page) => {
   const maxCoefficient =
     sortedSentimentCoefficients[sortedSentimentCoefficients.length - 1];
 
-  console.log(minCoefficient, maxCoefficient);
-
   return {
     finalTweets,
     meanSentiment,
+    minCoefficient,
+    maxCoefficient,
   };
 };

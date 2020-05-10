@@ -1,6 +1,3 @@
-import { spawn, Thread, Worker } from 'threads';
-
-import { Tweet } from '../types';
 import {
   REPLY_SELECTOR,
   RETWEET_SELECTOR,
@@ -53,20 +50,4 @@ export const scrollToLastTweet = () => {
       latestTweet.scrollIntoView();
     }
   }
-};
-
-export const getSentimentTweetsWithSpellCorrector = async (
-  tweets: Array<Tweet>,
-) => {
-  const getTweetsWithSentimentsAnalysis = await spawn(
-    new Worker('../../../lib/analysis/sentiment_spell_analysis'),
-  );
-  const {
-    tweetsSentiments,
-    meanSentiment,
-  } = await getTweetsWithSentimentsAnalysis(tweets);
-  await Thread.terminate(getTweetsWithSentimentsAnalysis);
-
-  console.log('tweets sentiments:', tweetsSentiments);
-  console.log('mean sentiment:', meanSentiment);
 };
