@@ -6,7 +6,7 @@ import { getTextWithAlphaOnly } from '../../lib/normalizers';
 
 import { getParsedTweets } from './parsed_tweets';
 import { getTextWithBayesClassifier } from '../../lib/bayes_classifier/bayes_classifier';
-import { insertionTweetsSort } from './helpers/insetion_tweets_sort';
+import { insertionTweetsSort } from './lib/insetion_tweets_sort';
 
 export const getFinalTweets = async (page: Page) => {
   const parsedTweets = await getParsedTweets(page);

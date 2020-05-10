@@ -3,15 +3,19 @@ import cheerio from 'cheerio';
 import R from 'ramda';
 
 import { TWEET_SELECTOR } from '../constants/selectors';
-import { Tweet } from '../types';
-import { MAX_TWEETS_EQUALS } from '../constants';
-import { getTweetInfo, scrollToLastTweet } from '../helpers';
-import { getHTML } from '../../../lib/dom/html';
 import { LOADER_SELECTOR } from '../../constants/selectors';
+
+import { getTweetInfo } from '../lib/tweet_info';
+import { getHTML } from '../../../lib/dom/html';
 import { checkIsTwitterContentVisible } from '../../lib/page/visible_content_check';
+import { scrollToLastTweet } from '../lib/scroll_to_last_tweet';
+
 import { $profileTab } from '../../model';
 
+import { Tweet } from '../types';
+
 const TWEETS_COUNT = Number(process.env.TWEETS_COUNT);
+const MAX_TWEETS_EQUALS = 5;
 
 export const getParsedTweets = async (page: Page) => {
   await page.waitForSelector(TWEET_SELECTOR);
