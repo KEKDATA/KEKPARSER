@@ -1,15 +1,15 @@
 import { getTextWithSentimentAnalysis } from '../../lib/sentiment_analysis/sentiment_analysis';
 import { aposToLexForm } from '../../lib/lex_form_convert/apos_to_lex_form';
-import { getTextWithAlphaOnly } from '../../lib/normalizers';
+import { getTextWithAlphaOnly } from '../../lib/normalizers/alphabet';
 
 import { getTextWithBayesClassifier } from '../../lib/bayes_classifier/bayes_classifier';
-import { insertionTweetsSort } from './lib/insetion_tweets_sort';
+import { insertionTweetsSort } from './lib/insertion_tweets_sort';
 
 import { getParsedTweets } from './parsed_tweets';
 
 import { $webdriverPage } from '../model';
 
-export const getFinalTweets = async () => {
+export const getAnalyzedTweets = async () => {
   const page = $webdriverPage.getState();
 
   const parsedTweets = await getParsedTweets(page);

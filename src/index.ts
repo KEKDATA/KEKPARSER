@@ -1,6 +1,6 @@
 import { chromium, devices } from 'playwright';
 
-import { twitterInit } from './twitter';
+import { setupTwitterParse } from './twitter/twitter_parse';
 import { setWebdriverPage } from './twitter/model';
 
 const { HEADLESS_BROWSER, START_URL } = process.env;
@@ -17,7 +17,7 @@ const parseInit = async () => {
 
   setWebdriverPage(page);
 
-  page.once('domcontentloaded', () => twitterInit(browser));
+  page.once('domcontentloaded', () => setupTwitterParse(browser));
 
   await page.goto(START_URL);
 };

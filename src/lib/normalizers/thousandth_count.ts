@@ -8,9 +8,3 @@ export const getNormalizedThousandthValue = (value: string) => {
 
   return normalizedValue;
 };
-
-export const getTextWithAlphaOnly = (text: string) => {
-  const textWithAlphaOnly = text.replace(/[^a-zA-Z\s]+/g, '');
-
-  return textWithAlphaOnly;
-};

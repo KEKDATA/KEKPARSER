@@ -4,7 +4,7 @@ import { getTextOfChildNodes } from '../../lib/dom/nodes/text_child_nodes';
 import { TWITTER_URL } from './lib/tweet_info/constants';
 import { getReplyingInfo } from './lib/tweet_info/replying_info';
 import { getTextOfChildNode } from '../../lib/dom/nodes/text_child_node';
-import { getNormalizedThousandthValue } from '../../lib/normalizers';
+import { getNormalizedThousandthValue } from '../../lib/normalizers/thousandth_count';
 
 import {
   REPLY_SELECTOR,

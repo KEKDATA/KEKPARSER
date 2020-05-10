@@ -2,7 +2,7 @@ import { BayesClassifier } from 'natural';
 
 import { negativeTrigramsWords } from './negative';
 import { positiveTrigramsWords } from './positive';
-import { getTrainedBayesClassifier } from '../../index';
+import { getTrainedBayesClassifier } from '../../train_bayes_classifier';
 
 export const getWordsTrigramsBayesClassifier = () => {
   const negativesNGrams = negativeTrigramsWords;

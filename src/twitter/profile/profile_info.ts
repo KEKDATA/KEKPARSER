@@ -8,7 +8,7 @@ import {
 } from './constants/selectors';
 
 import { getTextOfChildNodes } from '../../lib/dom/nodes/text_child_nodes';
-import { getHTML } from '../../lib/dom/html';
+import { getHTML } from '../../lib/dom/html/get_html';
 
 import { $webdriverPage } from '../model';
 

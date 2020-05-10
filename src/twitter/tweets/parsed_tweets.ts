@@ -2,23 +2,23 @@ import { Page } from 'playwright';
 import cheerio from 'cheerio';
 import R from 'ramda';
 
-import { TWEET_SELECTOR } from '../constants/selectors';
-import { LOADER_SELECTOR } from '../../constants/selectors';
+import { TWEET_SELECTOR } from './constants/selectors';
+import { LOADER_SELECTOR } from '../constants/selectors';
 import {
   LIKES,
   MEDIA,
   TWEETS_REPLIES_TAB,
   TWEETS_TAB,
-} from '../../constants/tabs';
+} from '../constants/tabs';
 
-import { getHTML } from '../../../lib/dom/html';
-import { checkIsTwitterContentVisible } from '../../lib/dom/visible_content_check';
-import { scrollToLastTweet } from '../lib/scroll_to_last_tweet';
+import { getHTML } from '../../lib/dom/html/get_html';
+import { checkIsTwitterContentVisible } from '../lib/dom/visible_content_check';
+import { scrollToLastTweet } from './lib/scroll_to_last_tweet';
 
-import { Tweet } from '../../types';
+import { Tweet } from '../types';
 
-import { tweetInfoFx } from '../model';
-import { $profileTab } from '../../model';
+import { tweetInfoFx } from './model';
+import { $profileTab } from '../model';
 
 const TWEETS_COUNT = Number(process.env.TWEETS_COUNT);
 const MAX_TWEETS_EQUALS = 5;

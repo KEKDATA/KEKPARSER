@@ -2,12 +2,12 @@ import { Browser } from 'playwright';
 
 import { PROFILE_TARGET, TWEETS_TARGET } from './constants/type_parse_target';
 
-import { getFinalTweets } from './tweets';
-import { getParsedTwitterProfile } from './profile';
+import { getAnalyzedTweets } from './tweets/analyzed_tweets';
+import { getParsedTwitterProfile } from './profile/parse_twitter_profile';
 
 const { TWITTER_PARSE_TARGET } = process.env;
 
-export const twitterInit = async (browser: Browser) => {
+export const setupTwitterParse = async (browser: Browser) => {
   console.time();
 
   let analyzedTwitterOptions = {};
@@ -20,7 +20,7 @@ export const twitterInit = async (browser: Browser) => {
     }
 
     case TWEETS_TARGET: {
-      analyzedTwitterOptions = await getFinalTweets();
+      analyzedTwitterOptions = await getAnalyzedTweets();
 
       break;
     }

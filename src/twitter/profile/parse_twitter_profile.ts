@@ -15,7 +15,7 @@ import {
 import { checkIsTwitterContentVisible } from '../lib/dom/visible_content_check';
 
 import { getProfileInfo } from './profile_info';
-import { getFinalTweets } from '../tweets';
+import { getAnalyzedTweets } from '../tweets/analyzed_tweets';
 import { changeProfileNavigation } from './change_profile_navigation';
 
 import { $webdriverPage, setProfileTab } from '../model';
@@ -36,7 +36,7 @@ export const getParsedTwitterProfile = async () => {
     case TWEETS_TAB: {
       setProfileTab(TWEETS_TAB);
 
-      parsedTweets = await getFinalTweets();
+      parsedTweets = await getAnalyzedTweets();
 
       break;
     }
@@ -46,7 +46,7 @@ export const getParsedTwitterProfile = async () => {
 
       await changeProfileNavigation(REPLIES_LINK_SELECTOR, false);
 
-      parsedTweets = await getFinalTweets();
+      parsedTweets = await getAnalyzedTweets();
 
       break;
     }
@@ -56,7 +56,7 @@ export const getParsedTwitterProfile = async () => {
 
       await changeProfileNavigation(MEDIA_LINK_SELECTOR, true);
 
-      parsedTweets = await getFinalTweets();
+      parsedTweets = await getAnalyzedTweets();
 
       break;
     }
@@ -66,7 +66,7 @@ export const getParsedTwitterProfile = async () => {
 
       await changeProfileNavigation(LIKES_LINK_SELECTOR, true);
 
-      parsedTweets = await getFinalTweets();
+      parsedTweets = await getAnalyzedTweets();
 
       break;
     }
