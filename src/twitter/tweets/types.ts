@@ -6,6 +6,7 @@ export type Tweet = {
   likes: number;
   retweets: number;
   replies: number;
+  replyingUsers?: Array<{ user: string; userLink: string }>;
 };
 
 export type FinalTweet = {
@@ -16,6 +17,7 @@ export type FinalTweet = {
   likes: number;
   retweets: number;
   replies: number;
+  replyingUsers?: Array<{ user: string; userLink: string }>;
   tweetSentiment: number;
   tweetBayes: string;
 };

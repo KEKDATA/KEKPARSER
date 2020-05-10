@@ -17,3 +17,5 @@ export const PROFILE_CONTACT_INFO: string =
 
 export const PROFILE_ACTIVITY: string =
   '.css-1dbjc4n.r-18u37iz.r-1w6e6rj.r-1h2hfjv';
+
+export const PROFILE_TABS: string = '[role="tablist"].r-1pi2tsx.r-hbs49y';

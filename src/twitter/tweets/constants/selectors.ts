@@ -14,3 +14,6 @@ export const TWEET_CONTENT_SELECTOR =
 
 export const TWEET_CONTENT_SELECTOR_MOBILE =
   '.r-1b43r93.r-16dba41.r-ad9z0x.r-bcqeeo.r-bnwqim.r-qvutc0';
+
+export const TWEET_REPLYING_SELECTOR =
+  '.css-1dbjc4n.r-4qtqp9.r-18u37iz.r-1wtj0ep.r-zl2h9q';
