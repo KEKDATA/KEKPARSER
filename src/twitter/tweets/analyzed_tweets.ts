@@ -3,7 +3,7 @@ import { aposToLexForm } from '../../lib/lex_form_convert/apos_to_lex_form';
 import { getTextWithAlphaOnly } from '../../lib/normalizers/alphabet';
 
 import { getTextWithBayesClassifier } from '../../lib/bayes_classifier/bayes_classifier';
-import { insertionTweetsSort } from './lib/insertion_tweets_sort';
+import { insertionSentimentTweetsSort } from './lib/insertion_sentiment_tweets_sort';
 
 import { getParsedTweets } from './parsed_tweets';
 
@@ -46,7 +46,9 @@ export const getAnalyzedTweets = async () => {
     });
   }
 
-  const sortedSentimentCoefficients = insertionTweetsSort([...finalTweets]);
+  const sortedSentimentCoefficients = insertionSentimentTweetsSort([
+    ...finalTweets,
+  ]);
   const minCoefficient = sortedSentimentCoefficients[0];
   const maxCoefficient =
     sortedSentimentCoefficients[sortedSentimentCoefficients.length - 1];

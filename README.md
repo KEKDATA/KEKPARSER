@@ -4,8 +4,6 @@ WIP
 
 ---
 
-Для Tweets: TWEETS_COUNT, START_URL - будут задаваться по запуску скрипта в будущем
-
 Установка зависимостей 
 1) npm install
 

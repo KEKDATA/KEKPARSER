@@ -1,6 +1,6 @@
 import { FinalTweet } from '../../types';
 
-export const insertionTweetsSort = (arr: Array<FinalTweet>) => {
+export const insertionSentimentTweetsSort = (arr: Array<FinalTweet>) => {
   for (let i = 1, l = arr.length; i < l; i++) {
     const current = arr[i];
 
