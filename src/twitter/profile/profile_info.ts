@@ -1,4 +1,3 @@
-import { Page } from 'playwright';
 import cheerio from 'cheerio';
 
 import {
@@ -6,12 +5,16 @@ import {
   PROFILE_CONTACT_INFO,
   PROFILE_CONTAINER,
   PROFILE_DESCRIPTION,
-} from '../constants/selectors';
+} from './constants/selectors';
 
-import { getTextOfChildNodes } from '../../../lib/dom/nodes/text_child_nodes';
-import { getHTML } from '../../../lib/dom/html';
+import { getTextOfChildNodes } from '../../lib/dom/nodes/text_child_nodes';
+import { getHTML } from '../../lib/dom/html';
 
-export const getProfileInfo = async (page: Page) => {
+import { $webdriverPage } from '../model';
+
+export const getProfileInfo = async () => {
+  const page = $webdriverPage.getState();
+
   const contentPage: string = await page.evaluate(getHTML);
 
   const $ = cheerio.load(contentPage);

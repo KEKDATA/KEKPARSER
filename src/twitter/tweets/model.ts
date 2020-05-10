@@ -1,27 +1,40 @@
+import { createEffect, Effect } from 'effector';
+
+import { getTextOfChildNodes } from '../../lib/dom/nodes/text_child_nodes';
+import { TWITTER_URL } from './lib/tweet_info/constants';
+import { getReplyingInfo } from './lib/tweet_info/replying_info';
+import { getTextOfChildNode } from '../../lib/dom/nodes/text_child_node';
+import { getNormalizedThousandthValue } from '../../lib/normalizers';
+
 import {
   REPLY_SELECTOR,
   RETWEET_SELECTOR,
   TWEET_CONTENT_SELECTOR_MOBILE,
   TWEET_LIKE_SELECTOR,
   USER_NAME_SELECTOR,
-} from '../../constants/selectors';
-import { TWEETS_REPLIES_TAB } from '../../../constants/tabs';
-import { TWITTER_URL } from './constants';
+} from './constants/selectors';
 
-import { getTextOfChildNodes } from '../../../../lib/dom/nodes/text_child_nodes';
-import { getTextOfChildNode } from '../../../../lib/dom/nodes/text_child_node';
-import { getNormalizedThousandthValue } from '../../../../lib/normalizers';
+export const tweetInfoFx: Effect<
+  {
+    tweetNode: Cheerio;
+    isProfileTarget: boolean;
+  },
+  any
+> = createEffect();
 
-import { getReplyingInfo } from './replying_info';
-
-export const getTweetInfo = (tweetNode: Cheerio, profileTabType?: string) => {
+tweetInfoFx.use(({ tweetNode, isProfileTarget }) => {
   const userNameSelector = tweetNode.find(USER_NAME_SELECTOR);
 
+  // Если попался элемент с Related searches
+  if (userNameSelector.text().length === 0) {
+    return null;
+  }
+
   const [name, tweetName] = getTextOfChildNodes(userNameSelector);
+
   const userUrl = `${TWITTER_URL}/${tweetName.replace('@', '')}`;
 
-  const replyingUsers =
-    profileTabType === TWEETS_REPLIES_TAB ? getReplyingInfo(tweetNode) : [];
+  const replyingUsers = isProfileTarget ? getReplyingInfo(tweetNode) : [];
 
   const tweetContent = getTextOfChildNode(
     tweetNode,
@@ -47,4 +60,4 @@ export const getTweetInfo = (tweetNode: Cheerio, profileTabType?: string) => {
   };
 
   return tweetInfo;
-};
+});

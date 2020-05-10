@@ -1,14 +1,17 @@
-import { Page } from 'playwright';
-
 import { getTextWithSentimentAnalysis } from '../../lib/sentiment_analysis/sentiment_analysis';
 import { aposToLexForm } from '../../lib/lex_form_convert/apos_to_lex_form';
 import { getTextWithAlphaOnly } from '../../lib/normalizers';
 
-import { getParsedTweets } from './parsed_tweets';
 import { getTextWithBayesClassifier } from '../../lib/bayes_classifier/bayes_classifier';
 import { insertionTweetsSort } from './lib/insetion_tweets_sort';
 
-export const getFinalTweets = async (page: Page) => {
+import { getParsedTweets } from './parsed_tweets';
+
+import { $webdriverPage } from '../model';
+
+export const getFinalTweets = async () => {
+  const page = $webdriverPage.getState();
+
   const parsedTweets = await getParsedTweets(page);
 
   const normalizedTweetsForAnalysis = parsedTweets.map(({ tweetContent }) => {

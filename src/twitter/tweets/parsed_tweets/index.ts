@@ -4,15 +4,21 @@ import R from 'ramda';
 
 import { TWEET_SELECTOR } from '../constants/selectors';
 import { LOADER_SELECTOR } from '../../constants/selectors';
+import {
+  LIKES,
+  MEDIA,
+  TWEETS_REPLIES_TAB,
+  TWEETS_TAB,
+} from '../../constants/tabs';
 
-import { getTweetInfo } from '../lib/tweet_info';
 import { getHTML } from '../../../lib/dom/html';
-import { checkIsTwitterContentVisible } from '../../lib/page/visible_content_check';
+import { checkIsTwitterContentVisible } from '../../lib/dom/visible_content_check';
 import { scrollToLastTweet } from '../lib/scroll_to_last_tweet';
 
-import { $profileTab } from '../../model';
+import { Tweet } from '../../types';
 
-import { Tweet } from '../types';
+import { tweetInfoFx } from '../model';
+import { $profileTab } from '../../model';
 
 const TWEETS_COUNT = Number(process.env.TWEETS_COUNT);
 const MAX_TWEETS_EQUALS = 5;
@@ -27,6 +33,12 @@ export const getParsedTweets = async (page: Page) => {
   let countOfEqualsPrevAndCurrentTweets: number = 0;
 
   const profileTabType = $profileTab.getState();
+  const isProfileTarget = [
+    TWEETS_TAB,
+    TWEETS_REPLIES_TAB,
+    MEDIA,
+    LIKES,
+  ].includes(profileTabType);
 
   while (tweetsInfo.length < TWEETS_COUNT) {
     await page.waitForFunction(checkIsTwitterContentVisible, LOADER_SELECTOR);
@@ -37,16 +49,24 @@ export const getParsedTweets = async (page: Page) => {
 
     const $ = cheerio.load(contentPage);
 
-    $(TWEET_SELECTOR).each((index, tweet) => {
+    $(TWEET_SELECTOR).each(async (index, tweet) => {
       const tweetNode = $(tweet);
 
-      const tweetInfo = getTweetInfo(tweetNode, profileTabType);
+      const tweetInfo: Tweet | null = await tweetInfoFx({
+        tweetNode,
+        isProfileTarget,
+      });
+
+      if (!tweetInfo) {
+        return;
+      }
 
       tweetsInfo.push(tweetInfo);
     });
 
     // Присутствует вероятность того, что могут попасть дубликаты, тк список твитов
     // имеет структуру списка с виртуализацией, из-за этого пришлось обрабатывать пачками твиты
+    // К тому же, ушлый твитер сделал в ленте Related searches, которые имеют идентичные атрибуты
     const uniqTweets = R.uniq(tweetsInfo);
 
     tweetsInfo = [...uniqTweets];

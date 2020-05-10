@@ -1,13 +1,10 @@
-import { Page } from 'playwright';
-
 import { LOADER_SELECTOR } from '../constants/selectors';
-import { PROFILE_SELECTOR, PROFILE_TABS } from './constants/selectors';
-
-import { checkIsTwitterContentVisible } from '../lib/page/visible_content_check';
-
-import { getProfileInfo } from './profile_info/profile_info';
-import { getFinalTweets } from '../tweets';
-import { setProfileTab } from '../model';
+import {
+  LIKES_LINK_SELECTOR,
+  MEDIA_LINK_SELECTOR,
+  PROFILE_SELECTOR,
+  REPLIES_LINK_SELECTOR,
+} from './constants/selectors';
 import {
   LIKES,
   MEDIA,
@@ -15,14 +12,24 @@ import {
   TWEETS_TAB,
 } from '../constants/tabs';
 
+import { checkIsTwitterContentVisible } from '../lib/dom/visible_content_check';
+
+import { getProfileInfo } from './profile_info';
+import { getFinalTweets } from '../tweets';
+import { changeProfileNavigation } from './change_profile_navigation';
+
+import { $webdriverPage, setProfileTab } from '../model';
+
 const PROFILE_TAB = process.env.PROFILE_TAB;
 
-export const getParsedTwitterProfile = async (page: Page) => {
+export const getParsedTwitterProfile = async () => {
+  const page = $webdriverPage.getState();
+
   await page.waitForSelector(PROFILE_SELECTOR);
 
   await page.waitForFunction(checkIsTwitterContentVisible, LOADER_SELECTOR);
 
-  const profileInfo = await getProfileInfo(page);
+  const profileInfo = await getProfileInfo();
 
   let parsedTweets = {};
 
@@ -30,7 +37,7 @@ export const getParsedTwitterProfile = async (page: Page) => {
     case TWEETS_TAB: {
       setProfileTab(TWEETS_TAB);
 
-      parsedTweets = await getFinalTweets(page);
+      parsedTweets = await getFinalTweets();
 
       break;
     }
@@ -38,20 +45,30 @@ export const getParsedTwitterProfile = async (page: Page) => {
     case TWEETS_REPLIES_TAB: {
       setProfileTab(TWEETS_REPLIES_TAB);
 
-      await page.click(`${PROFILE_TABS} > div:nth-child(2) > a`);
-      await page.waitForSelector(PROFILE_SELECTOR);
-      await page.waitForFunction(checkIsTwitterContentVisible, LOADER_SELECTOR);
+      await changeProfileNavigation(REPLIES_LINK_SELECTOR, false);
 
-      parsedTweets = await getFinalTweets(page);
+      parsedTweets = await getFinalTweets();
 
       break;
     }
 
     case MEDIA: {
+      setProfileTab(MEDIA);
+
+      await changeProfileNavigation(MEDIA_LINK_SELECTOR, true);
+
+      parsedTweets = await getFinalTweets();
+
       break;
     }
 
     case LIKES: {
+      setProfileTab(LIKES);
+
+      await changeProfileNavigation(LIKES_LINK_SELECTOR, true);
+
+      parsedTweets = await getFinalTweets();
+
       break;
     }
 

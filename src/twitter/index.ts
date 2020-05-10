@@ -1,43 +1,39 @@
-import { Page, Browser } from 'playwright';
+import { Browser } from 'playwright';
+
+import { PROFILE_TARGET, TWEETS_TARGET } from './constants/type_parse_target';
 
 import { getFinalTweets } from './tweets';
 import { getParsedTwitterProfile } from './profile';
 
 const { TWITTER_PARSE_TARGET } = process.env;
 
-export const twitterInit = async (page: Page, browser: Browser) => {
+export const twitterInit = async (browser: Browser) => {
   console.time();
 
-  switch (TWITTER_PARSE_TARGET) {
-    case 'profile': {
-      const data = await getParsedTwitterProfile(page);
+  let analyzedTwitterOptions = {};
 
-      console.log(data);
+  switch (TWITTER_PARSE_TARGET) {
+    case PROFILE_TARGET: {
+      analyzedTwitterOptions = await getParsedTwitterProfile();
+
       break;
     }
 
-    case 'tweets': {
-      const {
-        finalTweets,
-        meanSentiment,
-        minCoefficient,
-        maxCoefficient,
-      } = await getFinalTweets(page);
-
-      console.log('Tweets length:', finalTweets.length);
-      console.log('Mean sentiment:', meanSentiment);
-      console.log('Min coef:', minCoefficient);
-      console.log('Max coef:', maxCoefficient);
+    case TWEETS_TARGET: {
+      analyzedTwitterOptions = await getFinalTweets();
 
       break;
     }
 
     default: {
-      console.log('Цель парсинга указана не верно');
+      console.log('Цель анализа указана не верно');
+      break;
     }
   }
 
+  console.log(analyzedTwitterOptions);
+
   console.timeEnd();
 
-  // await browser.close();
+  await browser.close();
 };

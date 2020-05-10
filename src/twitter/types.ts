@@ -21,3 +21,9 @@ export type FinalTweet = {
   tweetSentiment: number;
   tweetBayes: string;
 };
+
+export type Tweets = 'Tweets';
+export type TweetsAndReplies = 'TweetsAndReplies';
+export type Media = 'Media';
+export type Likes = 'Likes';
+export type ProfileTabs = Tweets | Likes | TweetsAndReplies | Media;

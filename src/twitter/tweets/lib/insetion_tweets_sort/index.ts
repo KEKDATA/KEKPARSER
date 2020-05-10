@@ -1,4 +1,4 @@
-import { FinalTweet } from '../../types';
+import { FinalTweet } from '../../../types';
 
 export const insertionTweetsSort = (arr: Array<FinalTweet>) => {
   for (let i = 1, l = arr.length; i < l; i++) {

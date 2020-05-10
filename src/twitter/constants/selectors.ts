@@ -1,1 +1,1 @@
-export const LOADER_SELECTOR = '[role="progressbar"]';
+export const LOADER_SELECTOR: string = '[role="progressbar"]';
