@@ -9,6 +9,7 @@ import {
 import { getNormalizedThousandthValue } from '../../../lib/normalizers';
 import { getTextOfChildNode } from '../../../lib/dom/nodes/text_child_node';
 import { getTextOfChildNodes } from '../../../lib/dom/nodes/text_child_nodes';
+import { TWEETS_REPLIES_TAB } from '../../constants';
 
 const TWITTER_URL: string = 'https://twitter.com';
 
@@ -43,13 +44,14 @@ const getReplyingInfo = (tweetNode: Cheerio) => {
   return replyingUsers;
 };
 
-export const getTweetInfo = (tweetNode: Cheerio) => {
+export const getTweetInfo = (tweetNode: Cheerio, profileTabType?: string) => {
   const userNameSelector = tweetNode.find(USER_NAME_SELECTOR);
 
   const [name, tweetName] = getTextOfChildNodes(userNameSelector);
   const userUrl = `${TWITTER_URL}/${tweetName.replace('@', '')}`;
 
-  const replyingUsers = getReplyingInfo(tweetNode);
+  const replyingUsers =
+    profileTabType === TWEETS_REPLIES_TAB ? getReplyingInfo(tweetNode) : [];
 
   const tweetContent = getTextOfChildNode(
     tweetNode,

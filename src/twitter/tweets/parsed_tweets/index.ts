@@ -9,6 +9,7 @@ import { getTweetInfo, scrollToLastTweet } from '../helpers';
 import { getHTML } from '../../../lib/dom/html';
 import { LOADER_SELECTOR } from '../../constants/selectors';
 import { checkIsTwitterContentVisible } from '../../lib/page/visible_content_check';
+import { $profileTab } from '../../model';
 
 const TWEETS_COUNT = Number(process.env.TWEETS_COUNT);
 
@@ -20,6 +21,8 @@ export const getParsedTweets = async (page: Page) => {
   let currentLengthOfTweets: number = 0;
   let previousLengthOfTweets: number = 0;
   let countOfEqualsPrevAndCurrentTweets: number = 0;
+
+  const profileTabType = $profileTab.getState();
 
   while (tweetsInfo.length < TWEETS_COUNT) {
     await page.waitForFunction(checkIsTwitterContentVisible, LOADER_SELECTOR);
@@ -33,7 +36,7 @@ export const getParsedTweets = async (page: Page) => {
     $(TWEET_SELECTOR).each((index, tweet) => {
       const tweetNode = $(tweet);
 
-      const tweetInfo = getTweetInfo(tweetNode);
+      const tweetInfo = getTweetInfo(tweetNode, profileTabType);
 
       tweetsInfo.push(tweetInfo);
     });
