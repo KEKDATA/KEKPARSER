@@ -1,4 +1,3 @@
-import { Page } from 'playwright';
 import cheerio from 'cheerio';
 import R from 'ramda';
 
@@ -12,11 +11,14 @@ import { scrollToLastTweet } from './lib/scroll_to_last_tweet';
 import { Tweet } from '../types';
 
 import { attachedTweetInfo } from './model';
+import { $webdriverPage } from '../model';
 
 const TWEETS_COUNT = Number(process.env.TWEETS_COUNT);
 const MAX_TWEETS_EQUALS = 5;
 
-export const getParsedTweets = async (page: Page) => {
+export const getParsedTweets = async () => {
+  const page = $webdriverPage.getState();
+
   await page.waitForSelector(TWEET_SELECTOR);
 
   let tweetsInfo: Array<Tweet> = [];

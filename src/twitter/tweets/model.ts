@@ -13,13 +13,8 @@ import {
   TWEET_LIKE_SELECTOR,
   USER_NAME_SELECTOR,
 } from './constants/selectors';
-import { $profileTab } from '../model';
-import {
-  LIKES,
-  MEDIA,
-  TWEETS_REPLIES_TAB,
-  TWEETS_TAB,
-} from '../constants/tabs';
+
+import { $isProfileTarget } from '../model';
 
 const tweetInfoFx: Effect<
   {
@@ -31,20 +26,11 @@ const tweetInfoFx: Effect<
 
 export const attachedTweetInfo = attach({
   effect: tweetInfoFx,
-  source: $profileTab,
-  mapParams: ({ tweetNode }, profileTabType) => {
-    const isProfileTarget = [
-      TWEETS_TAB,
-      TWEETS_REPLIES_TAB,
-      MEDIA,
-      LIKES,
-    ].includes(profileTabType);
-
-    return {
-      tweetNode,
-      isProfileTarget,
-    };
-  },
+  source: $isProfileTarget,
+  mapParams: ({ tweetNode }, isProfileTarget) => ({
+    tweetNode,
+    isProfileTarget,
+  }),
 });
 
 tweetInfoFx.use(({ tweetNode, isProfileTarget }) => {

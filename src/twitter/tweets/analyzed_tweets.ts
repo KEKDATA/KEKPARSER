@@ -6,12 +6,8 @@ import { insertionSentimentTweetsSort } from './lib/insertion_sentiment_tweets_s
 
 import { getParsedTweets } from './parsed_tweets';
 
-import { $webdriverPage } from '../model';
-
 export const getAnalyzedTweets = async () => {
-  const page = $webdriverPage.getState();
-
-  const parsedTweets = await getParsedTweets(page);
+  const parsedTweets = await getParsedTweets();
 
   const normalizedTweetsForAnalysis = parsedTweets.map(({ tweetContent }) => {
     const tweetWithAlphaOnly = getTextWithAlphaOnly(tweetContent);
