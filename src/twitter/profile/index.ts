@@ -26,7 +26,6 @@ export const getParsedTwitterProfile = async () => {
   const page = $webdriverPage.getState();
 
   await page.waitForSelector(PROFILE_SELECTOR);
-
   await page.waitForFunction(checkIsTwitterContentVisible, LOADER_SELECTOR);
 
   const profileInfo = await getProfileInfo();
