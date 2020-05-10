@@ -9,6 +9,8 @@ import stopword from 'stopword';
 
 export const getTextWithSentimentAnalysis = (data: Array<string>) => {
   const tokenizer = new WordTokenizer();
+  const analyzer = new SentimentAnalyzer('English', PorterStemmer, 'afinn');
+
   const dataWithSentiments = [];
 
   let countOfSentimentCoefficients = 0;
@@ -26,7 +28,6 @@ export const getTextWithSentimentAnalysis = (data: Array<string>) => {
       continue;
     }
 
-    const analyzer = new SentimentAnalyzer('English', PorterStemmer, 'afinn');
     const sentimentCoefficient = Number(
       analyzer.getSentiment(dataWithoutStopWords),
     );

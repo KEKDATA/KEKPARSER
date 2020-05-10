@@ -1,5 +1,4 @@
 import { getTextWithSentimentAnalysis } from '../../lib/sentiment_analysis/sentiment_analysis';
-import { aposToLexForm } from '../../lib/lex_form_convert/apos_to_lex_form';
 import { getTextWithAlphaOnly } from '../../lib/normalizers/alphabet';
 
 import { getTextWithBayesClassifier } from '../../lib/bayes_classifier/bayes_classifier';
@@ -15,10 +14,7 @@ export const getAnalyzedTweets = async () => {
   const parsedTweets = await getParsedTweets(page);
 
   const normalizedTweetsForAnalysis = parsedTweets.map(({ tweetContent }) => {
-    const tweetLexicalForm = aposToLexForm(tweetContent);
-
-    const casedTweet = tweetLexicalForm.toLowerCase();
-    const tweetWithAlphaOnly = getTextWithAlphaOnly(casedTweet);
+    const tweetWithAlphaOnly = getTextWithAlphaOnly(tweetContent);
 
     return tweetWithAlphaOnly;
   });
