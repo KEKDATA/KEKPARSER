@@ -1,4 +1,4 @@
-import { createEffect, Effect } from 'effector';
+import { createEffect, attach, Effect } from 'effector';
 
 import { getTextOfChildNodes } from '../../lib/dom/nodes/text_child_nodes';
 import { TWITTER_URL } from './lib/tweet_info/constants';
@@ -13,14 +13,39 @@ import {
   TWEET_LIKE_SELECTOR,
   USER_NAME_SELECTOR,
 } from './constants/selectors';
+import { $profileTab } from '../model';
+import {
+  LIKES,
+  MEDIA,
+  TWEETS_REPLIES_TAB,
+  TWEETS_TAB,
+} from '../constants/tabs';
 
-export const tweetInfoFx: Effect<
+const tweetInfoFx: Effect<
   {
     tweetNode: Cheerio;
     isProfileTarget: boolean;
   },
   any
 > = createEffect();
+
+export const attachedTweetInfo = attach({
+  effect: tweetInfoFx,
+  source: $profileTab,
+  mapParams: ({ tweetNode }, profileTabType) => {
+    const isProfileTarget = [
+      TWEETS_TAB,
+      TWEETS_REPLIES_TAB,
+      MEDIA,
+      LIKES,
+    ].includes(profileTabType);
+
+    return {
+      tweetNode,
+      isProfileTarget,
+    };
+  },
+});
 
 tweetInfoFx.use(({ tweetNode, isProfileTarget }) => {
   const userNameSelector = tweetNode.find(USER_NAME_SELECTOR);

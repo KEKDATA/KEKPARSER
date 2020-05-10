@@ -4,12 +4,6 @@ import R from 'ramda';
 
 import { TWEET_SELECTOR } from './constants/selectors';
 import { LOADER_SELECTOR } from '../constants/selectors';
-import {
-  LIKES,
-  MEDIA,
-  TWEETS_REPLIES_TAB,
-  TWEETS_TAB,
-} from '../constants/tabs';
 
 import { getHTML } from '../../lib/dom/html/get_html';
 import { checkIsTwitterContentVisible } from '../lib/dom/visible_content_check';
@@ -17,8 +11,7 @@ import { scrollToLastTweet } from './lib/scroll_to_last_tweet';
 
 import { Tweet } from '../types';
 
-import { tweetInfoFx } from './model';
-import { $profileTab } from '../model';
+import { attachedTweetInfo } from './model';
 
 const TWEETS_COUNT = Number(process.env.TWEETS_COUNT);
 const MAX_TWEETS_EQUALS = 5;
@@ -32,14 +25,6 @@ export const getParsedTweets = async (page: Page) => {
   let previousLengthOfTweets: number = 0;
   let countOfEqualsPrevAndCurrentTweets: number = 0;
 
-  const profileTabType = $profileTab.getState();
-  const isProfileTarget = [
-    TWEETS_TAB,
-    TWEETS_REPLIES_TAB,
-    MEDIA,
-    LIKES,
-  ].includes(profileTabType);
-
   while (tweetsInfo.length < TWEETS_COUNT) {
     await page.waitForFunction(checkIsTwitterContentVisible, LOADER_SELECTOR);
 
@@ -52,10 +37,7 @@ export const getParsedTweets = async (page: Page) => {
     $(TWEET_SELECTOR).each(async (index, tweet) => {
       const tweetNode = $(tweet);
 
-      const tweetInfo: Tweet | null = await tweetInfoFx({
-        tweetNode,
-        isProfileTarget,
-      });
+      const tweetInfo: Tweet | null = await attachedTweetInfo({ tweetNode });
 
       if (!tweetInfo) {
         return;
