@@ -13,4 +13,4 @@ org.eclipse*
 .DS_Store
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 Thumbs.db
-private_test_data/index.ts
+private_test_data
