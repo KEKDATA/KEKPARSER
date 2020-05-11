@@ -1,0 +1,59 @@
+{
+  "extends": ["airbnb", "prettier", "prettier/react"],
+  "parser": "@typescript-eslint/parser",
+  "globals": {
+    "window": true,
+    "FormData": true,
+    "sessionStorage": true,
+    "localStorage": true,
+    "document": true,
+    "navigator": true,
+    "requestAnimationFrame": true,
+    "location": true,
+    "Audio": true,
+    "FileReader": true,
+    "Blob": true
+  },
+  "plugins": ["react", "prettier", "react-hooks"],
+  "rules": {
+    "react/jsx-filename-extension": [
+      1,
+      { "extensions": [".js", ".jsx", ".tsx"] }
+    ],
+    "react/prop-types": 0,
+    "react-hooks/rules-of-hooks": "warn",
+    "react-hooks/exhaustive-deps": "warn",
+    "no-param-reassign": "warn",
+    "no-prototype-builtins": "warn",
+    "consistent-return": "warn",
+    "no-use-before-define": "warn",
+    "no-nested-ternary": "warn",
+    "array-callback-return": "warn",
+    "prefer-destructuring": "warn",
+    "react/no-string-refs": "warn",
+    "import/no-unresolved": 0,
+    "no-unused-expressions": "warn",
+    "import/extensions": 0,
+    "react/static-property-placement": "warn",
+    "react/state-in-constructor": "warn",
+    "react/jsx-props-no-spreading": "warn",
+    "import/no-cycle": "warn",
+    "import/prefer-default-export": 0,
+    "react/prefer-stateless-function": "off",
+    "global-require": "warn",
+    "no-unused-vars": "warn"
+  },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "node": {
+        "moduleDirectory": ["node_modules"]
+      },
+      "typescript": {
+        "alwaysTryTypes": true
+      }
+    }
+  }
+}

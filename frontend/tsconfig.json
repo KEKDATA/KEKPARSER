@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "outDir": "./frontassets/",
+    "sourceMap": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "target": "es6",
+    "jsx": "react",
+    "baseUrl": "./src",
+    "lib": ["es6", "dom"],
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true
+  },
+  "exclude": ["node_modules"],
+  "include": ["src"]
+}
