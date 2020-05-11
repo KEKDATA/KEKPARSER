@@ -4,7 +4,7 @@ import { Tweet } from '../types';
 import {
   REPLY_SELECTOR,
   RETWEET_SELECTOR,
-  TWEET_CONTENT_SELECTOR,
+  TWEET_CONTENT_SELECTOR_MOBILE,
   TWEET_LIKE_SELECTOR,
   USER_NAME_SELECTOR,
 } from '../constants/selectors';
@@ -21,7 +21,10 @@ export const getTweetInfo = (tweetNode: Cheerio) => {
   const userUrl = `${TWITTER_URL}${userHref}`;
 
   const userName = getTextOfChildNode(tweetNode, USER_NAME_SELECTOR);
-  const tweetContent = getTextOfChildNode(tweetNode, TWEET_CONTENT_SELECTOR);
+  const tweetContent = getTextOfChildNode(
+    tweetNode,
+    TWEET_CONTENT_SELECTOR_MOBILE,
+  );
   const likes = getTextOfChildNode(tweetNode, TWEET_LIKE_SELECTOR);
   const retweets = getTextOfChildNode(tweetNode, RETWEET_SELECTOR);
   const replies = getTextOfChildNode(tweetNode, REPLY_SELECTOR);
@@ -40,9 +43,7 @@ export const getTweetInfo = (tweetNode: Cheerio) => {
   };
 };
 
-export const getTweetUploadStatus = () => {
-  const loaderSelector =
-    '.css-1dbjc4n.r-1awozwy.r-16y2uox.r-1777fci.r-utggzx.r-tvv088';
+export const getTweetUploadStatus = (loaderSelector: string) => {
   const loaderNode = document.querySelector(loaderSelector);
   const isTweetsAvailable = loaderNode === null;
 
@@ -61,30 +62,18 @@ export const scrollToLastTweet = () => {
   }
 };
 
-export const getTweetsSentiments = async (tweets: Array<Tweet>) => {
-  const getTweetsWithSentimentAnalysis = await spawn(
-    new Worker('../tweets_sentiment_analysis'),
+export const getSentimentTweetsWithSpellCorrector = async (
+  tweets: Array<Tweet>,
+) => {
+  const getTweetsWithSentimentsAnalysis = await spawn(
+    new Worker('../../../lib/analysis/sentiment_spell_analysis'),
   );
   const {
     tweetsSentiments,
     meanSentiment,
-  } = await getTweetsWithSentimentAnalysis(tweets);
-  await Thread.terminate(getTweetsWithSentimentAnalysis);
+  } = await getTweetsWithSentimentsAnalysis(tweets);
+  await Thread.terminate(getTweetsWithSentimentsAnalysis);
 
   console.log('tweets sentiments:', tweetsSentiments);
   console.log('mean sentiment:', meanSentiment);
-
-  console.timeEnd();
-};
-
-export const getTweetsBayesClassifier = async (tweets: Array<Tweet>) => {
-  const getTweetsWithBayesClassifier = await spawn(
-    new Worker('../tweets_bayes_classifier'),
-  );
-  const tweetsWithBayesClassifier: Array<string> = await getTweetsWithBayesClassifier(
-    tweets,
-  );
-  await Thread.terminate(getTweetsWithBayesClassifier);
-
-  console.log('tweets bayes classifier:', tweetsWithBayesClassifier);
 };

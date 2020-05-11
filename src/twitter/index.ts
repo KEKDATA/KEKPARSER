@@ -1,19 +1,16 @@
-import { Browser, Page } from 'puppeteer';
+import { Page, Browser } from 'playwright';
 
-import { getParsedTweets } from './tweets';
-import {
-  getTweetsBayesClassifier,
-  getTweetsSentiments,
-} from './tweets/helpers';
+import { getFinalTweets } from './tweets';
 
 export const twitterInit = async (page: Page, browser: Browser) => {
   console.time();
-  const tweets = await getParsedTweets(page);
 
-  getTweetsSentiments(tweets);
-  getTweetsBayesClassifier(tweets);
+  const { finalTweets, meanSentiment } = await getFinalTweets(page);
 
-  console.log('Length of tweets is:', tweets.length);
+  console.log('Tweets length:', finalTweets.length);
+  console.log('Mean sentiment:', meanSentiment);
+
+  console.timeEnd();
 
   await browser.close();
 };

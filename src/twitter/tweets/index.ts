@@ -1,76 +1,56 @@
-import { Page } from 'puppeteer';
-import cheerio from 'cheerio';
-import R from 'ramda';
+import { Page } from 'playwright';
 
-import { TWEETS_COUNT, MAX_TWEETS_EQUALS } from './constants';
+import { getTextWithSentimentAnalysis } from '../../lib/sentiment_analysis/sentiment_analysis';
+import { aposToLexForm } from '../../lib/lex_form_convert/apos_to_lex_form';
+import { getTextWithAlphaOnly } from '../../lib/normalizers';
 
-import {
-  getTweetInfo,
-  getTweetUploadStatus,
-  scrollToLastTweet,
-} from './helpers';
-import { getHTML } from '../../lib/dom/html';
-import { scrollWithDefaultYDiapason } from '../../lib/dom/window_scroll';
-import { TWEET_SELECTOR } from './constants/selectors';
+import { getParsedTweets } from './parsed_tweets';
+import { getTextWithBayesClassifier } from './tweets_bayes_classifier';
+import { insertionTweetsSort } from './helpers/insetion_tweets_sort';
 
-import { Tweet } from './types';
+export const getFinalTweets = async (page: Page) => {
+  const parsedTweets = await getParsedTweets(page);
 
-export const getParsedTweets = async (page: Page) => {
-  await page.waitForSelector(TWEET_SELECTOR);
+  const normalizedTweetsForAnalysis = parsedTweets.map(({ tweetContent }) => {
+    const tweetLexicalForm = aposToLexForm(tweetContent);
 
-  let tweetsInfo: Array<Tweet> = [];
+    const casedTweet = tweetLexicalForm.toLowerCase();
+    const tweetWithAlphaOnly = getTextWithAlphaOnly(casedTweet);
 
-  let currentLengthOfTweets: number = 0;
-  let previousLengthOfTweets: number = 0;
-  let countOfEqualsPrevAndCurrentTweets: number = 0;
+    return tweetWithAlphaOnly;
+  });
 
-  while (tweetsInfo.length < TWEETS_COUNT) {
-    await page.waitFor(getTweetUploadStatus);
+  const { tweetsWithSentiments, meanSentiment } = getTextWithSentimentAnalysis(
+    normalizedTweetsForAnalysis,
+  );
 
-    const contentPage: string = await page.evaluate(getHTML);
+  const tweetsWithBayesClassifier = getTextWithBayesClassifier(
+    normalizedTweetsForAnalysis,
+  );
 
-    await page.evaluate(scrollToLastTweet);
+  const finalTweets = [];
 
-    const $ = cheerio.load(contentPage);
+  for (let tweetIndex = 0; tweetIndex < parsedTweets.length; tweetIndex++) {
+    const tweetSentiment = tweetsWithSentiments[tweetIndex];
+    const tweetBayes = tweetsWithBayesClassifier[tweetIndex];
+    const parsedTweet = parsedTweets[tweetIndex];
 
-    $(TWEET_SELECTOR).each((index, tweet) => {
-      const tweetNode = $(tweet);
-
-      const tweetInfo = getTweetInfo(tweetNode);
-
-      tweetsInfo.push(tweetInfo);
+    finalTweets.push({
+      ...parsedTweet,
+      tweetSentiment,
+      tweetBayes,
     });
-
-    await page.evaluate(scrollWithDefaultYDiapason);
-
-    // Присутствует вероятность того, что могут попасть дубликаты, тк список твитов
-    // имеет структуру списка с виртуализацией, из-за этого пришлось обрабатывать пачками твиты
-    const uniqTweets = R.uniq(tweetsInfo);
-
-    tweetsInfo = [...uniqTweets];
-
-    currentLengthOfTweets = tweetsInfo.length;
-
-    // Если твиты закончились по запросу
-    const isTweetsLengthEquals =
-      currentLengthOfTweets === previousLengthOfTweets;
-
-    // Существует вероятность, при которой длина предыдущих и текущих твитов совпадает
-    // Если мы уходим в цикл с одинаковой длинной предыдущих и текущих, то допускаем
-    // выход из цикла при условии, что MAX_TWEETS_EQUALS раз предыдущая длинна и текущая
-    // были равны
-    if (countOfEqualsPrevAndCurrentTweets > MAX_TWEETS_EQUALS) {
-      break;
-    }
-
-    countOfEqualsPrevAndCurrentTweets = isTweetsLengthEquals
-      ? countOfEqualsPrevAndCurrentTweets + 1
-      : 0;
-
-    previousLengthOfTweets = tweetsInfo.length;
   }
 
-  const tweetOfTheCorrectLength = tweetsInfo.slice(0, TWEETS_COUNT);
+  const sortedSentimentCoefficients = insertionTweetsSort([...finalTweets]);
+  const minCoefficient = sortedSentimentCoefficients[0];
+  const maxCoefficient =
+    sortedSentimentCoefficients[sortedSentimentCoefficients.length - 1];
 
-  return tweetOfTheCorrectLength;
+  console.log(minCoefficient, maxCoefficient);
+
+  return {
+    finalTweets,
+    meanSentiment,
+  };
 };

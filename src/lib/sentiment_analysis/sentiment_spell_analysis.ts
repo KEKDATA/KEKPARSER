@@ -10,12 +10,12 @@ import SpellCorrector from 'spelling-corrector';
 import stopword from 'stopword';
 import { expose } from 'threads/worker';
 
-import { aposToLexForm } from '../../lib/lex_form_convert';
-import { Tweet } from './types';
+import { aposToLexForm } from '../lex_form_convert/apos_to_lex_form';
+import { Tweet } from '../../twitter/tweets/types';
 
-import { getTextWithAlphaOnly } from '../../lib/normalizers';
+import { getTextWithAlphaOnly } from '../normalizers';
 
-const tweetsSentimentAnalysis = (tweets: Array<Tweet>) => {
+const sentimentAnalysisWithSpellCorrector = (tweets: Array<Tweet>) => {
   const spellCorrector = new SpellCorrector();
   spellCorrector.loadDictionary();
 
@@ -29,9 +29,7 @@ const tweetsSentimentAnalysis = (tweets: Array<Tweet>) => {
     const casedTweet = tweetLexicalForm.toLowerCase();
     const tweetWithAlphaOnly = getTextWithAlphaOnly(casedTweet);
 
-    const tokenizedTweet = tokenizer
-      .tokenize(tweetWithAlphaOnly)
-      .map(word => spellCorrector.correct(word));
+    const tokenizedTweet = tokenizer.tokenize(tweetWithAlphaOnly);
 
     const tweetWithoutStopWords = stopword.removeStopwords(tokenizedTweet);
 
@@ -48,4 +46,4 @@ const tweetsSentimentAnalysis = (tweets: Array<Tweet>) => {
   return { tweetsSentiments, meanSentiment };
 };
 
-expose(tweetsSentimentAnalysis);
+expose(sentimentAnalysisWithSpellCorrector);
