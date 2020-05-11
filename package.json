@@ -4,7 +4,8 @@
   "description": "How to perform web-scrapping using Node.Js",
   "main": "index.js",
   "scripts": {
-    "articles-parse": "START_URL='https://twitter.com/search?q=html' ARTICLE_SCROLL_COUNT=10 babel-node src/index.js",
+    "tweets-parse-babel": "env-cmd -f src/config/.env babel-node src/index.js",
+    "tweets-parse-ts": "env-cmd -f src/config/.env ts-node --files src/index.ts",
     "tsc": "tsc --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "fix-code": "prettier --write 'src/**/*.ts'",
@@ -13,9 +14,16 @@
   "author": "KEKDATA TEAM",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^13.13.4",
     "cheerio": "^1.0.0-rc.3",
-    "puppeteer": "^3.0.2"
+    "env-cmd": "^10.1.0",
+    "natural": "^2.1.3",
+    "playwright": "^1.0.1",
+    "ramda": "^0.27.0",
+    "spelling-corrector": "^3.0.0",
+    "stopword": "^1.0.1",
+    "threads": "^1.4.1",
+    "tiny-worker": "^2.3.0",
+    "wordnet-db": "^3.1.14"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -25,12 +33,13 @@
     "@babel/preset-env": "^7.9.6",
     "@babel/preset-typescript": "^7.9.0",
     "@types/cheerio": "^0.22.18",
-    "@types/puppeteer": "^2.0.1",
+    "@types/natural": "^0.6.3",
+    "@types/node": "^13.13.4",
+    "@types/ramda": "^0.27.4",
     "@typescript-eslint/parser": "^2.30.0",
     "babel-eslint": "^10.1.0",
     "electron": "^8.2.5",
     "eslint": "^6.8.0",
-    "eslint-config-airbnb": "^18.1.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-import-resolver-typescript": "^2.0.0",
     "eslint-plugin-import": "^2.20.2",
@@ -39,6 +48,7 @@
     "husky": "^4.2.5",
     "lint-staged": "^10.2.2",
     "prettier": "1.19.1",
+    "ts-node": "^8.10.1",
     "typescript": "^3.8.3"
   },
   "husky": {
