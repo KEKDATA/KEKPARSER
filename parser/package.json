@@ -8,7 +8,7 @@
     "tweets-parse-ts": "env-cmd -f src/config/.env ts-node --files src/index.ts",
     "tsc": "tsc --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "fix-code": "prettier --write 'src/**/*.ts'",
+    "fix-code": "prettier --write './src/**/*.ts'",
     "lint": "eslint source --quiet"
   },
   "author": "KEKDATA TEAM",
@@ -58,11 +58,11 @@
     }
   },
   "lint-staged": {
-    "src/**/*.{js,ts}": [
+    "./src/**/*.{js,ts}": [
       "eslint --quiet",
       "prettier --write"
     ],
-    "*.{json,eslintrc}": [
+    "./*.{json,eslintrc}": [
       "prettier --write"
     ]
   }
