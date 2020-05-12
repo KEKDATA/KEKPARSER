@@ -1,10 +1,11 @@
 # Created by .ignore support plugin (hsz.mobi)
+build
+build-tmp
 node_modules
 *.log
 *.lock
 *.rar
 *.zip
-*.js
 .idea
 .vscode
 .project
@@ -13,4 +14,5 @@ org.eclipse*
 .DS_Store
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 Thumbs.db
-private_test_data/index.ts
+
+.now
