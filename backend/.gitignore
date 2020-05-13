@@ -1,0 +1,15 @@
+# Created by .ignore support plugin (hsz.mobi)
+node_modules
+*.log
+*.lock
+*.rar
+*.zip
+*.js
+.idea
+.vscode
+.project
+org.eclipse*
+.settings
+.DS_Store
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+Thumbs.db

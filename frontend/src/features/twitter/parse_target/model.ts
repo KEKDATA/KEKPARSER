@@ -1,11 +1,11 @@
-import { combine, createEvent, createStore, merge } from 'effector';
+import { combine, createEvent, createStore } from 'effector';
 
 import { PROFILE, SEARCH_TWEETS } from '../../../constants/parse_target';
 
-import { $parseTarget } from '../../../pages/parser/model';
-
 import { getEventValue } from '../../../lib/events/types/get_checked_value';
 import { OnChangeEvent } from '../../../lib/events/types/change';
+
+import { $parseTarget } from '../controls/model';
 
 const TWITTER_URL = 'https://twitter.com/';
 
@@ -62,7 +62,7 @@ export const searchTargetChanged = createEvent<OnChangeEvent>();
 
 $searchTarget.on(searchTargetChanged.map(getEventValue), (_, value) => value);
 
-export const $parseTargetStore = combine({
+export const $parseTargets = combine({
   labelParseTarget: $labelParseTarget,
   searchTarget: $searchTarget,
   parseUrl: $parseUrl,

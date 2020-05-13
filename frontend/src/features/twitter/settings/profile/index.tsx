@@ -5,7 +5,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
 import {
-  $profileStore,
+  $profileSettings,
   likesStatusChanged,
   mediaStatusChanged,
   tweetsAndRepliesChanged,
@@ -14,7 +14,7 @@ import {
 
 export const ProfileSettings: React.FC = () => {
   const { isTweets, isMedia, isLikes, isTweetsAndReplies } = useStore(
-    $profileStore,
+    $profileSettings,
   );
 
   return (

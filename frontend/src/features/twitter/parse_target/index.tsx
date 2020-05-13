@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 
-import { $parseTargetStore, searchTargetChanged } from './model';
+import { $parseTargets, searchTargetChanged } from './model';
 
 const StyledSearchGrid = styled(Grid)`
   min-width: 400px;
@@ -22,9 +22,7 @@ const StyledLinkGrid = styled(Grid)`
 `;
 
 export const ParseTarget = () => {
-  const { labelParseTarget, searchTarget, parseUrl } = useStore(
-    $parseTargetStore,
-  );
+  const { labelParseTarget, searchTarget, parseUrl } = useStore($parseTargets);
 
   return (
     <Grid

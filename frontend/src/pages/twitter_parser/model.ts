@@ -1,36 +1,57 @@
-import { createEvent, createStore, combine } from 'effector';
+import { attach, combine } from 'effector';
 
-import { OnChangeEvent } from '../../lib/events/types/change';
-import { getEventValue } from '../../lib/events/types/get_checked_value';
-import { SEARCH_TWEETS } from '../../constants/parse_target';
+import { sendFx } from '../../worker';
 
-type ParseTarget = 'search_tweets' | 'profile' | string;
+import { $controls } from '../../features/twitter/controls/model';
+import { $parseTargets } from '../../features/twitter/parse_target/model';
+import { $profileSettings } from '../../features/twitter/settings/profile/model';
+import { $tweetsSettings } from '../../features/twitter/settings/tweets/model';
 
-export const $parseTarget = createStore<ParseTarget>(SEARCH_TWEETS);
-const $tweetsCount = createStore<number>(10);
+import { PROFILE, SEARCH_TWEETS } from '../../constants/parse_target';
 
-export const parseTargetChanged = createEvent<OnChangeEvent>();
-export const tweetsCountChanged = createEvent<OnChangeEvent>();
+const $requestParams = combine({
+  controls: $controls,
+  parseTargets: $parseTargets,
+  profileSettings: $profileSettings,
+  tweetsSettings: $tweetsSettings,
+});
 
-$parseTarget.on(
-  parseTargetChanged.map(getEventValue),
-  (_, parseTarget: ParseTarget) => parseTarget,
-);
+export const sendParserOptions = attach({
+  effect: sendFx,
+  source: $requestParams,
+  mapParams: (
+    _,
+    {
+      controls: { parseTarget, tweetsCount },
+      parseTargets: { parseUrl },
+      profileSettings,
+      tweetsSettings,
+    },
+  ) => {
+    const params = {
+      parseTarget,
+      tweetsCount,
+      parseUrl,
+    };
 
-$tweetsCount.on(
-  tweetsCountChanged.map(getEventValue),
-  (prevCount, count: string) => {
-    const actualTweetsCount = Number(count);
+    switch (parseTarget) {
+      case PROFILE: {
+        return {
+          ...params,
+          profileSettings,
+        };
+      }
 
-    if (Number.isNaN(actualTweetsCount)) {
-      return prevCount;
+      case SEARCH_TWEETS: {
+        return {
+          ...params,
+          tweetsSettings,
+        };
+      }
+
+      default: {
+        return {};
+      }
     }
-
-    return actualTweetsCount;
   },
-);
-
-export const $parseStore = combine({
-  parseTarget: $parseTarget,
-  tweetsCount: $tweetsCount,
 });

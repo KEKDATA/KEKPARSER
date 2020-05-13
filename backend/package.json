@@ -1,0 +1,60 @@
+{
+  "name": "KEKPARSER",
+  "version": "1.0.0",
+  "description": "How to perform web-scrapping using Node.Js",
+  "main": "index.js",
+  "scripts": {
+    "babel-start": "babel-node src/index.js",
+    "ts-start": "ts-node --files src/index.ts",
+    "tsc": "tsc --watch",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "fix-code": "prettier --write './src/**/*.ts'",
+    "lint": "eslint source --quiet"
+  },
+  "author": "KEKDATA TEAM",
+  "license": "ISC",
+  "dependencies": {
+    "ws": "^7.3.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.6",
+    "@babel/node": "^7.8.7",
+    "@babel/plugin-transform-typescript": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
+    "@babel/preset-typescript": "^7.9.0",
+    "@types/node": "^13.13.5",
+    "@types/ws": "^7.2.4",
+    "@typescript-eslint/parser": "^2.31.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-import-resolver-typescript": "^2.0.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.3",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.2",
+    "prettier": "1.19.1",
+    "ts-node": "^8.10.1",
+    "typescript": "^3.8.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "./src/**/*.{js,ts}": [
+      "eslint --quiet",
+      "prettier --write"
+    ],
+    "./*.{json,eslintrc}": [
+      "prettier --write"
+    ]
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.1",
+    "utf-8-validate": "^5.0.2"
+  }
+}

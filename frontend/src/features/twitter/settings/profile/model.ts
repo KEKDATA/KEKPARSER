@@ -1,7 +1,7 @@
 import { createEvent, createStore, combine } from 'effector';
 
-import { OnChangeEvent } from '../../../lib/events/types/change';
-import { getEventChecked } from '../../../lib/events/get_checked_event';
+import { OnChangeEvent } from '../../../../lib/events/types/change';
+import { getEventChecked } from '../../../../lib/events/get_checked_event';
 
 const $isLikes = createStore<boolean>(false);
 const $isTweets = createStore<boolean>(true);
@@ -21,7 +21,7 @@ $isTweetsAndReplies.on(
 );
 $isMedia.on(mediaStatusChanged.map(getEventChecked), (_, status) => status);
 
-export const $profileStore = combine({
+export const $profileSettings = combine({
   isLikes: $isLikes,
   isTweets: $isTweets,
   isTweetsAndReplies: $isTweetsAndReplies,

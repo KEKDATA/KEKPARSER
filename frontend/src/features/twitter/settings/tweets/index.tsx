@@ -4,10 +4,14 @@ import { useStore } from 'effector-react';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
-import { $tweetsStore, latestStatusChanged, topStatusChanged } from './model';
+import {
+  $tweetsSettings,
+  latestStatusChanged,
+  topStatusChanged,
+} from './model';
 
 export const TweetsSettings: React.FC = () => {
-  const { isTop, isLatest } = useStore($tweetsStore);
+  const { isTop, isLatest } = useStore($tweetsSettings);
 
   return (
     <>
