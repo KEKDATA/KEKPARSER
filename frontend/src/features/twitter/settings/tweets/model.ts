@@ -9,8 +9,14 @@ const $isLatest = createStore<boolean>(false);
 export const topStatusChanged = createEvent<OnChangeEvent>();
 export const latestStatusChanged = createEvent<OnChangeEvent>();
 
-$isTop.on(topStatusChanged.map(getEventChecked), (_, status) => status);
-$isLatest.on(latestStatusChanged.map(getEventChecked), (_, status) => status);
+$isTop.on(
+  topStatusChanged.map(getEventChecked),
+  (_, status: boolean) => status,
+);
+$isLatest.on(
+  latestStatusChanged.map(getEventChecked),
+  (_, status: boolean) => status,
+);
 
 export const $tweetsSettings = combine({
   isTop: $isTop,

@@ -1,6 +1,6 @@
 import { attach, combine } from 'effector';
 
-import { sendFx } from '../../worker';
+import { sendFx } from '../../socket';
 
 import { $controls } from '../../features/twitter/controls/model';
 import { $parseTargets } from '../../features/twitter/parse_target/model';

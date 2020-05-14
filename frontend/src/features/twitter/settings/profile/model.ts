@@ -13,13 +13,22 @@ export const tweetsStatusChanged = createEvent<OnChangeEvent>();
 export const tweetsAndRepliesChanged = createEvent<OnChangeEvent>();
 export const mediaStatusChanged = createEvent<OnChangeEvent>();
 
-$isLikes.on(likesStatusChanged.map(getEventChecked), (_, status) => status);
-$isTweets.on(tweetsStatusChanged.map(getEventChecked), (_, status) => status);
+$isLikes.on(
+  likesStatusChanged.map(getEventChecked),
+  (_, status: boolean) => status,
+);
+$isTweets.on(
+  tweetsStatusChanged.map(getEventChecked),
+  (_, status: boolean) => status,
+);
 $isTweetsAndReplies.on(
   tweetsAndRepliesChanged.map(getEventChecked),
-  (_, status) => status,
+  (_, status: boolean) => status,
 );
-$isMedia.on(mediaStatusChanged.map(getEventChecked), (_, status) => status);
+$isMedia.on(
+  mediaStatusChanged.map(getEventChecked),
+  (_, status: boolean) => status,
+);
 
 export const $profileSettings = combine({
   isLikes: $isLikes,

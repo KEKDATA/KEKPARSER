@@ -1,4 +1,7 @@
-import { AUTH_PASSWORD, AUTH_NICK_NAME } from '../../../private_test_data';
+import {
+  AUTH_PASSWORD,
+  AUTH_NICK_NAME,
+} from '../../../../backend/private_test_data';
 
 import { checkIsTwitterContentVisible } from '../lib/dom/visible_content_check';
 

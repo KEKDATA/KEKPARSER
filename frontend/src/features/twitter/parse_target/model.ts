@@ -60,7 +60,10 @@ const $parseUrl = combine($prefixParseUrl, $searchTarget).map(
 
 export const searchTargetChanged = createEvent<OnChangeEvent>();
 
-$searchTarget.on(searchTargetChanged.map(getEventValue), (_, value) => value);
+$searchTarget.on(
+  searchTargetChanged.map(getEventValue),
+  (_, value: string) => value,
+);
 
 export const $parseTargets = combine({
   labelParseTarget: $labelParseTarget,

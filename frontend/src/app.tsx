@@ -6,7 +6,7 @@ import { history } from './lib/browser_history';
 
 import StackPages from './pages/StackPages';
 
-import { connection } from './worker';
+import { connection } from './socket';
 
 import 'reset-css';
 

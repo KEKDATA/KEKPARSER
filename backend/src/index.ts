@@ -1,15 +1,40 @@
-import WebSocket from 'ws';
-import http from 'http';
+import { chromium, devices } from 'playwright';
+import fs from 'fs';
 
-const server = http.createServer();
-const sockets = new WebSocket.Server({
-  server,
-});
+import { setupTwitterParse } from './twitter/twitter_parse';
+import { setWebdriverPage } from './twitter/model';
+import { connection, sendFx } from './socket';
 
-sockets.on('connection', socket => {
-  socket.on('message', message => {
-    console.log('MESSAGE IS:', message);
-  });
-});
+const { HEADLESS_BROWSER, START_URL } = process.env;
 
-server.listen(8000);
+// fs.readFile('id.json', 'utf8', (err, id) => {
+//   if (err) {
+//     console.error('Can not read file from parser:', err);
+//     return;
+//   }
+//
+//   connection(id);
+// });
+
+export const parseInit = async (data: any) => {
+  // await sendFx({ id, target: 'parser' });
+
+  console.log(data);
+
+  // const browser = await chromium.launch({
+  //   headless: HEADLESS_BROWSER == 'true',
+  // });
+  //
+  // const iPhone = devices['iPhone 11 Pro'];
+  // const context = await browser.newContext(iPhone);
+  //
+  // const page = await context.newPage();
+  //
+  // setWebdriverPage(page);
+  //
+  // page.once('domcontentloaded', () => setupTwitterParse(browser));
+  //
+  // await page.goto(START_URL);
+};
+
+// parseInit();
