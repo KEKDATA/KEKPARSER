@@ -1,30 +1,10 @@
-import {
-  createEvent,
-  createStore,
-  createEffect,
-  Event,
-  Effect,
-} from 'effector';
-
-import { Send } from '../socket';
+import { createEffect, Effect } from 'effector';
 import { chromium, devices } from 'playwright';
-import { setWebdriverPage } from '../twitter/model';
-import { setupTwitterParse } from '../twitter/twitter_parse';
 
-export const $parseTarget = createStore<string>('');
-export const $tweetsCount = createStore<number>(0);
-export const $parseUrl = createStore<string>('');
-export const $settings = createStore<string>('');
+import { Send } from './socket';
 
-export const parseTargetAdded: Event<string> = createEvent();
-export const tweetsCountAdded: Event<number> = createEvent();
-export const parseUrlAdded: Event<string> = createEvent();
-export const settingsAdded: Event<string> = createEvent();
-
-$parseTarget.on(parseTargetAdded, (_, parseTarget) => parseTarget);
-$tweetsCount.on(tweetsCountAdded, (_, tweetsCount) => tweetsCount);
-$parseUrl.on(parseUrlAdded, (_, parseUrl) => parseUrl);
-$settings.on(settingsAdded, (_, settings) => settings);
+import { setWebdriverPage } from './twitter/model';
+import { setupTwitterParse } from './twitter/twitter_parse';
 
 export const setupWebdriverFx: Effect<Send, any> = createEffect();
 
@@ -33,9 +13,27 @@ setupWebdriverFx.use(async (options: Send) => {
     parseTarget,
     tweetsCount,
     parseUrl,
-    tweetsSettings,
-    profileSettings,
+    tweetsSettings = {},
+    profileSettings = {},
   } = options;
+
+  let settings = {};
+
+  switch (parseTarget) {
+    case 'profile': {
+      settings = profileSettings;
+      break;
+    }
+
+    case 'search_tweets': {
+      settings = tweetsSettings;
+      break;
+    }
+
+    default: {
+      break;
+    }
+  }
 
   const browser = await chromium.launch({
     headless: true,
@@ -51,4 +49,11 @@ setupWebdriverFx.use(async (options: Send) => {
   page.once('domcontentloaded', () => setupTwitterParse(browser));
 
   await page.goto(parseUrl);
+
+  return Promise.resolve({
+    parseTarget,
+    tweetsCount,
+    parseUrl,
+    settings,
+  });
 });

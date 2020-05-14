@@ -3,53 +3,49 @@ import {
   createEvent,
   createStore,
   createEffect,
-  forward,
   Event,
   Effect,
 } from 'effector';
-import { parseInit } from './index';
+import http from 'http';
 
-type Send =
-  | {
-      parseTarget: string;
-      tweetsCount: number;
-      parseUrl: string;
-      profileStore?: {
-        isLikes: boolean;
-        isTweets: boolean;
-        isTweetsAndReplies: boolean;
-        isMedia: boolean;
-      };
-      tweetsStore?: {
-        isTop: boolean;
-        isLikes: boolean;
-      };
-    }
-  | {};
+import { startParserQueues } from './queues/start_parser_queues';
 
-let socket: WebSocket;
+export type ProfileSettings = {
+  isLikes: boolean;
+  isTweets: boolean;
+  isTweetsAndReplies: boolean;
+  isMedia: boolean;
+};
 
-const URL = 'ws://127.0.0.1:8000';
+export type TweetsSettings = {
+  isTop: boolean;
+  isLatest: boolean;
+};
 
-export const $ID = createStore<string>('');
+export type Send = {
+  parseTarget: string;
+  tweetsCount: number;
+  parseUrl: string;
+  profileSettings?: ProfileSettings;
+  tweetsSettings?: TweetsSettings;
+};
+let socket: WebSocket.Server;
+
 export const $socketMessage = createStore<string>('');
 
 export const sendFx: Effect<Send, any> = createEffect();
 
-export const setID: Event<string> = createEvent();
+const connection: Event<any> = createEvent('connection');
 const onMessage: Event<any> = createEvent('message');
-const open: Event<any> = createEvent('open');
-const closed: Event<any> = createEvent('closed');
 
-$ID.on(setID, (_, id) => id);
+$socketMessage.on(onMessage, (_, message) => JSON.parse(message));
 
-setID.watch(id => parseInit(id));
-
-$socketMessage.on(onMessage, (_, event) => event.data);
+$socketMessage.updates.watch(startParserQueues);
 
 sendFx.use((data: Send) => {
   console.log('Sended data:', data);
   const serializedData = JSON.stringify(data);
+  // @ts-ignore
   socket.send(serializedData);
 });
 
@@ -62,28 +58,25 @@ sendFx.fail.watch(fail => {
   console.log('Error:', fail);
 });
 
-open.watch(() => {
-  console.info('Connection is open');
+connection.watch(ws => {
+  console.info('Connection with user is open');
+
+  ws.on('message', onMessage);
 });
 
-closed.watch(({ code, reason }) => {
-  console.warn(`[close] Connection is closed, code=${code} reason=${reason}`);
-});
+export const connectionSockets = () => {
+  const server = http.createServer();
 
-forward({
-  from: open,
-  to: setID,
-});
-
-export const connection = (id: string) => {
   try {
     console.log('Try to connect...');
-    socket = new WebSocket(URL);
+    socket = new WebSocket.Server({
+      server,
+    });
   } catch (err) {
     throw new Error(err.message);
   }
 
-  socket.on('open', () => open(id));
-  socket.on('close', closed);
-  socket.on('message', onMessage);
+  socket.on('connection', connection);
+
+  server.listen(8000);
 };

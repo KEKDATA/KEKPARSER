@@ -14,7 +14,20 @@
   "author": "KEKDATA TEAM",
   "license": "ISC",
   "dependencies": {
-    "ws": "^7.3.0"
+    "bull": "^3.14.0",
+    "nanoid": "^3.1.7",
+    "redis": "^3.0.2",
+    "sequelize": "^5.21.8",
+    "sqlite3": "^4.2.0",
+    "ws": "^7.3.0",
+    "cheerio": "^1.0.0-rc.3",
+    "effector": "^20.15.0",
+    "env-cmd": "^10.1.0",
+    "natural": "^2.1.5",
+    "playwright": "^1.0.1",
+    "ramda": "^0.27.0",
+    "spelling-corrector": "^3.0.0",
+    "stopword": "^1.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -23,11 +36,14 @@
     "@babel/plugin-transform-typescript": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
     "@babel/preset-typescript": "^7.9.0",
-    "@types/node": "^13.13.5",
+    "@types/bull": "^3.13.0",
+    "@types/node": "^14.0.1",
+    "@types/redis": "^2.8.20",
+    "@types/sequelize": "^4.28.8",
     "@types/ws": "^7.2.4",
-    "@typescript-eslint/parser": "^2.31.0",
+    "@typescript-eslint/parser": "^2.33.0",
     "babel-eslint": "^10.1.0",
-    "eslint": "^6.8.0",
+    "eslint": "^7.0.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-import-resolver-typescript": "^2.0.0",
     "eslint-plugin-import": "^2.20.2",
@@ -37,7 +53,11 @@
     "lint-staged": "^10.2.2",
     "prettier": "1.19.1",
     "ts-node": "^8.10.1",
-    "typescript": "^3.8.3"
+    "typescript": "^3.9.2",
+    "@types/cheerio": "^0.22.18",
+    "@types/natural": "^0.6.3",
+    "@types/ramda": "^0.27.4",
+    "electron": "^8.2.5"
   },
   "husky": {
     "hooks": {

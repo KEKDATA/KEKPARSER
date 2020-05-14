@@ -1,8 +1,10 @@
 import Sequelize from 'sequelize';
 
-export const ormInit = () => {
+let sequelizeInstance;
+
+export const sequilizeDatabaseConnection = () => {
   // @ts-ignore
-  const sequelize = new Sequelize({
+  sequelizeInstance = new Sequelize({
     dialect: 'sqlite',
     storage: 'database.sqlite',
     pool: {
@@ -13,7 +15,7 @@ export const ormInit = () => {
     },
   });
 
-  sequelize
+  sequelizeInstance
     .authenticate()
     .then(() => {
       console.log('Connection has been established successfully.');
@@ -21,6 +23,4 @@ export const ormInit = () => {
     .catch((err: any) => {
       console.error('Unable to connect to the database:', err);
     });
-
-  return sequelize;
 };
