@@ -31,7 +31,7 @@ export type Send = {
 };
 let socket: WebSocket.Server;
 
-export const $socketMessage = createStore<string>('');
+export const $socketMessage = createStore<Send | {}>({});
 
 export const sendFx: Effect<Send, any> = createEffect();
 

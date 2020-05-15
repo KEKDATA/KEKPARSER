@@ -4,14 +4,16 @@ import Queue from 'bull';
 import { setupWebdriverFx } from '../webdriver';
 
 import { Send } from '../socket';
+import { createdTwitterParse } from '../twitter/twitter_parse';
 
 export const startParserQueues = (options: Send) => {
   const id = nanoid();
 
-  const queue = new Queue('kek');
+  const queue = new Queue('KEKPARSER');
 
   queue.process(async function(job, done) {
     await setupWebdriverFx(options);
+    await createdTwitterParse(null);
     done();
     return Promise.resolve();
   });

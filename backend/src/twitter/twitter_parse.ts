@@ -1,39 +1,59 @@
 import { Browser } from 'playwright';
+import { createEffect, attach, combine } from 'effector';
 
-import { PROFILE_TARGET, TWEETS_TARGET } from './constants/type_parse_target';
+import {
+  PROFILE_TARGET,
+  SEARCH_TWEETS_TARGET,
+} from './constants/type_parse_target';
 
 import { getAnalyzedTweets } from './tweets/analyzed_tweets';
 import { getParsedTwitterProfile } from './profile/parse_twitter_profile';
+import { $parseTarget, $webdriverBrowser } from './model';
 
-const { TWITTER_PARSE_TARGET } = process.env;
+const twitterParseFx = createEffect<
+  { browser: Browser; parseTarget: string },
+  any
+>({
+  handler: async ({ browser, parseTarget }) => {
+    console.time();
 
-export const setupTwitterParse = async (browser: Browser) => {
-  console.time();
+    let analyzedTwitterOptions = {};
 
-  let analyzedTwitterOptions = {};
+    switch (parseTarget) {
+      case PROFILE_TARGET: {
+        analyzedTwitterOptions = await getParsedTwitterProfile();
 
-  switch (TWITTER_PARSE_TARGET) {
-    case PROFILE_TARGET: {
-      analyzedTwitterOptions = await getParsedTwitterProfile();
+        break;
+      }
 
-      break;
+      case SEARCH_TWEETS_TARGET: {
+        analyzedTwitterOptions = await getAnalyzedTweets();
+
+        break;
+      }
+
+      default: {
+        console.log('Цель анализа указана не верно');
+        break;
+      }
     }
 
-    case TWEETS_TARGET: {
-      analyzedTwitterOptions = await getAnalyzedTweets();
+    console.log(analyzedTwitterOptions);
 
-      break;
-    }
+    console.timeEnd();
 
-    default: {
-      console.log('Цель анализа указана не верно');
-      break;
-    }
-  }
+    await browser.close();
+  },
+});
 
-  console.log(analyzedTwitterOptions);
-
-  console.timeEnd();
-
-  await browser.close();
-};
+export const createdTwitterParse = attach({
+  effect: twitterParseFx,
+  source: combine({
+    browser: $webdriverBrowser,
+    parseTarget: $parseTarget,
+  }),
+  mapParams: (_, { browser, parseTarget }) => ({
+    browser,
+    parseTarget,
+  }),
+});

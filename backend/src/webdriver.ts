@@ -1,59 +1,58 @@
-import { createEffect, Effect } from 'effector';
+import { createEffect } from 'effector';
 import { chromium, devices } from 'playwright';
 
 import { Send } from './socket';
+import {
+  PROFILE_TARGET,
+  SEARCH_TWEETS_TARGET,
+} from './twitter/constants/type_parse_target';
 
-import { setWebdriverPage } from './twitter/model';
-import { setupTwitterParse } from './twitter/twitter_parse';
+export const setupWebdriverFx = createEffect<Send, any>({
+  handler: async (options: Send) => {
+    const {
+      parseTarget,
+      tweetsCount,
+      parseUrl,
+      tweetsSettings = {},
+      profileSettings = {},
+    } = options;
 
-export const setupWebdriverFx: Effect<Send, any> = createEffect();
+    let settings = {};
 
-setupWebdriverFx.use(async (options: Send) => {
-  const {
-    parseTarget,
-    tweetsCount,
-    parseUrl,
-    tweetsSettings = {},
-    profileSettings = {},
-  } = options;
+    switch (parseTarget) {
+      case PROFILE_TARGET: {
+        settings = profileSettings;
+        break;
+      }
 
-  let settings = {};
+      case SEARCH_TWEETS_TARGET: {
+        settings = tweetsSettings;
+        break;
+      }
 
-  switch (parseTarget) {
-    case 'profile': {
-      settings = profileSettings;
-      break;
+      default: {
+        break;
+      }
     }
 
-    case 'search_tweets': {
-      settings = tweetsSettings;
-      break;
-    }
+    const browser = await chromium.launch({
+      headless: false,
+    });
 
-    default: {
-      break;
-    }
-  }
+    const iPhone = devices['iPhone 11 Pro'];
+    const context = await browser.newContext(iPhone);
 
-  const browser = await chromium.launch({
-    headless: true,
-  });
+    const page = await context.newPage();
 
-  const iPhone = devices['iPhone 11 Pro'];
-  const context = await browser.newContext(iPhone);
+    await page.goto(parseUrl);
 
-  const page = await context.newPage();
-
-  setWebdriverPage(page);
-
-  page.once('domcontentloaded', () => setupTwitterParse(browser));
-
-  await page.goto(parseUrl);
-
-  return Promise.resolve({
-    parseTarget,
-    tweetsCount,
-    parseUrl,
-    settings,
-  });
+    return Promise.resolve({
+      parseTarget,
+      tweetsCount,
+      parseUrl,
+      settings,
+      page,
+      browser,
+    });
+  },
 });
