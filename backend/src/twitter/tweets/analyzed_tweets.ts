@@ -5,9 +5,10 @@ import { getTextWithBayesClassifier } from '../../lib/bayes_classifier/bayes_cla
 import { insertionSentimentTweetsSort } from './lib/insertion_sentiment_tweets_sort';
 
 import { getParsedTweets } from './parsed_tweets';
+import { Tweet } from '../types';
 
 export const getAnalyzedTweets = async () => {
-  const parsedTweets = await getParsedTweets();
+  const parsedTweets: Array<Tweet> = await getParsedTweets(null);
 
   const normalizedTweetsForAnalysis = parsedTweets.map(({ tweetContent }) => {
     const tweetWithAlphaOnly = getTextWithAlphaOnly(tweetContent);

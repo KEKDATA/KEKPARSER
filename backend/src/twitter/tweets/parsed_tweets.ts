@@ -1,5 +1,7 @@
 import cheerio from 'cheerio';
 import R from 'ramda';
+import { Page } from 'playwright';
+import { createEffect, attach, combine } from 'effector';
 
 import { TWEET_SELECTOR } from './constants/selectors';
 import { LOADER_SELECTOR } from '../constants/selectors';
@@ -11,72 +13,77 @@ import { scrollToLastTweet } from './lib/scroll_to_last_tweet';
 import { Tweet } from '../types';
 
 import { attachedTweetInfo } from './model';
-import { $webdriverPage } from '../model';
+import { $tweetsCount, $webdriverPage } from '../model';
 
-const TWEETS_COUNT = Number(process.env.TWEETS_COUNT);
 const MAX_TWEETS_EQUALS = 5;
 
-export const getParsedTweets = async () => {
-  const page = $webdriverPage.getState();
+const parsedTweetsFx = createEffect<{ page: Page; tweetsCount: number }, any>({
+  handler: async ({ page, tweetsCount }) => {
+    await page.waitForSelector(TWEET_SELECTOR);
 
-  await page.waitForSelector(TWEET_SELECTOR);
+    let tweetsInfo: Array<Tweet> = [];
 
-  let tweetsInfo: Array<Tweet> = [];
+    let currentLengthOfTweets: number = 0;
+    let previousLengthOfTweets: number = 0;
+    let countOfEqualsPrevAndCurrentTweets: number = 0;
 
-  let currentLengthOfTweets: number = 0;
-  let previousLengthOfTweets: number = 0;
-  let countOfEqualsPrevAndCurrentTweets: number = 0;
+    while (tweetsInfo.length < tweetsCount) {
+      await page.waitForFunction(checkIsTwitterContentVisible, LOADER_SELECTOR);
 
-  while (tweetsInfo.length < TWEETS_COUNT) {
-    await page.waitForFunction(checkIsTwitterContentVisible, LOADER_SELECTOR);
+      const contentPage: string = await page.evaluate(getHTML);
 
-    const contentPage: string = await page.evaluate(getHTML);
+      await page.evaluate(scrollToLastTweet);
 
-    await page.evaluate(scrollToLastTweet);
+      const $ = cheerio.load(contentPage);
 
-    const $ = cheerio.load(contentPage);
+      $(TWEET_SELECTOR).each(async (index, tweet) => {
+        const tweetNode = $(tweet);
 
-    $(TWEET_SELECTOR).each(async (index, tweet) => {
-      const tweetNode = $(tweet);
+        const tweetInfo: Tweet | null = await attachedTweetInfo({ tweetNode });
 
-      const tweetInfo: Tweet | null = await attachedTweetInfo({ tweetNode });
+        if (!tweetInfo) {
+          return;
+        }
 
-      if (!tweetInfo) {
-        return;
+        tweetsInfo.push(tweetInfo);
+      });
+
+      // Присутствует вероятность того, что могут попасть дубликаты, тк список твитов
+      // имеет структуру списка с виртуализацией, из-за этого пришлось обрабатывать пачками твиты
+      // К тому же, ушлый твитер сделал в ленте Related searches, которые имеют идентичные атрибуты
+      const uniqTweets = R.uniq(tweetsInfo);
+
+      tweetsInfo = [...uniqTweets];
+
+      currentLengthOfTweets = tweetsInfo.length;
+
+      // Если твиты закончились по запросу
+      const isTweetsLengthEquals =
+        currentLengthOfTweets === previousLengthOfTweets;
+
+      // Существует вероятность, при которой длина предыдущих и текущих твитов совпадает
+      // Если мы уходим в цикл с одинаковой длинной предыдущих и текущих, то допускаем
+      // выход из цикла при условии, что MAX_TWEETS_EQUALS раз предыдущая длинна и текущая
+      // были равны
+      if (countOfEqualsPrevAndCurrentTweets > MAX_TWEETS_EQUALS) {
+        break;
       }
 
-      tweetsInfo.push(tweetInfo);
-    });
+      countOfEqualsPrevAndCurrentTweets = isTweetsLengthEquals
+        ? countOfEqualsPrevAndCurrentTweets + 1
+        : 0;
 
-    // Присутствует вероятность того, что могут попасть дубликаты, тк список твитов
-    // имеет структуру списка с виртуализацией, из-за этого пришлось обрабатывать пачками твиты
-    // К тому же, ушлый твитер сделал в ленте Related searches, которые имеют идентичные атрибуты
-    const uniqTweets = R.uniq(tweetsInfo);
-
-    tweetsInfo = [...uniqTweets];
-
-    currentLengthOfTweets = tweetsInfo.length;
-
-    // Если твиты закончились по запросу
-    const isTweetsLengthEquals =
-      currentLengthOfTweets === previousLengthOfTweets;
-
-    // Существует вероятность, при которой длина предыдущих и текущих твитов совпадает
-    // Если мы уходим в цикл с одинаковой длинной предыдущих и текущих, то допускаем
-    // выход из цикла при условии, что MAX_TWEETS_EQUALS раз предыдущая длинна и текущая
-    // были равны
-    if (countOfEqualsPrevAndCurrentTweets > MAX_TWEETS_EQUALS) {
-      break;
+      previousLengthOfTweets = tweetsInfo.length;
     }
 
-    countOfEqualsPrevAndCurrentTweets = isTweetsLengthEquals
-      ? countOfEqualsPrevAndCurrentTweets + 1
-      : 0;
+    const tweetOfTheCorrectLength = tweetsInfo.slice(0, tweetsCount);
 
-    previousLengthOfTweets = tweetsInfo.length;
-  }
+    return Promise.resolve(tweetOfTheCorrectLength);
+  },
+});
 
-  const tweetOfTheCorrectLength = tweetsInfo.slice(0, TWEETS_COUNT);
-
-  return tweetOfTheCorrectLength;
-};
+export const getParsedTweets = attach({
+  effect: parsedTweetsFx,
+  source: combine({ page: $webdriverPage, tweetsCount: $tweetsCount }),
+  mapParams: (_, sources) => sources,
+});
