@@ -7,8 +7,10 @@ import {
   Effect,
 } from 'effector';
 import http from 'http';
+import { nanoid } from 'nanoid';
 
 import { startParserQueues } from './queues/start_parser_queues';
+import { FinalTweet } from './twitter/types';
 
 export type ProfileSettings = {
   isLikes: boolean;
@@ -29,24 +31,41 @@ export type Send = {
   profileSettings?: ProfileSettings;
   tweetsSettings?: TweetsSettings;
 };
-let socket: WebSocket.Server;
+
+let socketCollection: { [id: string]: WebSocket.Server } = {};
 
 export const $socketMessage = createStore<Send | {}>({});
 
-export const sendFx: Effect<Send, any> = createEffect();
+export const sendFx: Effect<
+  {
+    result: {
+      finalTweets: Array<FinalTweet>;
+      meanSentiment: number;
+      minCoefficient: FinalTweet;
+      maxCoefficient: FinalTweet;
+    };
+    id: string;
+  },
+  any
+> = createEffect();
 
 const connection: Event<any> = createEvent('connection');
-const onMessage: Event<any> = createEvent('message');
+const onMessage: Event<{ options: Send; id: string }> = createEvent('message');
 
-$socketMessage.on(onMessage, (_, message) => JSON.parse(message));
+$socketMessage.on(onMessage, (_, { options, id }) => ({
+  options,
+  id,
+}));
 
 $socketMessage.updates.watch(startParserQueues);
 
-sendFx.use((data: Send) => {
-  console.log('Sended data:', data);
-  const serializedData = JSON.stringify(data);
+sendFx.use(({ result, id }) => {
+  const serializedData = JSON.stringify(result);
+  const currentSocket = socketCollection[id];
   // @ts-ignore
-  socket.send(serializedData);
+  currentSocket.send(serializedData);
+
+  delete socketCollection[id];
 });
 
 sendFx.done.watch(payload => {
@@ -58,14 +77,24 @@ sendFx.fail.watch(fail => {
   console.log('Error:', fail);
 });
 
-connection.watch(ws => {
+connection.watch(wsServer => {
+  const id = nanoid();
+
   console.info('Connection with user is open');
 
-  ws.on('message', onMessage);
+  wsServer.id = id;
+  socketCollection[wsServer.id] = wsServer;
+
+  wsServer.on('message', (message: string) => {
+    const options = JSON.parse(message);
+    return onMessage({ options, id });
+  });
 });
 
 export const connectionSockets = () => {
   const server = http.createServer();
+
+  let socket;
 
   try {
     console.log('Try to connect...');

@@ -6,7 +6,7 @@ import {
   SEARCH_TWEETS_TARGET,
 } from './constants/type_parse_target';
 
-import { getAnalyzedTweets } from './tweets/analyzed_tweets';
+import { parsedTweetsFx } from './tweets/analyzed_tweets';
 import { getParsedTwitterProfile } from './profile/parse_twitter_profile';
 import { $parseTarget, $webdriverBrowser } from './model';
 
@@ -27,7 +27,7 @@ const twitterParseFx = createEffect<
       }
 
       case SEARCH_TWEETS_TARGET: {
-        parsedTweets = await getAnalyzedTweets(null);
+        parsedTweets = await parsedTweetsFx(null);
 
         break;
       }

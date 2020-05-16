@@ -37,7 +37,7 @@ const open: Event<any> = createEvent('open');
 const closed: Event<WebSocketCloseEvent> = createEvent('closed');
 const error: Event<WebSocketErrorEvent> = createEvent('error');
 
-$socketMessage.on(onMessage, (_, event) => event.data);
+$socketMessage.on(onMessage, (_, event) => JSON.parse(event.data));
 
 sendFx.use((data: Send) => {
   console.log('Sended data:', data);
