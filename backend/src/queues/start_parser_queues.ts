@@ -15,8 +15,8 @@ export const startParserQueues = (options: Send) => {
 
   queue.process(processName, async function(job, done) {
     await setupWebdriverFx({ options, id, queue });
-    await createdTwitterParse(null);
-    done(null, () => parseJob(true));
+    const parsedTweets = await createdTwitterParse(null);
+    done(null, () => parseJob(parsedTweets));
   });
 
   queue.on('progress', function(job, progress) {

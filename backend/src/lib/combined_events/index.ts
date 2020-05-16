@@ -5,10 +5,10 @@ export const combineEvents = (events: { [key: string]: Event<any> }) => {
   const resultingEvent: Event<any> = createEvent();
   const eventsKeys: Array<string> = Object.keys(events);
 
-  eventsKeys.forEach((eventKey: string) => {
-    const event = events[eventKey];
+  eventsKeys.forEach((eventName: string) => {
+    const event = events[eventName];
     const unwatch = event.watch((payload: any) => {
-      results[eventKey] = payload;
+      results[eventName] = payload;
 
       if (Object.keys(results).length === eventsKeys.length) {
         resultingEvent(results);

@@ -17,17 +17,17 @@ const twitterParseFx = createEffect<
   handler: async ({ browser, parseTarget }) => {
     console.time();
 
-    let analyzedTwitterOptions = {};
+    let parsedTweets = {};
 
     switch (parseTarget) {
       case PROFILE_TARGET: {
-        analyzedTwitterOptions = await getParsedTwitterProfile();
+        // parsedTweets = await getParsedTwitterProfile();
 
         break;
       }
 
       case SEARCH_TWEETS_TARGET: {
-        analyzedTwitterOptions = await getAnalyzedTweets(null);
+        parsedTweets = await getAnalyzedTweets(null);
 
         break;
       }
@@ -38,11 +38,11 @@ const twitterParseFx = createEffect<
       }
     }
 
-    console.log('I am happy!', Object.values(analyzedTwitterOptions).length);
-
     console.timeEnd();
 
     await browser.close();
+
+    return Promise.resolve(parsedTweets);
   },
 });
 
