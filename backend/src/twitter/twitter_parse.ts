@@ -27,7 +27,7 @@ const twitterParseFx = createEffect<
       }
 
       case SEARCH_TWEETS_TARGET: {
-        analyzedTwitterOptions = await getAnalyzedTweets();
+        analyzedTwitterOptions = await getAnalyzedTweets(null);
 
         break;
       }
@@ -38,7 +38,7 @@ const twitterParseFx = createEffect<
       }
     }
 
-    console.log(analyzedTwitterOptions);
+    console.log('I am happy!', Object.values(analyzedTwitterOptions).length);
 
     console.timeEnd();
 

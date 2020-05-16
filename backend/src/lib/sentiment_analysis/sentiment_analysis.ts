@@ -7,7 +7,7 @@ import {
 //@ts-ignore
 import stopword from 'stopword';
 
-export const getTextWithSentimentAnalysis = (data: Array<string>) => {
+export const getTextWithSentimentAnalysis = async (data: Array<string>) => {
   const tokenizer = new WordTokenizer();
   const analyzer = new SentimentAnalyzer('English', PorterStemmer, 'afinn');
 
@@ -40,5 +40,5 @@ export const getTextWithSentimentAnalysis = (data: Array<string>) => {
 
   const meanSentiment = countOfSentimentCoefficients / lengthOfData;
 
-  return { dataWithSentiments, meanSentiment };
+  return Promise.resolve({ dataWithSentiments, meanSentiment });
 };

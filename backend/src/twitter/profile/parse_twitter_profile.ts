@@ -36,7 +36,7 @@ export const getParsedTwitterProfile = async () => {
     case TWEETS_TAB: {
       setProfileTab(TWEETS_TAB);
 
-      parsedTweets = await getAnalyzedTweets();
+      parsedTweets = await getAnalyzedTweets(null);
 
       break;
     }
@@ -46,7 +46,7 @@ export const getParsedTwitterProfile = async () => {
 
       await changeProfileNavigation(REPLIES_LINK_SELECTOR, false);
 
-      parsedTweets = await getAnalyzedTweets();
+      parsedTweets = await getAnalyzedTweets(null);
 
       break;
     }
@@ -56,7 +56,7 @@ export const getParsedTwitterProfile = async () => {
 
       await changeProfileNavigation(MEDIA_LINK_SELECTOR, true);
 
-      parsedTweets = await getAnalyzedTweets();
+      parsedTweets = await getAnalyzedTweets(null);
 
       break;
     }
@@ -66,7 +66,7 @@ export const getParsedTwitterProfile = async () => {
 
       await changeProfileNavigation(LIKES_LINK_SELECTOR, true);
 
-      parsedTweets = await getAnalyzedTweets();
+      parsedTweets = await getAnalyzedTweets(null);
 
       break;
     }

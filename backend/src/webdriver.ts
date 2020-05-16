@@ -1,5 +1,6 @@
 import { createEffect } from 'effector';
 import { chromium, devices } from 'playwright';
+import { Queue } from 'bull';
 
 import { Send } from './socket';
 import {
@@ -7,8 +8,11 @@ import {
   SEARCH_TWEETS_TARGET,
 } from './twitter/constants/type_parse_target';
 
-export const setupWebdriverFx = createEffect<Send, any>({
-  handler: async (options: Send) => {
+export const setupWebdriverFx = createEffect<
+  { options: Send; id: string; queue: Queue },
+  any
+>({
+  handler: async ({ options, id, queue }) => {
     const {
       parseTarget,
       tweetsCount,
@@ -53,6 +57,8 @@ export const setupWebdriverFx = createEffect<Send, any>({
       settings,
       page,
       browser,
+      id,
+      queue,
     });
   },
 });
