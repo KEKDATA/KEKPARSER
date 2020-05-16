@@ -1,5 +1,6 @@
 import { createEvent, createEffect } from 'effector';
 import { Queue } from 'bull';
+import { nanoid } from 'nanoid';
 
 import { combineEvents } from '../lib/combined_events';
 import { insertionSentimentTweetsSort } from '../twitter/tweets/lib/insertion_sentiment_tweets_sort';
@@ -35,16 +36,16 @@ export const analyzeTweetsFx = createEffect<
     const sentimentProcessName = `sentiment:${id}`;
     const bayesProcessName = `bayes:${id}`;
 
-    queue.process(sentimentProcessName, async function(job, done) {
+    queue.process(sentimentProcessName, function(job, done) {
       const {
         dataWithSentiments: tweetsWithSentiments,
         meanSentiment,
-      } = await getTextWithSentimentAnalysis(normalizedTweetsForAnalysis);
+      } = getTextWithSentimentAnalysis(normalizedTweetsForAnalysis);
       done(null, () => sentimentJob({ tweetsWithSentiments, meanSentiment }));
     });
 
-    queue.process(bayesProcessName, async function(job, done) {
-      const tweetsWithBayesClassifier = await getTextWithBayesClassifier(
+    queue.process(bayesProcessName, function(job, done) {
+      const tweetsWithBayesClassifier = getTextWithBayesClassifier(
         normalizedTweetsForAnalysis,
       );
       done(null, () => bayesJob({ tweetsWithBayesClassifier }));
@@ -65,6 +66,7 @@ export const analyzeTweetsFx = createEffect<
           tweetIndex < parsedTweets.length;
           tweetIndex++
         ) {
+          const tweetId = nanoid();
           const tweetSentiment = tweetsWithSentiments[tweetIndex];
           const tweetBayes = tweetsWithBayesClassifier[tweetIndex];
           const parsedTweet = parsedTweets[tweetIndex];
@@ -73,6 +75,7 @@ export const analyzeTweetsFx = createEffect<
             ...parsedTweet,
             tweetSentiment,
             tweetBayes,
+            id: tweetId,
           });
         }
 

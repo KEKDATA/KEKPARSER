@@ -26,9 +26,25 @@ type Send =
     }
   | {};
 
+type FinalTweet = {
+  id: string;
+  userUrl: string;
+  name: string;
+  tweetName: string;
+  tweetContent: string;
+  likes: number;
+  retweets: number;
+  replies: number;
+  replyingUsers?: Array<{ user: string; userLink: string }>;
+  tweetSentiment: number;
+  tweetBayes: string;
+};
+
 let socket: WebSocket;
 
-export const $socketMessage = createStore<string>('');
+export const $socketMessage = createStore<{ finalTweets: Array<FinalTweet> }>({
+  finalTweets: [],
+});
 
 export const sendFx: Effect<Send, any> = createEffect();
 

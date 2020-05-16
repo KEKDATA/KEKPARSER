@@ -87,6 +87,7 @@
   "dependencies": {
     "@material-ui/core": "^4.9.14",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.53",
     "core-js": "3.6.5",
     "effector": "^20.15.0",
     "effector-react": "^20.7.1",

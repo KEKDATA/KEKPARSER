@@ -10,6 +10,7 @@ export type Tweet = {
 };
 
 export type FinalTweet = {
+  id: string;
   userUrl: string;
   name: string;
   tweetName: string;
