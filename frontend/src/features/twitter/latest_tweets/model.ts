@@ -19,6 +19,7 @@ export const $latestTweets: Store<NormalizedTweetInfo> = $socketMessage.map(
 
     const normalizedTweets = {
       finalTweets,
+      isLoaded: true,
       ...getNormalizedTweetAnalyze({
         maxCoefficient,
         minCoefficient,

@@ -8,4 +8,5 @@ export const initialStore: NormalizedTweetInfo = {
   isExistMin: false,
   isExistMax: false,
   meanSentiment: null,
+  isLoaded: false,
 };

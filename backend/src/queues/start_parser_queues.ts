@@ -7,13 +7,18 @@ import { createdTwitterParse } from '../twitter/twitter_parse';
 import { analyzeTweetsFx } from './bonding_jobs';
 import { SEARCH_TWEETS_TARGET } from '../twitter/constants/type_parse_target';
 
+const defaultJobOptions = {
+  removeOnComplete: true,
+  removeOnFail: false,
+};
+
 export const startParserQueues = (message: { options: Send; id: string }) => {
   const { options, id } = message;
   const { tweetsSettings, parseUrl, parseTarget } = options;
 
   if (parseTarget === SEARCH_TWEETS_TARGET) {
     if (tweetsSettings && tweetsSettings.isTop) {
-      const queue = new Queue(`${id}:top`);
+      const queue = new Queue(`${id}:top`, { defaultJobOptions });
       const processName = `parse:${id}`;
       const tweetsType = 'top';
 
@@ -48,7 +53,7 @@ export const startParserQueues = (message: { options: Send; id: string }) => {
     }
 
     if (tweetsSettings && tweetsSettings.isLatest) {
-      const queue = new Queue(`${id}:latest`);
+      const queue = new Queue(`${id}:latest`, { defaultJobOptions });
       const processName = `parse:${id}`;
       const actualParseUrl = `${parseUrl}&f=live`;
       const tweetsType = 'latest';
@@ -83,7 +88,6 @@ export const startParserQueues = (message: { options: Send; id: string }) => {
       queue.on('completed', function(job, jobEvent) {
         console.log(`Parse Job ${job.id} completed!`);
         jobEvent();
-        job.remove();
       });
 
       queue.add(processName);

@@ -19,6 +19,7 @@ const TweetIcon = styled.img`
 
 const TweetContainer = styled(Grid)`
   padding: 16px 0;
+  width: 100%;
 `;
 
 const TweetName = styled(Typography)`

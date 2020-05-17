@@ -1,6 +1,5 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { useStore } from 'effector-react';
 
 import Skeleton from '@material-ui/lab/Skeleton';
 import Grid from '@material-ui/core/Grid';
@@ -9,14 +8,14 @@ import Typography from '@material-ui/core/Typography';
 import { MemoizedTweets } from '../tweets';
 import { Tweet } from '../tweet';
 
-import { $tweetsWithCoefficients } from './model';
 import { TweetSkeleton } from '../../../UI/skeleton/tweet';
 import { TweetsSkeleton } from '../../../UI/skeleton/tweets';
+
 import { NormalizedTweetInfo } from '../../../types/tweets';
 
 const ParseInfoContainer = styled.div`
   display: grid;
-  grid-template-columns: 0.8fr 0.8fr 0.8fr;
+  grid-template-columns: 30% 40% 30%;
   margin: 16px 4px 0 4px;
 `;
 
@@ -41,13 +40,12 @@ export const ParseInfo: React.FC<{
     isExistMin,
     isExistMax,
     meanSentiment,
+    isLoaded,
   },
 }) => {
-  const { isLoading } = useStore($tweetsWithCoefficients);
-
   return (
     <Grid container justify="center" direction="column">
-      {isLoading && (
+      {!isLoaded && (
         <>
           <Grid container justify="center">
             <Skeleton animation="wave" height={25} width={150} />
@@ -59,7 +57,7 @@ export const ParseInfo: React.FC<{
           </ParseInfoContainer>
         </>
       )}
-      {!isLoading && (
+      {isLoaded && (
         <>
           {meanSentiment && (
             <Grid container justify="center">
