@@ -15,6 +15,43 @@ const $requestParams = combine({
   profileSettings: $profileSettings,
   tweetsSettings: $tweetsSettings,
 });
+export const $isDisabled = $requestParams.map(
+  ({
+    parseTargets: { parseUrl },
+    controls: { parseTarget, tweetsCount },
+    profileSettings,
+    tweetsSettings,
+  }) => {
+    const isParseUrlSelected = parseUrl.length > 0;
+    const isTweetsCountSelected = tweetsCount > 0;
+    let settings = {};
+
+    switch (parseTarget) {
+      case PROFILE: {
+        settings = profileSettings;
+        break;
+      }
+
+      case SEARCH_TWEETS: {
+        settings = tweetsSettings;
+        break;
+      }
+
+      default: {
+        break;
+      }
+    }
+
+    const isSomeSettingSelected = Object.values(settings).some(
+      setting => setting,
+    );
+
+    const isDisabled =
+      !isParseUrlSelected || !isSomeSettingSelected || !isTweetsCountSelected;
+
+    return isDisabled;
+  },
+);
 
 export const sendParserOptions = attach({
   effect: sendFx,
