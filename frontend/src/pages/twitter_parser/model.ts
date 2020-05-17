@@ -1,6 +1,6 @@
 import { attach, combine } from 'effector';
 
-import { sendFx } from '../../socket';
+import { onMessage, sendFx } from '../../socket';
 
 import { $controls } from '../../features/twitter/controls/model';
 import { $parseTargets } from '../../features/twitter/parse_target/model';
@@ -52,6 +52,9 @@ export const $isDisabled = $requestParams.map(
     return isDisabled;
   },
 );
+
+$isDisabled.on(sendFx.done, () => true);
+$isDisabled.on(onMessage, () => false);
 
 export const sendParserOptions = attach({
   effect: sendFx,

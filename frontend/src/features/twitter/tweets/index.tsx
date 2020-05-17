@@ -32,14 +32,22 @@ const OptionTweetInfo = styled(Typography)`
   padding: 2px 2px 0 8px;
 `;
 
+const Tweet = styled(Grid)`
+  border-bottom: 1px solid black;
+`;
+
+const TweetsWrapper = styled.div`
+  margin: 16px 0;
+`;
+
 export const Tweets: React.FC = () => {
   const { isLoading, finalTweets } = useStore($tweets);
 
   return (
-    <>
+    <TweetsWrapper>
       {isLoading && <TweetsSkeleton />}
       {!isLoading && (
-        <Grid container direction="column" spacing={4}>
+        <Grid container direction="column" spacing={6}>
           {finalTweets.map(
             ({
               id,
@@ -54,7 +62,7 @@ export const Tweets: React.FC = () => {
               tweetSentiment,
               userUrl,
             }) => (
-              <Grid item key={id}>
+              <Tweet item key={id}>
                 <Grid container direction="row" alignItems="center">
                   <Link href={userUrl}>{name}</Link>
                   <TweetName>{tweetName}</TweetName>
@@ -97,11 +105,11 @@ export const Tweets: React.FC = () => {
                 <Typography gutterBottom>
                   Sentiment analysis: {tweetSentiment}
                 </Typography>
-              </Grid>
+              </Tweet>
             ),
           )}
         </Grid>
       )}
-    </>
+    </TweetsWrapper>
   );
 };
