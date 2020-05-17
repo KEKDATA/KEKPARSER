@@ -5,14 +5,11 @@ import { setupWebdriverFx } from '../webdriver';
 import { Send } from '../socket';
 import { createdTwitterParse } from '../twitter/twitter_parse';
 import { analyzeTweetsFx } from './bonding_jobs';
-import {
-  PROFILE_TARGET,
-  SEARCH_TWEETS_TARGET,
-} from '../twitter/constants/type_parse_target';
+import { SEARCH_TWEETS_TARGET } from '../twitter/constants/type_parse_target';
 
 export const startParserQueues = (message: { options: Send; id: string }) => {
   const { options, id } = message;
-  const { tweetsSettings, profileSettings, parseUrl, parseTarget } = options;
+  const { tweetsSettings, parseUrl, parseTarget } = options;
 
   if (parseTarget === SEARCH_TWEETS_TARGET) {
     if (tweetsSettings && tweetsSettings.isTop) {
@@ -25,7 +22,7 @@ export const startParserQueues = (message: { options: Send; id: string }) => {
       queue.process(processName, async function(job, done) {
         const actualId = id;
         const actualQueue = queue;
-        await setupWebdriverFx({ options, id: actualId, queue: actualQueue });
+        await setupWebdriverFx({ options });
         const { parsedTweets } = await createdTwitterParse(null);
         done(null, () =>
           analyzeTweetsFx({
@@ -67,8 +64,6 @@ export const startParserQueues = (message: { options: Send; id: string }) => {
         const actualQueue = queue;
         await setupWebdriverFx({
           options: actualOptions,
-          id: actualId,
-          queue: actualQueue,
         });
         const { parsedTweets } = await createdTwitterParse(null);
         done(null, () =>

@@ -15,6 +15,13 @@ const ButtonGroupContainer = styled(Grid)`
   margin: 20px 0;
 `;
 
+const StyledButton = styled(Button)<{ isActive: boolean }>`
+  opacity: ${({ isActive }) => (isActive ? 1 : 0.7)};
+  &:hover {
+    opacity: 1;
+  }
+`;
+
 export const SwitchTypeTweets: React.FC = () => {
   const { isLatest, isTop } = useStore($switchTypes);
 
@@ -25,12 +32,16 @@ export const SwitchTypeTweets: React.FC = () => {
           variant="contained"
           color="primary"
           aria-label="contained primary button group">
-          <Button onClick={latestStatusToggled}>Latest</Button>
-          <Button onClick={topStatusToggled}>Top</Button>
+          <StyledButton isActive={isTop} onClick={topStatusToggled}>
+            Top
+          </StyledButton>
+          <StyledButton isActive={isLatest} onClick={latestStatusToggled}>
+            Latest
+          </StyledButton>
         </ButtonGroup>
       </ButtonGroupContainer>
-      {isLatest && <LatestTweets />}
       {isTop && <TopTweets />}
+      {isLatest && <LatestTweets />}
     </>
   );
 };
