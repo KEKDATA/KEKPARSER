@@ -10,7 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import { $parseTargets, searchTargetChanged } from './model';
 
 const StyledSearchGrid = styled(Grid)`
-  @media (min-width: 500px) {
+  @media (min-width: 700px) {
     min-width: 400px;
   }
 

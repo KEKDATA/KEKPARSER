@@ -7,11 +7,12 @@ import Grid from '@material-ui/core/Grid';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Typography from '@material-ui/core/Typography';
 
+import { TweetsSkeleton } from '../../../UI/skeleton/tweets';
+
 import retweetIcon from '../../../assets/icons/retweet.svg';
 import replyIcon from '../../../assets/icons/reply.svg';
 
 import { $tweets } from './model';
-import { TweetSkeleton } from '../../../UI/tweet_skeleton';
 
 const TweetIcon = styled.img`
   width: 24px;
@@ -36,7 +37,7 @@ export const Tweets: React.FC = () => {
 
   return (
     <>
-      {isLoading && <TweetSkeleton />}
+      {isLoading && <TweetsSkeleton />}
       {!isLoading && (
         <Grid container direction="column" spacing={4}>
           {finalTweets.map(
