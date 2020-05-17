@@ -1,4 +1,4 @@
-export const checkIsNumberExist = (value: number) => {
+export const checkIsNumberExist = (value: any) => {
   const isExist = typeof value !== 'undefined' || value !== null;
   const isNumberExist = isExist && typeof value === 'number';
 

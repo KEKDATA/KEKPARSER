@@ -1,27 +1,35 @@
 import { combine, createStore } from 'effector';
 
 import { $socketMessage, FinalTweet, onMessage, sendFx } from '../../../socket';
+import { checkIsNumberExist } from '../../../lib/is_number_exist';
 
 const checkIsExistCoefficients = (coefficient: FinalTweet) =>
   coefficient && Object.values(coefficient).length > 0;
 
-const $tweetWithMinCoefficient = $socketMessage.map(({ minCoefficient }) => {
-  const isExistMin = checkIsExistCoefficients(minCoefficient);
+const $analyzedTweets = $socketMessage.map(
+  ({ maxCoefficient, minCoefficient, meanSentiment }) => {
+    const isExistMin = checkIsExistCoefficients(minCoefficient);
+    const isExistMax = checkIsExistCoefficients(maxCoefficient);
+    const isMeanSentimentExist = checkIsNumberExist(meanSentiment);
 
-  return { tweetWithMinCoefficient: minCoefficient, isExistMin };
-});
-const $tweetWithMaxCoefficient = $socketMessage.map(({ maxCoefficient }) => {
-  const isExistMax = checkIsExistCoefficients(maxCoefficient);
+    const actualMeanSentiment = isMeanSentimentExist && meanSentiment;
 
-  return { tweetWithMaxCoefficient: maxCoefficient, isExistMax };
-});
+    return {
+      tweetWithMinCoefficient: minCoefficient,
+      tweetWithMaxCoefficient: maxCoefficient,
+      isExistMin,
+      isExistMax,
+      meanSentiment: actualMeanSentiment,
+    };
+  },
+);
+
 const $isLoading = createStore<boolean>(false);
 
 $isLoading.on(sendFx.done, () => true);
 $isLoading.on(onMessage, () => false);
 
 export const $tweetsWithCoefficients = combine({
-  minCoefficient: $tweetWithMinCoefficient,
-  maxCoefficient: $tweetWithMaxCoefficient,
+  analyzedTweets: $analyzedTweets,
   isLoading: $isLoading,
 });

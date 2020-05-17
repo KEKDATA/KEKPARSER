@@ -2,6 +2,8 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { useStore } from 'effector-react';
 
+import Skeleton from '@material-ui/lab/Skeleton';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
 import { MemoizedTweets } from '../tweets';
@@ -30,47 +32,66 @@ const TweetsWrapper = styled(Wrapper)`
 
 export const ParseInfo: React.FC = () => {
   const {
-    minCoefficient: { tweetWithMinCoefficient, isExistMin },
-    maxCoefficient: { tweetWithMaxCoefficient, isExistMax },
+    analyzedTweets: {
+      tweetWithMinCoefficient,
+      tweetWithMaxCoefficient,
+      isExistMin,
+      isExistMax,
+      meanSentiment,
+    },
     isLoading,
   } = useStore($tweetsWithCoefficients);
 
   return (
-    <ParseInfoContainer>
+    <Grid container justify="center" direction="column">
       {isLoading && (
         <>
-          <TweetSkeleton />
-          <TweetsSkeleton />
-          <TweetSkeleton />
+          <Grid container justify="center">
+            <Skeleton animation="wave" height={25} width={150} />
+          </Grid>
+          <ParseInfoContainer>
+            <TweetSkeleton />
+            <TweetsSkeleton />
+            <TweetSkeleton />
+          </ParseInfoContainer>
         </>
       )}
       {!isLoading && (
         <>
-          <Wrapper>
-            {isExistMin && (
-              <>
-                <Typography gutterBottom>
-                  Tweet with min Sentiment analyse coefficient:
-                </Typography>
-                <Tweet tweetOptions={tweetWithMinCoefficient} />
-              </>
-            )}
-          </Wrapper>
-          <TweetsWrapper>
-            <MemoizedTweets />
-          </TweetsWrapper>
-          <Wrapper>
-            {isExistMax && (
-              <>
-                <Typography gutterBottom>
-                  Tweet with max Sentiment analyse coefficient:
-                </Typography>
-                <Tweet tweetOptions={tweetWithMaxCoefficient} />
-              </>
-            )}
-          </Wrapper>
+          {meanSentiment && (
+            <Grid container justify="center">
+              <Typography>
+                Mean Sentiment coefficient: {meanSentiment}
+              </Typography>
+            </Grid>
+          )}
+          <ParseInfoContainer>
+            <Wrapper>
+              {isExistMin && (
+                <>
+                  <Typography gutterBottom>
+                    Tweet with min Sentiment analyse coefficient:
+                  </Typography>
+                  <Tweet tweetOptions={tweetWithMinCoefficient} />
+                </>
+              )}
+            </Wrapper>
+            <TweetsWrapper>
+              <MemoizedTweets />
+            </TweetsWrapper>
+            <Wrapper>
+              {isExistMax && (
+                <>
+                  <Typography gutterBottom>
+                    Tweet with max Sentiment analyse coefficient:
+                  </Typography>
+                  <Tweet tweetOptions={tweetWithMaxCoefficient} />
+                </>
+              )}
+            </Wrapper>
+          </ParseInfoContainer>
         </>
       )}
-    </ParseInfoContainer>
+    </Grid>
   );
 };
