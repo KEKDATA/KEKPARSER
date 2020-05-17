@@ -5,6 +5,7 @@ import {
   Effect,
   Event,
 } from 'effector';
+import { finalTweets } from './moks/final_tweets';
 
 const URL = 'ws://127.0.0.1:8000';
 
@@ -26,7 +27,7 @@ type Send =
     }
   | {};
 
-type FinalTweet = {
+export type FinalTweet = {
   id: string;
   userUrl: string;
   name: string;
@@ -42,8 +43,16 @@ type FinalTweet = {
 
 let socket: WebSocket;
 
-export const $socketMessage = createStore<{ finalTweets: Array<FinalTweet> }>({
+export const $socketMessage = createStore<{
+  finalTweets: Array<FinalTweet>;
+  meanSentiment: number;
+  minCoefficient: FinalTweet;
+  maxCoefficient: FinalTweet;
+}>({
   finalTweets: [],
+  meanSentiment: 0,
+  minCoefficient: <FinalTweet>{},
+  maxCoefficient: <FinalTweet>{},
 });
 
 export const sendFx: Effect<Send, any> = createEffect();

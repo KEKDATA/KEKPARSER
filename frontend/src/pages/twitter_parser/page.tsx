@@ -9,7 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import { ParseTarget } from '../../features/twitter/parse_target';
 import { TwitterControls } from '../../features/twitter/controls';
 import { Settings } from '../../features/twitter/settings';
-import { Tweets } from '../../features/twitter/tweets';
+import { ParseInfo } from '../../features/twitter/parse_info';
 
 import { $isDisabled, sendParserOptions } from './model';
 
@@ -21,22 +21,24 @@ export const TwitterParser: React.FC = () => {
   const isDisabled = useStore($isDisabled);
 
   return (
-    <StyledContainer maxWidth="md">
-      <ParseTarget />
-      <TwitterControls />
-      <Settings />
-      <Grid container justify="center" spacing={4}>
-        <Grid item>
-          <Button
-            variant="contained"
-            color="secondary"
-            disabled={isDisabled}
-            onClick={sendParserOptions}>
-            Submit parse options
-          </Button>
+    <>
+      <StyledContainer maxWidth="md">
+        <ParseTarget />
+        <TwitterControls />
+        <Settings />
+        <Grid container justify="center" spacing={4}>
+          <Grid item>
+            <Button
+              variant="contained"
+              color="secondary"
+              disabled={isDisabled}
+              onClick={sendParserOptions}>
+              Submit parse options
+            </Button>
+          </Grid>
         </Grid>
-      </Grid>
-      <Tweets />
-    </StyledContainer>
+      </StyledContainer>
+      <ParseInfo />
+    </>
   );
 };
