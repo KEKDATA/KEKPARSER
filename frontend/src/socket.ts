@@ -40,18 +40,22 @@ export type FinalTweet = {
   tweetBayes: string;
 };
 
-let socket: WebSocket;
-
-export const $socketMessage = createStore<{
+export type TakenTweetsInfo = {
   finalTweets: Array<FinalTweet>;
   meanSentiment: number | null;
   minCoefficient: FinalTweet;
   maxCoefficient: FinalTweet;
-}>({
+  tweetsType: 'top' | 'latest' | null;
+};
+
+let socket: WebSocket;
+
+export const $socketMessage = createStore<TakenTweetsInfo>({
   finalTweets: [],
   meanSentiment: null,
   minCoefficient: <FinalTweet>{},
   maxCoefficient: <FinalTweet>{},
+  tweetsType: null,
 });
 
 export const sendFx: Effect<Send, any> = createEffect();

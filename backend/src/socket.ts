@@ -43,6 +43,7 @@ export const sendFx: Effect<
       meanSentiment: number;
       minCoefficient: FinalTweet;
       maxCoefficient: FinalTweet;
+      tweetsType: 'top' | 'latest';
     };
     id: string;
   },
@@ -64,8 +65,6 @@ sendFx.use(({ result, id }) => {
   const currentSocket = socketCollection[id];
   // @ts-ignore
   currentSocket.send(serializedData);
-
-  delete socketCollection[id];
 });
 
 sendFx.done.watch(payload => {

@@ -1,28 +1,10 @@
 import { combine, createStore } from 'effector';
 
-import { $socketMessage, FinalTweet, onMessage, sendFx } from '../../../socket';
-import { checkIsNumberExist } from '../../../lib/is_number_exist';
+import { $socketMessage, onMessage, sendFx } from '../../../socket';
 
-const checkIsExistCoefficients = (coefficient: FinalTweet) =>
-  coefficient && Object.values(coefficient).length > 0;
+import { getNormalizedTweetAnalyze } from '../lib/get_normalized_tweets';
 
-const $analyzedTweets = $socketMessage.map(
-  ({ maxCoefficient, minCoefficient, meanSentiment }) => {
-    const isExistMin = checkIsExistCoefficients(minCoefficient);
-    const isExistMax = checkIsExistCoefficients(maxCoefficient);
-    const isMeanSentimentExist = checkIsNumberExist(meanSentiment);
-
-    const actualMeanSentiment = isMeanSentimentExist && meanSentiment;
-
-    return {
-      tweetWithMinCoefficient: minCoefficient,
-      tweetWithMaxCoefficient: maxCoefficient,
-      isExistMin,
-      isExistMax,
-      meanSentiment: actualMeanSentiment,
-    };
-  },
-);
+const $analyzedTweets = $socketMessage.map(getNormalizedTweetAnalyze);
 
 const $isLoading = createStore<boolean>(false);
 

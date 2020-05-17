@@ -1,13 +1,13 @@
 import { attach, combine } from 'effector';
 
-import { onMessage, sendFx } from '../../socket';
+import { onMessage, sendFx } from '../../../socket';
 
-import { $controls } from '../../features/twitter/controls/model';
-import { $parseTargets } from '../../features/twitter/parse_target/model';
-import { $profileSettings } from '../../features/twitter/settings/profile/model';
-import { $tweetsSettings } from '../../features/twitter/settings/tweets/model';
+import { $controls } from '../controls/model';
+import { $parseTargets } from '../parse_target/model';
+import { $profileSettings } from '../settings/profile/model';
+import { $tweetsSettings } from '../settings/tweets/model';
 
-import { PROFILE, SEARCH_TWEETS } from '../../constants/parse_target';
+import { PROFILE, SEARCH_TWEETS } from '../../../constants/parse_target';
 
 const $requestParams = combine({
   controls: $controls,

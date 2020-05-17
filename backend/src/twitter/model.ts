@@ -8,7 +8,7 @@ import { ProfileSettings, TweetsSettings } from '../socket';
 import { LIKES, MEDIA, TWEETS_REPLIES_TAB, TWEETS_TAB } from './constants/tabs';
 import { setupWebdriverFx } from '../webdriver';
 
-type Settings = ProfileSettings | TweetsSettings | {};
+export type Settings = ProfileSettings | TweetsSettings | {};
 
 export const $profileTab = createStore<ProfileTabs | ''>('');
 export const $webdriverPage = createStore<Page>(<Page>{});

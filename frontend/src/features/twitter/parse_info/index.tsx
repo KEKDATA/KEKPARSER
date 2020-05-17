@@ -12,6 +12,7 @@ import { Tweet } from '../tweet';
 import { $tweetsWithCoefficients } from './model';
 import { TweetSkeleton } from '../../../UI/skeleton/tweet';
 import { TweetsSkeleton } from '../../../UI/skeleton/tweets';
+import { NormalizedTweetInfo } from '../../../types/tweets';
 
 const ParseInfoContainer = styled.div`
   display: grid;
@@ -30,17 +31,19 @@ const TweetsWrapper = styled(Wrapper)`
   padding: 0 16px;
 `;
 
-export const ParseInfo: React.FC = () => {
-  const {
-    analyzedTweets: {
-      tweetWithMinCoefficient,
-      tweetWithMaxCoefficient,
-      isExistMin,
-      isExistMax,
-      meanSentiment,
-    },
-    isLoading,
-  } = useStore($tweetsWithCoefficients);
+export const ParseInfo: React.FC<{
+  infoOptions: NormalizedTweetInfo;
+}> = ({
+  infoOptions: {
+    finalTweets,
+    tweetWithMinCoefficient,
+    tweetWithMaxCoefficient,
+    isExistMin,
+    isExistMax,
+    meanSentiment,
+  },
+}) => {
+  const { isLoading } = useStore($tweetsWithCoefficients);
 
   return (
     <Grid container justify="center" direction="column">
@@ -77,7 +80,7 @@ export const ParseInfo: React.FC = () => {
               )}
             </Wrapper>
             <TweetsWrapper>
-              <MemoizedTweets />
+              <MemoizedTweets finalTweets={finalTweets} />
             </TweetsWrapper>
             <Wrapper>
               {isExistMax && (

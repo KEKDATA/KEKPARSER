@@ -5,36 +5,95 @@ import { setupWebdriverFx } from '../webdriver';
 import { Send } from '../socket';
 import { createdTwitterParse } from '../twitter/twitter_parse';
 import { analyzeTweetsFx } from './bonding_jobs';
+import {
+  PROFILE_TARGET,
+  SEARCH_TWEETS_TARGET,
+} from '../twitter/constants/type_parse_target';
 
 export const startParserQueues = (message: { options: Send; id: string }) => {
   const { options, id } = message;
+  const { tweetsSettings, profileSettings, parseUrl, parseTarget } = options;
 
-  const queue = new Queue(id);
-  const processName = `parse:${id}`;
+  if (parseTarget === SEARCH_TWEETS_TARGET) {
+    if (tweetsSettings && tweetsSettings.isTop) {
+      const queue = new Queue(`${id}:top`);
+      const processName = `parse:${id}`;
+      const tweetsType = 'top';
 
-  console.log(processName);
+      console.log(processName);
 
-  queue.process(processName, async function(job, done) {
-    const actualId = id;
-    const actualQueue = queue;
-    await setupWebdriverFx({ options, id: actualId, queue: actualQueue });
-    const { parsedTweets } = await createdTwitterParse(null);
-    done(null, () =>
-      analyzeTweetsFx({ parsedTweets, id: actualId, queue: actualQueue }),
-    );
-  });
+      queue.process(processName, async function(job, done) {
+        const actualId = id;
+        const actualQueue = queue;
+        await setupWebdriverFx({ options, id: actualId, queue: actualQueue });
+        const { parsedTweets } = await createdTwitterParse(null);
+        done(null, () =>
+          analyzeTweetsFx({
+            parsedTweets,
+            id: actualId,
+            queue: actualQueue,
+            tweetsType,
+          }),
+        );
+      });
 
-  queue.on('progress', function(job, progress) {
-    console.log(`Job ${job.id} is ${progress * 100}% ready!`);
-  });
+      queue.on('progress', function(job, progress) {
+        console.log(`Job ${job.id} is ${progress * 100}% ready!`);
+      });
 
-  queue.on('completed', function(job, jobEvent) {
-    console.log(`Parse Job ${job.id} completed!`);
-    jobEvent();
-    job.remove();
-  });
+      queue.on('completed', function(job, jobEvent) {
+        console.log(`Parse Job ${job.id} completed!`);
+        jobEvent();
+        job.remove();
+      });
 
-  queue.add(processName);
+      queue.add(processName);
+    }
+
+    if (tweetsSettings && tweetsSettings.isLatest) {
+      const queue = new Queue(`${id}:latest`);
+      const processName = `parse:${id}`;
+      const actualParseUrl = `${parseUrl}&f=live`;
+      const tweetsType = 'latest';
+      const actualOptions = {
+        ...options,
+        parseUrl: actualParseUrl,
+      };
+
+      console.log(processName);
+
+      queue.process(processName, async function(job, done) {
+        const actualId = id;
+        const actualQueue = queue;
+        await setupWebdriverFx({
+          options: actualOptions,
+          id: actualId,
+          queue: actualQueue,
+        });
+        const { parsedTweets } = await createdTwitterParse(null);
+        done(null, () =>
+          analyzeTweetsFx({
+            parsedTweets,
+            id: actualId,
+            queue: actualQueue,
+            tweetsType,
+          }),
+        );
+      });
+
+      queue.on('progress', function(job, progress) {
+        console.log(`Job ${job.id} is ${progress * 100}% ready!`);
+      });
+
+      queue.on('completed', function(job, jobEvent) {
+        console.log(`Parse Job ${job.id} completed!`);
+        jobEvent();
+        job.remove();
+      });
+
+      queue.add(processName);
+    }
+  }
 
   // const UserOptions = sequelize.define(id, {
   //   userOptions: {

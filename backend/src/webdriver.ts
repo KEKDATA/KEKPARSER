@@ -2,7 +2,7 @@ import { createEffect } from 'effector';
 import { chromium, devices } from 'playwright';
 import { Queue } from 'bull';
 
-import { Send } from './socket';
+import { ProfileSettings, Send, TweetsSettings } from './socket';
 import {
   PROFILE_TARGET,
   SEARCH_TWEETS_TARGET,
@@ -21,7 +21,7 @@ export const setupWebdriverFx = createEffect<
       profileSettings = {},
     } = options;
 
-    let settings = {};
+    let settings: ProfileSettings | TweetsSettings | {} = {};
 
     switch (parseTarget) {
       case PROFILE_TARGET: {
@@ -40,7 +40,7 @@ export const setupWebdriverFx = createEffect<
     }
 
     const browser = await chromium.launch({
-      headless: false,
+      headless: true,
     });
 
     const iPhone = devices['iPhone 11 Pro'];

@@ -1,14 +1,13 @@
 import * as React from 'react';
-import { useStore } from 'effector-react';
 
 import Grid from '@material-ui/core/Grid';
 
-import { $finalTweets } from './model';
 import { Tweet } from '../tweet';
+import { FinalTweet } from '../../../socket';
 
-export const Tweets: React.FC = () => {
-  const finalTweets = useStore($finalTweets);
-
+export const Tweets: React.FC<{ finalTweets: Array<FinalTweet> }> = ({
+  finalTweets,
+}) => {
   return (
     <Grid container direction="column">
       {finalTweets.map(tweetOptions => (

@@ -12,10 +12,15 @@ import { getTextWithSentimentAnalysis } from '../lib/sentiment_analysis/sentimen
 import { getTextWithBayesClassifier } from '../lib/bayes_classifier/bayes_classifier';
 
 export const analyzeTweetsFx = createEffect<
-  { id: string; parsedTweets: Array<Tweet>; queue: Queue },
+  {
+    id: string;
+    parsedTweets: Array<Tweet>;
+    queue: Queue;
+    tweetsType: 'top' | 'latest';
+  },
   any
 >({
-  handler: async ({ id, parsedTweets, queue }) => {
+  handler: async ({ id, parsedTweets, queue, tweetsType }) => {
     const sentimentJob = createEvent<{
       tweetsWithSentiments: number[];
       meanSentiment: number;
@@ -93,6 +98,7 @@ export const analyzeTweetsFx = createEffect<
             meanSentiment,
             minCoefficient,
             maxCoefficient,
+            tweetsType,
           },
         });
       },
