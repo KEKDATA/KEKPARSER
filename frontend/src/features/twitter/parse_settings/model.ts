@@ -5,7 +5,7 @@ import { onMessage, sendFx } from '../../../socket';
 import { $controls } from '../controls/model';
 import { $parseTargets } from '../parse_target/model';
 import { $profileSettings } from '../settings/profile/model';
-import { $tweetsSettings } from '../settings/tweets/model';
+import { $searchTweetsSettings } from '../settings/search_tweets/model';
 
 import { PROFILE, SEARCH_TWEETS } from '../../../constants/parse_target';
 
@@ -13,14 +13,14 @@ const $requestParams = combine({
   controls: $controls,
   parseTargets: $parseTargets,
   profileSettings: $profileSettings,
-  tweetsSettings: $tweetsSettings,
+  searchTweetsSettings: $searchTweetsSettings,
 });
 export const $isDisabled = $requestParams.map(
   ({
     parseTargets: { parseUrl },
     controls: { parseTarget, tweetsCount },
     profileSettings,
-    tweetsSettings,
+    searchTweetsSettings,
   }) => {
     const isParseUrlSelected = parseUrl.length > 0;
     const isTweetsCountSelected = tweetsCount > 0;
@@ -33,7 +33,7 @@ export const $isDisabled = $requestParams.map(
       }
 
       case SEARCH_TWEETS: {
-        settings = tweetsSettings;
+        settings = searchTweetsSettings;
         break;
       }
 
