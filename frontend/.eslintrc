@@ -12,7 +12,8 @@
     "location": true,
     "Audio": true,
     "FileReader": true,
-    "Blob": true
+    "Blob": true,
+    "WebSocket": true
   },
   "plugins": ["react", "prettier", "react-hooks"],
   "rules": {
