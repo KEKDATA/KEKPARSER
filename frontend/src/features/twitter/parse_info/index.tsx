@@ -32,6 +32,7 @@ const TweetsWrapper = styled(Wrapper)`
 
 export const ParseInfo: React.FC<{
   infoOptions: NormalizedTweetInfo;
+  isLoading: boolean;
 }> = ({
   infoOptions: {
     finalTweets,
@@ -40,12 +41,12 @@ export const ParseInfo: React.FC<{
     isExistMin,
     isExistMax,
     meanSentiment,
-    isLoaded,
   },
+  isLoading,
 }) => {
   return (
     <Grid container justify="center" direction="column">
-      {!isLoaded && (
+      {isLoading && (
         <>
           <Grid container justify="center">
             <Skeleton animation="wave" height={25} width={150} />
@@ -57,7 +58,7 @@ export const ParseInfo: React.FC<{
           </ParseInfoContainer>
         </>
       )}
-      {isLoaded && (
+      {!isLoading && (
         <>
           {meanSentiment && (
             <Grid container justify="center">

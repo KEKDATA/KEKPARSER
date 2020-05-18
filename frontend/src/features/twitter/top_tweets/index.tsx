@@ -6,7 +6,11 @@ import { $topTweets } from './model';
 import { ParseInfo } from '../parse_info';
 
 export const TopTweets: React.FC = () => {
-  const topTweets = useStore($topTweets);
+  const { tweets, isLoading } = useStore($topTweets);
 
-  return <ParseInfo infoOptions={topTweets} />;
+  if (isLoading === null) {
+    return null;
+  }
+
+  return <ParseInfo infoOptions={tweets} isLoading={isLoading} />;
 };

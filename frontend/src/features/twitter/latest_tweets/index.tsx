@@ -6,7 +6,11 @@ import { $latestTweets } from './model';
 import { ParseInfo } from '../parse_info';
 
 export const LatestTweets: React.FC = () => {
-  const latestTweets = useStore($latestTweets);
+  const { tweets, isLoading } = useStore($latestTweets);
 
-  return <ParseInfo infoOptions={latestTweets} />;
+  if (isLoading === null) {
+    return null;
+  }
+
+  return <ParseInfo infoOptions={tweets} isLoading={isLoading} />;
 };

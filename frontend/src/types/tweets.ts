@@ -7,5 +7,4 @@ export type NormalizedTweetInfo = {
   isExistMin: boolean;
   isExistMax: boolean;
   meanSentiment: number | null;
-  isLoaded: boolean;
 };

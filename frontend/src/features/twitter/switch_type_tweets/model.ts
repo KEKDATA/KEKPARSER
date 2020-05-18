@@ -1,16 +1,12 @@
-import { createEvent, createStore, combine } from 'effector';
+import { createEvent, createStore } from 'effector';
 import { MouseEvent } from 'react';
 
-export const $isLatest = createStore<boolean>(false);
-export const $isTop = createStore<boolean>(false);
+export const $tweetsParseType = createStore<'top' | 'latest' | ''>('');
 
-export const latestStatusToggled = createEvent<MouseEvent<HTMLElement>>();
-export const topStatusToggled = createEvent<MouseEvent<HTMLElement>>();
+export const tweetsParseTypeChanged = createEvent<MouseEvent<HTMLElement>>();
 
-$isLatest.on(latestStatusToggled, () => true);
-$isLatest.on(topStatusToggled, () => false);
-
-$isTop.on(topStatusToggled, () => true);
-$isTop.on(latestStatusToggled, () => false);
-
-export const $switchTypes = combine({ isLatest: $isLatest, isTop: $isTop });
+$tweetsParseType.on(tweetsParseTypeChanged, (_, event) => {
+  // @ts-ignore
+  const type = event.currentTarget.value;
+  return type;
+});

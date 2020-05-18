@@ -3,45 +3,42 @@ import styled from 'styled-components';
 import { useStore } from 'effector-react';
 
 import Grid from '@material-ui/core/Grid';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import Button from '@material-ui/core/Button';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 import { LatestTweets } from '../latest_tweets';
 
-import { $switchTypes, latestStatusToggled, topStatusToggled } from './model';
+import { $tweetsParseType, tweetsParseTypeChanged } from './model';
 import { TopTweets } from '../top_tweets';
 
 const ButtonGroupContainer = styled(Grid)`
   margin: 20px 0;
 `;
 
-const StyledButton = styled(Button)<{ isActive: boolean }>`
-  opacity: ${({ isActive }) => (isActive ? 1 : 0.7)};
-  &:hover {
-    opacity: 1;
-  }
-`;
+const PARSE_TOP_TYPE = 'top';
+const PARSE_LATEST_TYPE = 'latest';
 
 export const SwitchTypeTweets: React.FC = () => {
-  const { isLatest, isTop } = useStore($switchTypes);
+  const tweetsParseType = useStore($tweetsParseType);
 
   return (
     <>
       <ButtonGroupContainer container justify="center">
-        <ButtonGroup
-          variant="contained"
-          color="primary"
-          aria-label="contained primary button group">
-          <StyledButton isActive={isTop} onClick={topStatusToggled}>
+        <ToggleButtonGroup
+          value={tweetsParseType}
+          exclusive
+          onChange={tweetsParseTypeChanged}
+          aria-label="Tweets toggle button group">
+          <ToggleButton value="top" aria-label="top">
             Top
-          </StyledButton>
-          <StyledButton isActive={isLatest} onClick={latestStatusToggled}>
+          </ToggleButton>
+          <ToggleButton value="latest" aria-label="latest">
             Latest
-          </StyledButton>
-        </ButtonGroup>
+          </ToggleButton>
+        </ToggleButtonGroup>
       </ButtonGroupContainer>
-      {isTop && <TopTweets />}
-      {isLatest && <LatestTweets />}
+      {tweetsParseType === PARSE_TOP_TYPE && <TopTweets />}
+      {tweetsParseType === PARSE_LATEST_TYPE && <LatestTweets />}
     </>
   );
 };
