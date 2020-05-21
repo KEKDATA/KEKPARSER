@@ -65,7 +65,7 @@ export const sendParserOptions = attach({
       controls: { parseTarget, tweetsCount },
       parseTargets: { parseUrl },
       profileSettings,
-      tweetsSettings,
+      searchTweetsSettings,
     },
   ) => {
     const params = {
@@ -85,7 +85,7 @@ export const sendParserOptions = attach({
       case SEARCH_TWEETS: {
         return {
           ...params,
-          tweetsSettings,
+          tweetsSettings: searchTweetsSettings,
         };
       }
 

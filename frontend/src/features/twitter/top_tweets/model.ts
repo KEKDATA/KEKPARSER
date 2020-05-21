@@ -30,10 +30,13 @@ const $normalizedTweets: Store<NormalizedTweetInfo> = $socketMessage.map(
 const $isLoadingTopTweets = createStore<boolean | null>(null);
 
 $isLoadingTopTweets.on(sendFx, () => true);
-$isLoadingTopTweets.on(
-  $socketMessage,
-  (_, { tweetsType }) => tweetsType !== TOP_TWEETS,
-);
+$isLoadingTopTweets.on($socketMessage, (defaultState, { tweetsType }) => {
+  if (tweetsType === TOP_TWEETS) {
+    return false;
+  }
+
+  return defaultState;
+});
 
 export const $topTweets = combine({
   tweets: $normalizedTweets,

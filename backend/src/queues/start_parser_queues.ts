@@ -2,7 +2,7 @@ import Queue from 'bull';
 
 import { setupWebdriverFx } from '../webdriver';
 
-import { Send } from '../socket';
+import { $socketMessage, Send } from '../socket';
 import { createdTwitterParse } from '../twitter/twitter_parse';
 import { analyzeTweetsFx } from './bonding_jobs';
 import { SEARCH_TWEETS_TARGET } from '../twitter/constants/type_parse_target';

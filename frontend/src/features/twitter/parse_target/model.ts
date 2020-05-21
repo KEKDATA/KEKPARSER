@@ -39,7 +39,7 @@ const $searchTarget = createStore<string>('');
 const $labelParseTarget = $parseTarget.map(target =>
   getActualValueByParseTarget(
     target,
-    'What kind of search_tweets?',
+    'What kind of search tweets?',
     'Enter profile name',
   ),
 );

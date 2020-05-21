@@ -32,10 +32,13 @@ const $normalizedTweets: Store<NormalizedTweetInfo> = $socketMessage.map(
 const $isLoadingLatestTweets = createStore<boolean | null>(null);
 
 $isLoadingLatestTweets.on(sendFx, () => true);
-$isLoadingLatestTweets.on(
-  $socketMessage,
-  (_, { tweetsType }) => tweetsType !== LATEST_TWEETS,
-);
+$isLoadingLatestTweets.on($socketMessage, (defaultState, { tweetsType }) => {
+  if (tweetsType === LATEST_TWEETS) {
+    return false;
+  }
+
+  return defaultState;
+});
 
 export const $latestTweets = combine({
   tweets: $normalizedTweets,
