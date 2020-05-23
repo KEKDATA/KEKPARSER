@@ -11,26 +11,7 @@ import { nanoid } from 'nanoid';
 
 import { startParserQueues } from './queues/start_parser_queues';
 import { FinalTweet } from './twitter/types';
-
-export type ProfileSettings = {
-  isLikes: boolean;
-  isTweets: boolean;
-  isTweetsAndReplies: boolean;
-  isMedia: boolean;
-};
-
-export type TweetsSettings = {
-  isTop: boolean;
-  isLatest: boolean;
-};
-
-export type Send = {
-  parseTarget: string;
-  tweetsCount: number;
-  parseUrl: string;
-  profileSettings?: ProfileSettings;
-  tweetsSettings?: TweetsSettings;
-};
+import { Send } from './types';
 
 let socketCollection: { [id: string]: WebSocket.Server } = {};
 
@@ -51,7 +32,10 @@ export const sendFx: Effect<
 > = createEffect();
 
 const connection: Event<any> = createEvent('connection');
-const onMessage: Event<{ options: Send; id: string }> = createEvent('message');
+const onMessage: Event<{
+  options: Send;
+  id: string;
+}> = createEvent('message');
 
 $socketMessage.on(onMessage, (_, { options, id }) => ({
   options,
@@ -67,8 +51,8 @@ sendFx.use(({ result, id }) => {
   currentSocket.send(serializedData);
 });
 
-sendFx.done.watch(payload => {
-  console.log('Response: ', payload);
+sendFx.done.watch(() => {
+  console.log('Complete');
 });
 
 sendFx.fail.watch(fail => {
@@ -97,10 +81,11 @@ export const connectionSockets = () => {
   let socket;
 
   try {
-    console.log('Try to connect...');
+    console.log('Try to init socket...');
     socket = new WebSocket.Server({
       server,
     });
+    console.log('Socket init');
   } catch (err) {
     throw new Error(err.message);
   }

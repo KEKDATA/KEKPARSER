@@ -1,7 +1,7 @@
 import { createEffect } from 'effector';
 import { chromium, devices } from 'playwright';
 
-import { ProfileSettings, Send, TweetsSettings } from './socket';
+import { ProfileSettings, Send, TweetsSettings } from './types';
 import {
   PROFILE_TARGET,
   SEARCH_TWEETS_TARGET,
