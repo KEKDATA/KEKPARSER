@@ -91,7 +91,7 @@ export const analyzeTweetsFx = createEffect<
         const maxCoefficient =
           sortedSentimentCoefficients[sortedSentimentCoefficients.length - 1];
 
-        await sendFx({
+        sendFx({
           id,
           result: {
             finalTweets,

@@ -46,7 +46,6 @@ export const startParserQueues = (message: { options: Send; id: string }) => {
       queue.on('completed', function(job, jobEvent) {
         console.log(`Parse Job ${job.id} completed!`);
         jobEvent();
-        job.remove();
       });
 
       queue.add(processName);

@@ -77,15 +77,16 @@ sendFx.fail.watch(fail => {
 });
 
 connection.watch(wsServer => {
-  const id = nanoid();
-
-  console.info('Connection with user is open');
-
-  wsServer.id = id;
-  socketCollection[wsServer.id] = wsServer;
-
   wsServer.on('message', (message: string) => {
+    const id = nanoid();
+
+    console.info('Connection with user is open');
+
+    wsServer.id = id;
+    socketCollection[wsServer.id] = wsServer;
+
     const options = JSON.parse(message);
+
     return onMessage({ options, id });
   });
 });
