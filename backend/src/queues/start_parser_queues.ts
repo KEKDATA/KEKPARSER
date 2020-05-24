@@ -1,31 +1,19 @@
 import Queue from 'bull';
+import { nanoid } from 'nanoid';
 
 import { Send } from '../types';
 import { SEARCH_TWEETS_TARGET } from '../twitter/constants/type_parse_target';
 import { sendFx } from '../socket';
-import { nanoid } from 'nanoid';
 
-const defaultJobOptions = {
-  removeOnComplete: true,
-  removeOnFail: false,
-};
+import { OPTIONS, MAX_JOBS_PER_WORKER } from './config';
 
-const redis = {
-  host: 'localhost',
-  port: 6379,
-  maxRetriesPerRequest: null,
-  connectTimeout: 180000,
-};
+const parserQueue = new Queue(`parser`, OPTIONS);
+const callbackQueue = new Queue('callback', OPTIONS);
+const socketSendQueue = new Queue('web', OPTIONS);
 
-const options = { defaultJobOptions, redis };
+console.info('start parser queues connected');
 
-const parserQueue = new Queue(`parser`, options);
-const callbackQueue = new Queue('callback', options);
-const socketSendQueue = new Queue('web', options);
-
-const maxJobsPerWorker = 10;
-
-socketSendQueue.process(maxJobsPerWorker, job => {
+socketSendQueue.process(MAX_JOBS_PER_WORKER, job => {
   const { id, result } = job.data;
 
   sendFx({

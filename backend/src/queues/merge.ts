@@ -3,28 +3,14 @@ import { nanoid } from 'nanoid';
 
 import { insertionSentimentTweetsSort } from '../twitter/tweets/lib/insertion_sentiment_tweets_sort';
 
-const defaultJobOptions = {
-  removeOnComplete: true,
-  removeOnFail: false,
-};
+import { OPTIONS, MAX_JOBS_PER_WORKER } from './config';
 
-const redis = {
-  host: 'localhost',
-  port: 6379,
-  maxRetriesPerRequest: null,
-  connectTimeout: 180000,
-};
-
-const options = { defaultJobOptions, redis };
-
-const callbackQueue = new Queue('callback', options);
-const webQueue = new Queue('web', options);
+const callbackQueue = new Queue('callback', OPTIONS);
+const webQueue = new Queue('web', OPTIONS);
 
 const jobsProgress = new Map();
 
-const maxJobsPerWorker = 10;
-
-callbackQueue.process(maxJobsPerWorker, job => {
+callbackQueue.process(MAX_JOBS_PER_WORKER, job => {
   const { jobId, options } = job.data;
 
   const jobOptions = jobsProgress.get(jobId);

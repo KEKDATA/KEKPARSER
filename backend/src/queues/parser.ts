@@ -7,30 +7,16 @@ import { getTextWithAlphaOnly } from '../lib/normalizers/alphabet';
 import { createdTwitterParse } from '../twitter/twitter_parse';
 import { Tweet } from '../twitter/types';
 
+import { OPTIONS, MAX_JOBS_PER_WORKER } from './config';
+
 console.info('Parser connected');
 
-const defaultJobOptions = {
-  removeOnComplete: true,
-  removeOnFail: false,
-};
+const parserQueue = new Queue('parser', OPTIONS);
+const sentimentQueue = new Queue('sentiment', OPTIONS);
+const bayesQueue = new Queue('bayes', OPTIONS);
+const callbackQueue = new Queue('callback', OPTIONS);
 
-const redis = {
-  host: 'localhost',
-  port: 6379,
-  maxRetriesPerRequest: null,
-  connectTimeout: 180000,
-};
-
-const options = { defaultJobOptions, redis };
-
-const parserQueue = new Queue('parser', options);
-const sentimentQueue = new Queue('sentiment', options);
-const bayesQueue = new Queue('bayes', options);
-const callbackQueue = new Queue('callback', options);
-
-const maxJobsPerWorker = 10;
-
-parserQueue.process(maxJobsPerWorker, async job => {
+parserQueue.process(MAX_JOBS_PER_WORKER, async job => {
   const { id, options } = job.data;
 
   await setupWebdriverFx({ options });
