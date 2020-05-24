@@ -13,6 +13,7 @@ import { startParserQueues } from './queues/start_parser_queues';
 import { FinalTweet } from './twitter/types';
 import { Send } from './types';
 
+// TODO: Чистить со временем или после завершения работы нужных процессов.
 let socketCollection: { [id: string]: WebSocket.Server } = {};
 
 export const $socketMessage = createStore<Send | {}>({});
@@ -80,6 +81,7 @@ export const connectionSockets = () => {
 
   let socket;
 
+  // TODO: Добавить обработку ошибок нормальную
   try {
     console.log('Try to init socket...');
     socket = new WebSocket.Server({

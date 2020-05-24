@@ -8,6 +8,7 @@ import { OPTIONS, MAX_JOBS_PER_WORKER } from './config';
 const callbackQueue = new Queue('callback', OPTIONS);
 const webQueue = new Queue('web', OPTIONS);
 
+// TODO: Чистить со временем или после завершения работы нужных процессов.
 const jobsProgress = new Map();
 
 callbackQueue.process(MAX_JOBS_PER_WORKER, job => {
