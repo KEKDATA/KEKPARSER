@@ -1,0 +1,5 @@
+web: ts-node --files src/index.ts
+parser: ts-node --files src/queues/parser.ts
+sentiment: ts-node --files src/queues/sentiment.ts
+bayes: ts-node --files src/queues/bayes.ts
+merge: ts-node --files src/queues/merge.ts

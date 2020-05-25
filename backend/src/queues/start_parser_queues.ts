@@ -1,40 +1,80 @@
 import Queue from 'bull';
+import { nanoid } from 'nanoid';
 
-import { setupWebdriverFx } from '../webdriver';
+import { Send } from '../types';
+import { SEARCH_TWEETS_TARGET } from '../twitter/constants/type_parse_target';
+import { sendFx } from '../socket';
 
-import { Send } from '../socket';
-import { createdTwitterParse } from '../twitter/twitter_parse';
-import { analyzeTweetsFx } from './bonding_jobs';
+import { OPTIONS, MAX_JOBS_PER_WORKER } from './config';
+
+const parserQueue = new Queue(`parser`, OPTIONS);
+const callbackQueue = new Queue('callback', OPTIONS);
+const socketSendQueue = new Queue('web', OPTIONS);
+
+console.info('start parser queues connected');
+
+socketSendQueue.process(MAX_JOBS_PER_WORKER, job => {
+  const { id, result } = job.data;
+
+  sendFx({
+    id,
+    result,
+  });
+});
 
 export const startParserQueues = (message: { options: Send; id: string }) => {
   const { options, id } = message;
 
-  const queue = new Queue(id);
-  const processName = `parse:${id}`;
+  const { tweetsSettings, parseUrl, parseTarget } = options;
 
-  console.log(processName);
+  if (parseTarget === SEARCH_TWEETS_TARGET) {
+    if (tweetsSettings && tweetsSettings.isTop) {
+      const processName = `parse:${id}`;
+      const tweetsType = 'top';
 
-  queue.process(processName, async function(job, done) {
-    const actualId = id;
-    const actualQueue = queue;
-    await setupWebdriverFx({ options, id: actualId, queue: actualQueue });
-    const { parsedTweets } = await createdTwitterParse(null);
-    done(null, () =>
-      analyzeTweetsFx({ parsedTweets, id: actualId, queue: actualQueue }),
-    );
-  });
+      console.log(processName);
 
-  queue.on('progress', function(job, progress) {
-    console.log(`Job ${job.id} is ${progress * 100}% ready!`);
-  });
+      setTimeout(() => {
+        const jobId = nanoid();
 
-  queue.on('completed', function(job, jobEvent) {
-    console.log(`Parse Job ${job.id} completed!`);
-    jobEvent();
-    job.remove();
-  });
+        callbackQueue.add({
+          jobId,
+          options: { tweetsType, id },
+        });
+        parserQueue.add({
+          id: jobId,
+          options,
+          processName,
+        });
+      });
+    }
 
-  queue.add(processName);
+    if (tweetsSettings && tweetsSettings.isLatest) {
+      const processName = `parse:${id}`;
+      const actualParseUrl = `${parseUrl}&f=live`;
+      const tweetsType = 'latest';
+      const actualOptions = {
+        ...options,
+        parseUrl: actualParseUrl,
+      };
+
+      console.log(processName);
+
+      setTimeout(() => {
+        const jobId = nanoid();
+
+        callbackQueue.add({
+          jobId,
+          options: { tweetsType, id },
+        });
+        parserQueue.add({
+          processName,
+          id: jobId,
+          options: actualOptions,
+        });
+      });
+    }
+  }
 
   // const UserOptions = sequelize.define(id, {
   //   userOptions: {

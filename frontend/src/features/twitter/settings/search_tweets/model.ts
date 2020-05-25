@@ -18,7 +18,7 @@ $isLatest.on(
   (_, status: boolean) => status,
 );
 
-export const $tweetsSettings = combine({
+export const $searchTweetsSettings = combine({
   isTop: $isTop,
   isLatest: $isLatest,
 });

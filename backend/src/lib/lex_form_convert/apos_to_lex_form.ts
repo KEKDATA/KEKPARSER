@@ -1,5 +1,11 @@
 import { dictionary } from './dictionary';
 
+// Предложение
+// Массив слов
+// Обход каждого слова по словарю апострофов
+// Преобразования форм can't -> can not
+// Нормализованное предложение
+
 export const aposToLexForm = (text: string) => {
   const textWithWordBreak = text.split(' ');
 

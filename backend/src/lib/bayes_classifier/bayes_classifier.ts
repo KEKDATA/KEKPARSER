@@ -1,6 +1,6 @@
 import { getWordsTrigramsBayesClassifier } from './trigrams/words/bayes_words';
 
-export const getTextWithBayesClassifier = async (data: Array<string>) => {
+export const getTextWithBayesClassifier = (data: Array<string>) => {
   const bayesClassifier = getWordsTrigramsBayesClassifier();
 
   const dataWithBayesClassifier = [];
@@ -13,5 +13,5 @@ export const getTextWithBayesClassifier = async (data: Array<string>) => {
     dataWithBayesClassifier.push(classifierData);
   }
 
-  return Promise.resolve(dataWithBayesClassifier);
+  return dataWithBayesClassifier;
 };

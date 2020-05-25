@@ -5,13 +5,13 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
 import {
-  $tweetsSettings,
+  $searchTweetsSettings,
   latestStatusChanged,
   topStatusChanged,
 } from './model';
 
-export const TweetsSettings: React.FC = () => {
-  const { isTop, isLatest } = useStore($tweetsSettings);
+export const SearchTweetsSettings: React.FC = () => {
+  const { isTop, isLatest } = useStore($searchTweetsSettings);
 
   return (
     <>
