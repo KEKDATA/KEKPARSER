@@ -23,7 +23,7 @@ export const positiveTweets: Array<string> = [
   '@JetBlue well lucky I only fly JB..I guess I would be even more squished on any other airline 😞',
   '@united I appreciate the follow up.',
   '@united @jsumiyasu I am thankful to the  United ground staff who put me in the last seat on the last flight out. Home Late Flight is still home!',
-  '@united no worries about the tweets. We all should do what we can to make sure we, as in your tag line, "Fly the Friendly Skies."',
+  '@united no worries about the search_tweets. We all should do what we can to make sure we, as in your tag line, "Fly the Friendly Skies."',
   '@SouthwestAir Great job!! Looking forward to my next trip being able to use this new feature!',
   '@united @FlyANA_official pleasantly surprised to find ANA has made major upgrades on their transpacific route in flights, planes and service',
   '@SouthwestAir Great job with the Passbook integration! It’ll really help streamline the commute to San Fran! 😊☕📲✈',

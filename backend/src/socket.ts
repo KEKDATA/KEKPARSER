@@ -11,27 +11,9 @@ import { nanoid } from 'nanoid';
 
 import { startParserQueues } from './queues/start_parser_queues';
 import { FinalTweet } from './twitter/types';
+import { Send } from './types';
 
-export type ProfileSettings = {
-  isLikes: boolean;
-  isTweets: boolean;
-  isTweetsAndReplies: boolean;
-  isMedia: boolean;
-};
-
-export type TweetsSettings = {
-  isTop: boolean;
-  isLatest: boolean;
-};
-
-export type Send = {
-  parseTarget: string;
-  tweetsCount: number;
-  parseUrl: string;
-  profileSettings?: ProfileSettings;
-  tweetsSettings?: TweetsSettings;
-};
-
+// TODO: Чистить со временем или после завершения работы нужных процессов.
 let socketCollection: { [id: string]: WebSocket.Server } = {};
 
 export const $socketMessage = createStore<Send | {}>({});
@@ -43,6 +25,7 @@ export const sendFx: Effect<
       meanSentiment: number;
       minCoefficient: FinalTweet;
       maxCoefficient: FinalTweet;
+      tweetsType: 'top' | 'latest';
     };
     id: string;
   },
@@ -50,7 +33,10 @@ export const sendFx: Effect<
 > = createEffect();
 
 const connection: Event<any> = createEvent('connection');
-const onMessage: Event<{ options: Send; id: string }> = createEvent('message');
+const onMessage: Event<{
+  options: Send;
+  id: string;
+}> = createEvent('message');
 
 $socketMessage.on(onMessage, (_, { options, id }) => ({
   options,
@@ -64,12 +50,10 @@ sendFx.use(({ result, id }) => {
   const currentSocket = socketCollection[id];
   // @ts-ignore
   currentSocket.send(serializedData);
-
-  delete socketCollection[id];
 });
 
-sendFx.done.watch(payload => {
-  console.log('Response: ', payload);
+sendFx.done.watch(() => {
+  console.log('Complete');
 });
 
 sendFx.fail.watch(fail => {
@@ -78,15 +62,16 @@ sendFx.fail.watch(fail => {
 });
 
 connection.watch(wsServer => {
-  const id = nanoid();
-
-  console.info('Connection with user is open');
-
-  wsServer.id = id;
-  socketCollection[wsServer.id] = wsServer;
-
   wsServer.on('message', (message: string) => {
+    const id = nanoid();
+
+    console.info('Connection with user is open');
+
+    wsServer.id = id;
+    socketCollection[wsServer.id] = wsServer;
+
     const options = JSON.parse(message);
+
     return onMessage({ options, id });
   });
 });
@@ -96,11 +81,13 @@ export const connectionSockets = () => {
 
   let socket;
 
+  // TODO: Добавить обработку ошибок нормальную
   try {
-    console.log('Try to connect...');
+    console.log('Try to init socket...');
     socket = new WebSocket.Server({
       server,
     });
+    console.log('Socket init');
   } catch (err) {
     throw new Error(err.message);
   }

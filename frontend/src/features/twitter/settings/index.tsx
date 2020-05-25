@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import { PROFILE, SEARCH_TWEETS } from '../../../constants/parse_target';
 
 import { ProfileSettings } from './profile';
-import { TweetsSettings } from './tweets';
+import { SearchTweetsSettings } from './search_tweets';
 
 import { $parseTarget } from '../controls/model';
 
@@ -17,7 +17,7 @@ export const Settings: React.FC = () => {
     <Grid container justify="center" alignItems="center" spacing={4}>
       <Grid item>
         {parseTarget === PROFILE && <ProfileSettings />}
-        {parseTarget === SEARCH_TWEETS && <TweetsSettings />}
+        {parseTarget === SEARCH_TWEETS && <SearchTweetsSettings />}
       </Grid>
     </Grid>
   );

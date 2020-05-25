@@ -1,18 +1,14 @@
 import { createEffect } from 'effector';
 import { chromium, devices } from 'playwright';
-import { Queue } from 'bull';
 
-import { Send } from './socket';
+import { ProfileSettings, Send, TweetsSettings } from './types';
 import {
   PROFILE_TARGET,
   SEARCH_TWEETS_TARGET,
 } from './twitter/constants/type_parse_target';
 
-export const setupWebdriverFx = createEffect<
-  { options: Send; id: string; queue: Queue },
-  any
->({
-  handler: async ({ options, id, queue }) => {
+export const setupWebdriverFx = createEffect<{ options: Send }, any>({
+  handler: async ({ options }) => {
     const {
       parseTarget,
       tweetsCount,
@@ -21,7 +17,7 @@ export const setupWebdriverFx = createEffect<
       profileSettings = {},
     } = options;
 
-    let settings = {};
+    let settings: ProfileSettings | TweetsSettings | {} = {};
 
     switch (parseTarget) {
       case PROFILE_TARGET: {
@@ -53,12 +49,8 @@ export const setupWebdriverFx = createEffect<
     return Promise.resolve({
       parseTarget,
       tweetsCount,
-      parseUrl,
-      settings,
       page,
       browser,
-      id,
-      queue,
     });
   },
 });
