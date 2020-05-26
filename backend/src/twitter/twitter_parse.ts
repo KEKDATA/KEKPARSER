@@ -9,25 +9,44 @@ import {
 import { parsedTweetsFx } from './tweets/analyzed_tweets';
 import { getParsedTwitterProfile } from './profile/parse_twitter_profile';
 import { $parseTarget, $webdriverBrowser } from './model';
+import { ParsedTweets } from './types';
 
 const twitterParseFx = createEffect<
-  { browser: Browser; parseTarget: string },
+  { browser: Browser; parseTarget: string; tweetsType: string },
   any
 >({
-  handler: async ({ browser, parseTarget }) => {
+  handler: async ({ browser, parseTarget, tweetsType }) => {
     console.time();
 
-    let parsedTweets = {};
+    let tweets = {};
+    let profileInfo = {};
 
     switch (parseTarget) {
       case PROFILE_TARGET: {
-        // parsedTweets = await getParsedTwitterProfile();
+        const parsedProfileInfo: {
+          profileInfo: {
+            sentimentCoefficient: number | null;
+            contactInfo: Array<string>;
+            classifierData: string | null;
+            name: string;
+            tweetName: string;
+            description: string;
+            activityInfo: Array<string>;
+          };
+          parsedTweets: {} | ParsedTweets;
+        } = await getParsedTwitterProfile(tweetsType);
+
+        tweets = parsedProfileInfo.parsedTweets;
+        profileInfo = parsedProfileInfo.profileInfo;
 
         break;
       }
 
       case SEARCH_TWEETS_TARGET: {
-        parsedTweets = await parsedTweetsFx(null);
+        const {
+          parsedTweets,
+        }: { parsedTweets: {} | ParsedTweets } = await parsedTweetsFx(null);
+        tweets = parsedTweets;
 
         break;
       }
@@ -42,7 +61,7 @@ const twitterParseFx = createEffect<
 
     await browser.close();
 
-    return Promise.resolve(parsedTweets);
+    return Promise.resolve({ parsedTweets: tweets, profileInfo });
   },
 });
 
@@ -52,8 +71,9 @@ export const createdTwitterParse = attach({
     browser: $webdriverBrowser,
     parseTarget: $parseTarget,
   }),
-  mapParams: (_, { browser, parseTarget }) => ({
+  mapParams: (tweetsType: string, { browser, parseTarget }) => ({
     browser,
     parseTarget,
+    tweetsType,
   }),
 });

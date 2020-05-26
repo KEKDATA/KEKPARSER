@@ -23,8 +23,10 @@ export type FinalTweet = {
   tweetBayes: string;
 };
 
-export type Tweets = 'Tweets';
-export type TweetsAndReplies = 'TweetsAndReplies';
-export type Media = 'Media';
-export type Likes = 'Likes';
+export type ParsedTweets = Array<Tweet>;
+
+export type Tweets = 'tweets';
+export type TweetsAndReplies = 'tweetsAndReplies';
+export type Media = 'media';
+export type Likes = 'likes';
 export type ProfileTabs = Tweets | Likes | TweetsAndReplies | Media;

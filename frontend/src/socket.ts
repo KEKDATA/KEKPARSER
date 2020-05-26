@@ -45,7 +45,7 @@ export type TakenTweetsInfo = {
   meanSentiment: number | null;
   minCoefficient: FinalTweet;
   maxCoefficient: FinalTweet;
-  tweetsType: 'top' | 'latest' | null;
+  tweetsType: 'top' | 'latest' | 'tweets' | null;
 };
 
 let socket: WebSocket;

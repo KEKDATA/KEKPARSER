@@ -8,8 +8,8 @@ import { $profileSettings } from '../settings/profile/model';
 import { $searchTweetsSettings } from '../settings/search_tweets/model';
 
 import { PROFILE, SEARCH_TWEETS } from '../../../constants/parse_target';
-import { $isLoadingLatestTweets } from '../latest_tweets/model';
-import { $isLoadingTopTweets } from '../top_tweets/model';
+import { $isLoadingLatestTweets } from '../tabs/search_tweets/latest_tweets/model';
+import { $isLoadingTopTweets } from '../tabs/search_tweets/top_tweets/model';
 
 const $requestParams = combine({
   controls: $controls,

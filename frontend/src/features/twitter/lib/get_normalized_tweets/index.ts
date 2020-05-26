@@ -24,6 +24,7 @@ export const getNormalizedTweetAnalyze = ({
     tweetWithMaxCoefficient: maxCoefficient,
     isExistMin,
     isExistMax,
+    isMeanSentimentExist,
     meanSentiment: actualMeanSentiment,
   };
 };

@@ -6,5 +6,6 @@ export type NormalizedTweetInfo = {
   tweetWithMaxCoefficient: FinalTweet;
   isExistMin: boolean;
   isExistMax: boolean;
+  isMeanSentimentExist: boolean;
   meanSentiment: number | null;
 };

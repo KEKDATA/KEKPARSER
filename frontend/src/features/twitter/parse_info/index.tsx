@@ -41,6 +41,7 @@ export const ParseInfo: React.FC<{
     isExistMin,
     isExistMax,
     meanSentiment,
+    isMeanSentimentExist,
   },
   isLoading,
 }) => {
@@ -60,7 +61,7 @@ export const ParseInfo: React.FC<{
       )}
       {!isLoading && (
         <>
-          {meanSentiment && (
+          {isMeanSentimentExist && (
             <Grid container justify="center">
               <Typography>
                 Mean Sentiment coefficient: {meanSentiment}

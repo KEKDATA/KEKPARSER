@@ -1,12 +1,12 @@
 import { Store, createStore, combine } from 'effector';
 
-import { $socketMessage, sendFx } from '../../../socket';
+import { $socketMessage, sendFx } from '../../../../../socket';
 
-import { LATEST_TWEETS } from '../../../constants/tweets_types';
+import { LATEST_TWEETS } from '../../../../../constants/tweets_types';
 
-import { getNormalizedTweetAnalyze } from '../lib/get_normalized_tweets';
-import { NormalizedTweetInfo } from '../../../types/tweets';
-import { initialStore } from '../../../constants/initial_tweets_store';
+import { getNormalizedTweetAnalyze } from '../../../lib/get_normalized_tweets';
+import { NormalizedTweetInfo } from '../../../../../types/tweets';
+import { initialStore } from '../../../../../constants/initial_tweets_store';
 
 const $normalizedTweets: Store<NormalizedTweetInfo> = $socketMessage.map(
   (

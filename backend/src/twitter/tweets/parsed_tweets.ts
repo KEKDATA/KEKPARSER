@@ -10,7 +10,7 @@ import { getHTML } from '../../lib/dom/html/get_html';
 import { checkIsTwitterContentVisible } from '../lib/dom/visible_content_check';
 import { scrollToLastTweet } from './lib/scroll_to_last_tweet';
 
-import { Tweet } from '../types';
+import { ParsedTweets, Tweet } from '../types';
 
 import { attachedTweetInfo } from './model';
 import { $tweetsCount, $webdriverPage } from '../model';
@@ -21,7 +21,7 @@ const parsedTweetsFx = createEffect<{ page: Page; tweetsCount: number }, any>({
   handler: async ({ page, tweetsCount }) => {
     await page.waitForSelector(TWEET_SELECTOR);
 
-    let tweetsInfo: Array<Tweet> = [];
+    let tweetsInfo: ParsedTweets = [];
 
     let currentLengthOfTweets: number = 0;
     let previousLengthOfTweets: number = 0;

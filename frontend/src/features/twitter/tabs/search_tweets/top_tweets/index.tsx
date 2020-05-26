@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useStore } from 'effector-react';
 
-import { $latestTweets } from './model';
+import { $topTweets } from './model';
 
-import { ParseInfo } from '../parse_info';
+import { ParseInfo } from '../../../parse_info';
 
-export const LatestTweets: React.FC = () => {
-  const { tweets, isLoading } = useStore($latestTweets);
+export const TopTweets: React.FC = () => {
+  const { tweets, isLoading } = useStore($topTweets);
 
   if (isLoading === null) {
     return null;
