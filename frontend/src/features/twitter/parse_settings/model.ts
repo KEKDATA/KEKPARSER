@@ -8,6 +8,8 @@ import { $profileSettings } from '../settings/profile/model';
 import { $searchTweetsSettings } from '../settings/search_tweets/model';
 
 import { PROFILE, SEARCH_TWEETS } from '../../../constants/parse_target';
+import { $isLoadingLatestTweets } from '../latest_tweets/model';
+import { $isLoadingTopTweets } from '../top_tweets/model';
 
 const $requestParams = combine({
   controls: $controls,
@@ -54,7 +56,21 @@ export const $isDisabled = $requestParams.map(
 );
 
 $isDisabled.on(sendFx.done, () => true);
-$isDisabled.on(onMessage, () => false);
+
+const $isLoadedTweets = combine({
+  isLoadingLatestTweets: $isLoadingLatestTweets,
+  isLoadingTopTweets: $isLoadingTopTweets,
+});
+$isDisabled.on(
+  $isLoadedTweets,
+  (previousState, { isLoadingLatestTweets, isLoadingTopTweets }) => {
+    if (!isLoadingLatestTweets && !isLoadingTopTweets) {
+      return false;
+    }
+
+    return previousState;
+  },
+);
 
 export const sendParserOptions = attach({
   effect: sendFx,

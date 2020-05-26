@@ -36,7 +36,7 @@ export const setupWebdriverFx = createEffect<{ options: Send }, any>({
     }
 
     const browser = await chromium.launch({
-      headless: false,
+      headless: true,
     });
 
     const iPhone = devices['iPhone 11 Pro'];

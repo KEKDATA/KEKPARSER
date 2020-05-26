@@ -29,7 +29,7 @@ const $normalizedTweets: Store<NormalizedTweetInfo> = $socketMessage.map(
     return normalizedTweets;
   },
 );
-const $isLoadingLatestTweets = createStore<boolean | null>(null);
+export const $isLoadingLatestTweets = createStore<boolean | null>(null);
 
 $isLoadingLatestTweets.on(sendFx, () => true);
 $isLoadingLatestTweets.on($socketMessage, (defaultState, { tweetsType }) => {
