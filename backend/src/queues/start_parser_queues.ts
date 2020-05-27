@@ -9,7 +9,7 @@ import {
 import { sendFx } from '../socket';
 
 import { OPTIONS, MAX_JOBS_PER_WORKER } from './config';
-import { TWEETS_TAB } from '../twitter/constants/tabs';
+import { TWEETS_TAB, TWEETS_REPLIES_TAB } from '../twitter/constants/tabs';
 
 const parserQueue = new Queue(`parser`, OPTIONS);
 const callbackQueue = new Queue('callback', OPTIONS);
@@ -35,6 +35,26 @@ export const startParserQueues = (message: { options: Send; id: string }) => {
   if (parseTarget === PROFILE_TARGET) {
     if (profileSettings && profileSettings.isTweets) {
       const tweetsType = TWEETS_TAB;
+
+      console.log(`${processName}, ${tweetsType}`);
+
+      setTimeout(() => {
+        const jobId = nanoid();
+
+        callbackQueue.add({
+          jobId,
+          options: { tweetsType, id },
+        });
+        parserQueue.add({
+          id: jobId,
+          options,
+          tweetsType,
+        });
+      });
+    }
+
+    if (profileSettings && profileSettings.isTweetsAndReplies) {
+      const tweetsType = TWEETS_REPLIES_TAB;
 
       console.log(`${processName}, ${tweetsType}`);
 

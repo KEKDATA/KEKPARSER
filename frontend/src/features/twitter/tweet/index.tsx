@@ -35,6 +35,10 @@ const OptionTweetInfo = styled(Typography)`
   padding: 2px 2px 0 8px;
 `;
 
+const RepliesContainer = styled(Grid)`
+  margin: 10px 0;
+`;
+
 export const Tweet: React.FC<{ tweetOptions: FinalTweet }> = ({
   tweetOptions,
 }) => {
@@ -65,7 +69,14 @@ export const Tweet: React.FC<{ tweetOptions: FinalTweet }> = ({
       </Grid>
       <Typography gutterBottom>{tweetContent}</Typography>
       {replyingUsers && replyingUsers.length > 0 && (
-        <Typography gutterBottom>{replyingUsers.length}</Typography>
+        <RepliesContainer container direction="column">
+          <Typography gutterBottom>
+            Replying users: {replyingUsers.length}
+          </Typography>
+          {replyingUsers.map(({ user, userLink }) => (
+            <Link href={userLink}>{user}</Link>
+          ))}
+        </RepliesContainer>
       )}
       <Grid container spacing={4}>
         {checkIsNumberExist(likes) && (

@@ -5,6 +5,7 @@ import {
   Effect,
   Event,
 } from 'effector';
+import { Latest, Top, Tweets, TweetsAndReplies } from './types/profile';
 
 const URL = 'ws://127.0.0.1:8000';
 
@@ -45,7 +46,7 @@ export type TakenTweetsInfo = {
   meanSentiment: number | null;
   minCoefficient: FinalTweet;
   maxCoefficient: FinalTweet;
-  tweetsType: 'top' | 'latest' | 'tweets' | null;
+  tweetsType: Top | Latest | Tweets | TweetsAndReplies | null;
 };
 
 let socket: WebSocket;

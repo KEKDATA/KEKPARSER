@@ -15,6 +15,7 @@ import {
 } from '../../../../constants/tweets_types';
 
 import { ProfileTweets } from '../../tabs/profile/tweets';
+import { ProfileTweetsAndReplies } from '../../tabs/profile/tweets_and_replies';
 
 export const SwitchTypeProfile: React.FC = () => {
   const profileParseType = useStore($profileParseType);
@@ -55,6 +56,7 @@ export const SwitchTypeProfile: React.FC = () => {
         </ButtonGroupContainer>
       )}
       {profileParseType === TWEETS && <ProfileTweets />}
+      {profileParseType === TWEETS_REPLIES && <ProfileTweetsAndReplies />}
     </>
   );
 };
