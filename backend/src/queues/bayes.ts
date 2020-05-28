@@ -10,7 +10,10 @@ const bayesQueue = new Queue('bayes', OPTIONS);
 const callbackQueue = new Queue('callback', OPTIONS);
 
 bayesQueue.process(MAX_JOBS_PER_WORKER, job => {
-  const { normalizedTweetsForAnalysis, id } = job.data;
+  const {
+    normalizedTweetsForAnalysis,
+    id,
+  }: { normalizedTweetsForAnalysis: Array<string>; id: string } = job.data;
 
   const tweetsWithBayesClassifier = getTextWithBayesClassifier(
     normalizedTweetsForAnalysis,

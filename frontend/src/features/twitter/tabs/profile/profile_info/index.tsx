@@ -2,6 +2,8 @@ import * as React from 'react';
 import { useStore } from 'effector-react';
 import styled from 'styled-components';
 
+import Link from '@material-ui/core/Link';
+import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
@@ -13,7 +15,21 @@ const Info = styled(Typography)`
 `;
 
 const Container = styled(Grid)`
-  max-width: 50%;
+  max-width: 800px;
+`;
+
+const TwitterAvatar = styled(Avatar)`
+  min-width: 90px;
+  min-height: 90px;
+`;
+
+const Description = styled(Grid)`
+  margin-bottom: 4px;
+`;
+
+const DescriptionPart = styled.span`
+  font-size: 18px;
+  padding: 0 5px 4px 0;
 `;
 
 export const ProfileInfo: React.FC = () => {
@@ -32,13 +48,15 @@ export const ProfileInfo: React.FC = () => {
     name,
     sentimentCoefficient,
     tweetName,
+    avatarUrl,
   } = profileInfo;
 
   return (
-    <Grid container justify="center" direction="column">
+    <Grid container justify="center" direction="column" alignItems="center">
       {isLoading && <h1> loading </h1>}
       {!isLoading && (
-        <Container container direction="column" alignItems="center">
+        <Container container direction="column">
+          <TwitterAvatar src={avatarUrl} alt={name} />
           <Grid container direction="column">
             {name && <Typography variant="h6">{name}</Typography>}
             {tweetName && (
@@ -47,7 +65,15 @@ export const ProfileInfo: React.FC = () => {
               </Typography>
             )}
           </Grid>
-          {description && <Typography gutterBottom>{description}</Typography>}
+          {description.length > 0 && (
+            <Description container direction="row">
+              {description.map(({ text, isUrl, url, id }) => (
+                <DescriptionPart key={id}>
+                  {isUrl ? <Link href={url}>{text}</Link> : text}
+                </DescriptionPart>
+              ))}
+            </Description>
+          )}
           <Grid container direction="row">
             {contactInfo.map(({ id, info }) => (
               <Info key={id} gutterBottom>
@@ -62,7 +88,7 @@ export const ProfileInfo: React.FC = () => {
               </Info>
             ))}
           </Grid>
-          <Grid container direction="row">
+          <Grid container direction="column">
             {checkIsNumberExist(sentimentCoefficient) && (
               <Info gutterBottom>
                 Sentiment analysis: {sentimentCoefficient}

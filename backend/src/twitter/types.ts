@@ -41,3 +41,10 @@ export type ProfileTabs =
   | TweetsAndReplies
   | Media
   | ProfileInfo;
+export type TweetsTabs =
+  | Latest
+  | Top
+  | Tweets
+  | TweetsAndReplies
+  | Media
+  | Likes;

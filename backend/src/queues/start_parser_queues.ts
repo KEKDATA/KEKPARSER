@@ -14,15 +14,19 @@ import {
   TWEETS_REPLIES_TAB,
   PROFILE_INFO_TYPE,
 } from '../twitter/constants/tabs';
+import {
+  LATEST_TWEETS,
+  TOP_TWEETS,
+} from '../../../frontend/src/constants/tweets_types';
 
 const parserQueue = new Queue(`parser`, OPTIONS);
 const callbackQueue = new Queue('callback', OPTIONS);
-const socketSendQueue = new Queue('web', OPTIONS);
+const webQueue = new Queue('web', OPTIONS);
 const profileQueue = new Queue('profile', OPTIONS);
 
 console.info('start parser queues connected');
 
-socketSendQueue.process(MAX_JOBS_PER_WORKER, job => {
+webQueue.process(MAX_JOBS_PER_WORKER, job => {
   const { id, result } = job.data;
 
   sendFx({
@@ -87,7 +91,7 @@ export const startParserQueues = (message: { options: Send; id: string }) => {
 
   if (parseTarget === SEARCH_TWEETS_TARGET) {
     if (tweetsSettings && tweetsSettings.isTop) {
-      const tweetsType = 'top';
+      const tweetsType = TOP_TWEETS;
 
       console.log(`${processName}, ${tweetsType}`);
 
@@ -108,7 +112,7 @@ export const startParserQueues = (message: { options: Send; id: string }) => {
 
     if (tweetsSettings && tweetsSettings.isLatest) {
       const actualParseUrl = `${parseUrl}&f=live`;
-      const tweetsType = 'latest';
+      const tweetsType = LATEST_TWEETS;
       const actualOptions = {
         ...options,
         parseUrl: actualParseUrl,
