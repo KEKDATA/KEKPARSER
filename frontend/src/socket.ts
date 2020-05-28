@@ -2,10 +2,16 @@ import {
   createEffect,
   createEvent,
   createStore,
+  guard,
   Effect,
   Event,
 } from 'effector';
-import { Latest, Top, Tweets, TweetsAndReplies } from './types/profile';
+import { nanoid } from 'nanoid';
+import { FinalTweet, TakenTweetsInfo } from './types/tweets';
+import { TakenProfileInfo } from './types/profile_info';
+
+import { PROFILE_INFO_TYPE } from './constants/profile_info';
+import { initialStore } from './constants/initial_profile_store';
 
 const URL = 'ws://127.0.0.1:8000';
 
@@ -27,37 +33,17 @@ type Send =
     }
   | {};
 
-export type FinalTweet = {
-  id: string;
-  userUrl: string;
-  name: string;
-  tweetName: string;
-  tweetContent: string;
-  likes: number;
-  retweets: number;
-  replies: number;
-  replyingUsers?: Array<{ user: string; userLink: string }>;
-  tweetSentiment: number;
-  tweetBayes: string;
-};
-
-export type TakenTweetsInfo = {
-  finalTweets: Array<FinalTweet>;
-  meanSentiment: number | null;
-  minCoefficient: FinalTweet;
-  maxCoefficient: FinalTweet;
-  tweetsType: Top | Latest | Tweets | TweetsAndReplies | null;
-};
-
 let socket: WebSocket;
 
-export const $socketMessage = createStore<TakenTweetsInfo>({
+export const $tweetsMessage = createStore<TakenTweetsInfo>({
   finalTweets: [],
   meanSentiment: null,
   minCoefficient: <FinalTweet>{},
   maxCoefficient: <FinalTweet>{},
   tweetsType: null,
 });
+export const $profileMessage = createStore<TakenProfileInfo>(initialStore);
+const $message = createStore<any>({});
 
 export const sendFx: Effect<Send, any> = createEffect();
 
@@ -66,7 +52,24 @@ const open: Event<any> = createEvent('open');
 const closed: Event<WebSocketCloseEvent> = createEvent('closed');
 const error: Event<WebSocketErrorEvent> = createEvent('error');
 
-$socketMessage.on(onMessage, (_, event) => JSON.parse(event.data));
+const tweetsUpdated = createEvent<TakenTweetsInfo>('tweets_updated');
+const profileUpdated = createEvent<TakenProfileInfo>('profile_updated');
+
+$tweetsMessage.on(tweetsUpdated, (prevState, actualTweets) => actualTweets);
+$profileMessage.on(profileUpdated, (prevState, profileInfo) => profileInfo);
+$message.on(onMessage, (_, event) => JSON.parse(event.data));
+
+guard({
+  source: $message,
+  filter: message => message.tweetsType !== PROFILE_INFO_TYPE,
+  target: tweetsUpdated,
+});
+
+guard({
+  source: $message,
+  filter: message => message.tweetsType === PROFILE_INFO_TYPE,
+  target: profileUpdated,
+});
 
 sendFx.use((data: Send) => {
   console.log('Sended data:', data);

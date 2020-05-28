@@ -1,10 +1,13 @@
 import { createStore, guard, createEvent, combine } from 'effector';
 
-import { $socketMessage, sendFx, TakenTweetsInfo } from '../../../../../socket';
+import { $tweetsMessage, sendFx } from '../../../../../socket';
 
 import { TWEETS_REPLIES } from '../../../../../constants/tweets_types';
 import { initialStore } from '../../../../../constants/initial_tweets_store';
-import { NormalizedTweetInfo } from '../../../../../types/tweets';
+import {
+  NormalizedTweetInfo,
+  TakenTweetsInfo,
+} from '../../../../../types/tweets';
 import { getNormalizedTweetAnalyze } from '../../../lib/get_normalized_tweets';
 
 export const $profileNormalizedTweetsAndReplies = createStore<
@@ -33,17 +36,17 @@ $profileNormalizedTweetsAndReplies.on(
 );
 
 guard({
-  source: $socketMessage,
+  source: $tweetsMessage,
   filter: message => message.tweetsType === TWEETS_REPLIES,
   target: profileTweetsAndRepliesChanged,
 });
 
-export const $isLoadingTweets = createStore<boolean | null>(null);
+export const $isLoadingTweetsAndReplies = createStore<boolean | null>(null);
 
-$isLoadingTweets.on(sendFx, () => true);
-$isLoadingTweets.on(profileTweetsAndRepliesChanged, () => false);
+$isLoadingTweetsAndReplies.on(sendFx, () => true);
+$isLoadingTweetsAndReplies.on(profileTweetsAndRepliesChanged, () => false);
 
 export const $profileTweetsAndReplies = combine({
   tweets: $profileNormalizedTweetsAndReplies,
-  isLoading: $isLoadingTweets,
+  isLoading: $isLoadingTweetsAndReplies,
 });

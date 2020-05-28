@@ -1,5 +1,5 @@
 import { checkIsNumberExist } from '../../../../lib/is_number_exist';
-import { FinalTweet } from '../../../../socket';
+import { FinalTweet } from '../../../../types/tweets';
 
 const checkIsExistCoefficients = (coefficient: object) =>
   coefficient && Object.values(coefficient).length > 0;

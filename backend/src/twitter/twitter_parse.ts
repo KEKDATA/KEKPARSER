@@ -16,28 +16,15 @@ const twitterParseFx = createEffect<
   any
 >({
   handler: async ({ browser, parseTarget, tweetsType }) => {
-    console.time();
-
     let tweets = {};
-    let profileInfo = {};
 
     switch (parseTarget) {
       case PROFILE_TARGET: {
         const parsedProfileInfo: {
-          profileInfo: {
-            sentimentCoefficient: number | null;
-            contactInfo: Array<string>;
-            classifierData: string | null;
-            name: string;
-            tweetName: string;
-            description: string;
-            activityInfo: Array<string>;
-          };
           parsedTweets: {} | ParsedTweets;
         } = await getParsedTwitterProfile(tweetsType);
 
         tweets = parsedProfileInfo.parsedTweets;
-        profileInfo = parsedProfileInfo.profileInfo;
 
         break;
       }
@@ -57,11 +44,9 @@ const twitterParseFx = createEffect<
       }
     }
 
-    console.timeEnd();
-
     await browser.close();
 
-    return Promise.resolve({ parsedTweets: tweets, profileInfo });
+    return Promise.resolve({ parsedTweets: tweets });
   },
 });
 

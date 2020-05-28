@@ -14,7 +14,6 @@ import {
 
 import { checkIsTwitterContentVisible } from '../lib/dom/visible_content_check';
 
-import { getProfileInfo } from './profile_info';
 import { parsedTweetsFx } from '../tweets/analyzed_tweets';
 import { changeProfileNavigation } from './change_profile_navigation';
 
@@ -25,8 +24,6 @@ export const getParsedTwitterProfile = async (tweetsType: string) => {
 
   await page.waitForSelector(PROFILE_SELECTOR);
   await page.waitForFunction(checkIsTwitterContentVisible, LOADER_SELECTOR);
-
-  const profileInfo = await getProfileInfo();
 
   let parsedProfileTweets = {};
 
@@ -78,7 +75,6 @@ export const getParsedTwitterProfile = async (tweetsType: string) => {
   }
 
   return {
-    profileInfo,
     parsedTweets: parsedProfileTweets,
   };
 };

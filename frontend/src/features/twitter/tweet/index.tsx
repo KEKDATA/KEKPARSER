@@ -9,8 +9,8 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import retweetIcon from '../../../assets/icons/retweet.svg';
 import replyIcon from '../../../assets/icons/reply.svg';
 
-import { FinalTweet } from '../../../socket';
 import { checkIsNumberExist } from '../../../lib/is_number_exist';
+import { FinalTweet } from '../../../types/tweets';
 
 const TweetIcon = styled.img`
   width: 24px;

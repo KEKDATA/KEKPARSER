@@ -7,11 +7,13 @@ const $isLikes = createStore<boolean>(false);
 const $isTweets = createStore<boolean>(true);
 const $isTweetsAndReplies = createStore<boolean>(false);
 const $isMedia = createStore<boolean>(false);
+const $isProfileInfo = createStore<boolean>(false);
 
 export const likesStatusChanged = createEvent<OnChangeEvent>();
 export const tweetsStatusChanged = createEvent<OnChangeEvent>();
 export const tweetsAndRepliesChanged = createEvent<OnChangeEvent>();
 export const mediaStatusChanged = createEvent<OnChangeEvent>();
+export const profileInfoChanged = createEvent<OnChangeEvent>();
 
 $isLikes.on(
   likesStatusChanged.map(getEventChecked),
@@ -29,10 +31,15 @@ $isMedia.on(
   mediaStatusChanged.map(getEventChecked),
   (_, status: boolean) => status,
 );
+$isProfileInfo.on(
+  profileInfoChanged.map(getEventChecked),
+  (_, status: boolean) => status,
+);
 
 export const $profileSettings = combine({
   isLikes: $isLikes,
   isTweets: $isTweets,
   isTweetsAndReplies: $isTweetsAndReplies,
   isMedia: $isMedia,
+  isProfileInfo: $isProfileInfo,
 });

@@ -16,16 +16,29 @@ import {
 
 import { ProfileTweets } from '../../tabs/profile/tweets';
 import { ProfileTweetsAndReplies } from '../../tabs/profile/tweets_and_replies';
+import {
+  PROFILE_INFO,
+  PROFILE_INFO_TYPE,
+} from '../../../../constants/profile_info';
+import { ProfileInfo } from '../../tabs/profile/profile_info';
 
 export const SwitchTypeProfile: React.FC = () => {
   const profileParseType = useStore($profileParseType);
-  const { isTweetsAndReplies, isLikes, isMedia, isTweets } = useStore(
-    $profileSettings,
-  );
+  const {
+    isTweetsAndReplies,
+    isLikes,
+    isMedia,
+    isTweets,
+    isProfileInfo,
+  } = useStore($profileSettings);
 
   return (
     <>
-      {(isTweetsAndReplies || isLikes || isMedia || isTweets) && (
+      {(isTweetsAndReplies ||
+        isLikes ||
+        isMedia ||
+        isTweets ||
+        isProfileInfo) && (
         <ButtonGroupContainer container justify="center">
           <ToggleButtonGroup
             value={profileParseType}
@@ -52,11 +65,19 @@ export const SwitchTypeProfile: React.FC = () => {
                 Media
               </ToggleButton>
             )}
+            {isProfileInfo && (
+              <ToggleButton
+                value={PROFILE_INFO_TYPE}
+                aria-label={PROFILE_INFO_TYPE}>
+                {PROFILE_INFO}
+              </ToggleButton>
+            )}
           </ToggleButtonGroup>
         </ButtonGroupContainer>
       )}
       {profileParseType === TWEETS && <ProfileTweets />}
       {profileParseType === TWEETS_REPLIES && <ProfileTweetsAndReplies />}
+      {profileParseType === PROFILE_INFO_TYPE && <ProfileInfo />}
     </>
   );
 };

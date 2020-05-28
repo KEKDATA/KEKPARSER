@@ -1,12 +1,12 @@
 import { Store, createStore, combine } from 'effector';
 
-import { $socketMessage, sendFx } from '../../../../../socket';
+import { $tweetsMessage, sendFx } from '../../../../../socket';
 import { TOP_TWEETS } from '../../../../../constants/tweets_types';
 import { getNormalizedTweetAnalyze } from '../../../lib/get_normalized_tweets';
 import { initialStore } from '../../../../../constants/initial_tweets_store';
 import { NormalizedTweetInfo } from '../../../../../types/tweets';
 
-const $normalizedTweets: Store<NormalizedTweetInfo> = $socketMessage.map(
+const $normalizedTweets: Store<NormalizedTweetInfo> = $tweetsMessage.map(
   (
     { finalTweets, meanSentiment, minCoefficient, maxCoefficient, tweetsType },
     lastState = initialStore,
@@ -30,7 +30,7 @@ const $normalizedTweets: Store<NormalizedTweetInfo> = $socketMessage.map(
 export const $isLoadingTopTweets = createStore<boolean | null>(null);
 
 $isLoadingTopTweets.on(sendFx, () => true);
-$isLoadingTopTweets.on($socketMessage, (defaultState, { tweetsType }) => {
+$isLoadingTopTweets.on($tweetsMessage, (defaultState, { tweetsType }) => {
   if (tweetsType === TOP_TWEETS) {
     return false;
   }

@@ -3,7 +3,7 @@ import { useStore } from 'effector-react';
 
 import { $profileTweetsAndReplies } from './model';
 
-import { ParseInfo } from '../../../parse_info';
+import { TweetsInfo } from '../../../tweets_info';
 
 export const ProfileTweetsAndReplies: React.FC = () => {
   const { tweets, isLoading } = useStore($profileTweetsAndReplies);
@@ -12,5 +12,5 @@ export const ProfileTweetsAndReplies: React.FC = () => {
     return null;
   }
 
-  return <ParseInfo infoOptions={tweets} isLoading={isLoading} />;
+  return <TweetsInfo infoOptions={tweets} isLoading={isLoading} />;
 };

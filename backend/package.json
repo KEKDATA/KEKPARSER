@@ -10,6 +10,7 @@
     "sentiment": "ts-node --files src/queues/sentiment.ts",
     "bayes": "ts-node --files src/queues/bayes.ts",
     "mege": "ts-node --files src/queues/merge.ts",
+    "profile": "ts-node --files src/queues/profile.ts",
     "tsc": "tsc --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "fix-code": "prettier --write './src/**/*.ts'",

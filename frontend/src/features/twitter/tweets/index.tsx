@@ -3,7 +3,7 @@ import * as React from 'react';
 import Grid from '@material-ui/core/Grid';
 
 import { Tweet } from '../tweet';
-import { FinalTweet } from '../../../socket';
+import { FinalTweet } from '../../../types/tweets';
 
 export const Tweets: React.FC<{ finalTweets: Array<FinalTweet> }> = ({
   finalTweets,

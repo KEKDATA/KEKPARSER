@@ -30,7 +30,7 @@ const TweetsWrapper = styled(Wrapper)`
   padding: 0 16px;
 `;
 
-export const ParseInfo: React.FC<{
+export const TweetsInfo: React.FC<{
   infoOptions: NormalizedTweetInfo;
   isLoading: boolean;
 }> = ({

@@ -17,3 +17,13 @@ export type Send = {
   profileSettings?: ProfileSettings;
   tweetsSettings?: TweetsSettings;
 };
+
+export type Profile = {
+  sentimentCoefficient: number | null;
+  contactInfo: Array<string>;
+  classifierData: string | null;
+  name: string;
+  tweetName: string;
+  description: string;
+  activityInfo: Array<string>;
+};
