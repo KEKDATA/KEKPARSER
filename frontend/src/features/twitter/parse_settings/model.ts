@@ -113,6 +113,7 @@ $isDisabled.on(
       case SEARCH_TWEETS: {
         const { isLoadingLatestTweets, isLoadingTopTweets } = loadingTweets;
         const { isLatest, isTop } = searchTweetsSettings;
+
         const loaders = [
           { loader: isLoadingLatestTweets, isOptionActive: isLatest },
           { loader: isLoadingTopTweets, isOptionActive: isTop },
