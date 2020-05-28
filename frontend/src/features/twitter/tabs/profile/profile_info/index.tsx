@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { $profileInfo } from './model';
 import { checkIsNumberExist } from '../../../../../lib/is_number_exist';
+import { ProfileSkeleton } from '../../../../../UI/skeleton/profile';
 
 const Info = styled(Typography)`
   padding-right: 10px;
@@ -39,7 +40,6 @@ export const ProfileInfo: React.FC = () => {
     return null;
   }
 
-  console.log(profileInfo);
   const {
     activityInfo,
     classifierData,
@@ -53,7 +53,7 @@ export const ProfileInfo: React.FC = () => {
 
   return (
     <Grid container justify="center" direction="column" alignItems="center">
-      {isLoading && <h1> loading </h1>}
+      {isLoading && <ProfileSkeleton />}
       {!isLoading && (
         <Container container direction="column">
           <TwitterAvatar src={avatarUrl} alt={name} />
@@ -90,12 +90,10 @@ export const ProfileInfo: React.FC = () => {
           </Grid>
           <Grid container direction="column">
             {checkIsNumberExist(sentimentCoefficient) && (
-              <Info gutterBottom>
-                Sentiment analysis: {sentimentCoefficient}
-              </Info>
+              <Info gutterBottom>Sentiment: {sentimentCoefficient}</Info>
             )}
             {classifierData && (
-              <Info gutterBottom>Naive bayes classifier: {classifierData}</Info>
+              <Info gutterBottom>Naive Bayes: {classifierData}</Info>
             )}
           </Grid>
         </Container>
