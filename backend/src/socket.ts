@@ -11,7 +11,7 @@ import { nanoid } from 'nanoid';
 
 import { startParserQueues } from './queues/start_parser_queues';
 import { FinalTweet } from './twitter/types';
-import { Send } from './types';
+import { NormalizedProfileInfo, Send } from './types';
 
 // TODO: Чистить со временем или после завершения работы нужных процессов.
 let socketCollection: { [id: string]: WebSocket.Server } = {};
@@ -20,13 +20,15 @@ export const $socketMessage = createStore<Send | {}>({});
 
 export const sendFx: Effect<
   {
-    result: {
-      finalTweets: Array<FinalTweet>;
-      meanSentiment: number;
-      minCoefficient: FinalTweet;
-      maxCoefficient: FinalTweet;
-      tweetsType: 'top' | 'latest';
-    };
+    result:
+      | {
+          finalTweets: Array<FinalTweet>;
+          meanSentiment: number;
+          minCoefficient: FinalTweet;
+          maxCoefficient: FinalTweet;
+          tweetsType: 'top' | 'latest';
+        }
+      | NormalizedProfileInfo;
     id: string;
   },
   any

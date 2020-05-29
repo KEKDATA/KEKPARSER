@@ -8,6 +8,11 @@ import { $profileSettings } from '../settings/profile/model';
 import { $searchTweetsSettings } from '../settings/search_tweets/model';
 
 import { PROFILE, SEARCH_TWEETS } from '../../../constants/parse_target';
+import { $isLoadingLatestTweets } from '../tabs/search_tweets/latest_tweets/model';
+import { $isLoadingTopTweets } from '../tabs/search_tweets/top_tweets/model';
+import { $isLoadingProfileInfo } from '../tabs/profile/profile_info/model';
+import { $isLoadingProfileTweets } from '../tabs/profile/tweets/model';
+import { $isLoadingTweetsAndReplies } from '../tabs/profile/tweets_and_replies/model';
 
 const $requestParams = combine({
   controls: $controls,
@@ -54,7 +59,85 @@ export const $isDisabled = $requestParams.map(
 );
 
 $isDisabled.on(sendFx.done, () => true);
-$isDisabled.on(onMessage, () => false);
+
+const $isLoadedTweets = combine({
+  isLoadingLatestTweets: $isLoadingLatestTweets,
+  isLoadingTopTweets: $isLoadingTopTweets,
+  isLoadingProfileInfo: $isLoadingProfileInfo,
+  isLoadingProfileTweets: $isLoadingProfileTweets,
+  isLoadingTweetsAndReplies: $isLoadingTweetsAndReplies,
+  profileSettings: $profileSettings,
+  searchTweetsSettings: $searchTweetsSettings,
+  controls: $controls,
+});
+// FIXME: Пересмотреть логику дизейбла кнопки
+//  Сейчас идет привязка к лоадерам процессов парсинга
+$isDisabled.on(
+  $isLoadedTweets,
+  (
+    previousState,
+    {
+      profileSettings,
+      searchTweetsSettings,
+      controls: { parseTarget },
+      ...loadingTweets
+    },
+  ) => {
+    let isLoaded = false;
+
+    switch (parseTarget) {
+      case PROFILE: {
+        const {
+          isLoadingTweetsAndReplies,
+          isLoadingProfileInfo,
+          isLoadingProfileTweets,
+        } = loadingTweets;
+        const { isTweets, isTweetsAndReplies, isProfileInfo } = profileSettings;
+
+        const loaders = [
+          {
+            loader: isLoadingTweetsAndReplies,
+            isOptionActive: isTweetsAndReplies,
+          },
+          { loader: isLoadingProfileInfo, isOptionActive: isProfileInfo },
+          { loader: isLoadingProfileTweets, isOptionActive: isTweets },
+        ];
+
+        isLoaded = loaders
+          .filter(({ isOptionActive }) => isOptionActive)
+          .every(({ loader }) => loader === false);
+
+        break;
+      }
+
+      case SEARCH_TWEETS: {
+        const { isLoadingLatestTweets, isLoadingTopTweets } = loadingTweets;
+        const { isLatest, isTop } = searchTweetsSettings;
+
+        const loaders = [
+          { loader: isLoadingLatestTweets, isOptionActive: isLatest },
+          { loader: isLoadingTopTweets, isOptionActive: isTop },
+        ];
+
+        isLoaded = loaders
+          .filter(({ isOptionActive }) => isOptionActive)
+          .every(({ loader }) => loader === false);
+
+        break;
+      }
+
+      default: {
+        break;
+      }
+    }
+
+    if (isLoaded) {
+      return false;
+    }
+
+    return previousState;
+  },
+);
 
 export const sendParserOptions = attach({
   effect: sendFx,

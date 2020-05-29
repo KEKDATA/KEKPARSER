@@ -1,7 +1,8 @@
 import { createEvent, createStore } from 'effector';
 import { MouseEvent } from 'react';
+import { Latest, Top } from '../../../../types/profile';
 
-export const $tweetsParseType = createStore<'top' | 'latest' | ''>('');
+export const $tweetsParseType = createStore<Top | Latest | ''>('');
 
 export const tweetsParseTypeChanged = createEvent<MouseEvent<HTMLElement>>();
 

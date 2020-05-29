@@ -8,14 +8,19 @@ import {
   $profileSettings,
   likesStatusChanged,
   mediaStatusChanged,
+  profileInfoChanged,
   tweetsAndRepliesChanged,
   tweetsStatusChanged,
 } from './model';
 
 export const ProfileSettings: React.FC = () => {
-  const { isTweets, isMedia, isLikes, isTweetsAndReplies } = useStore(
-    $profileSettings,
-  );
+  const {
+    isTweets,
+    isMedia,
+    isLikes,
+    isTweetsAndReplies,
+    isProfileInfo,
+  } = useStore($profileSettings);
 
   return (
     <>
@@ -58,6 +63,16 @@ export const ProfileSettings: React.FC = () => {
           />
         }
         label="Media"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={isProfileInfo}
+            onChange={profileInfoChanged}
+            name="profile_info"
+          />
+        }
+        label="Profile info"
       />
     </>
   );

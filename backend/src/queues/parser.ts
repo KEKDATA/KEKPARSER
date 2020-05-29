@@ -5,9 +5,10 @@ import { setupWebdriverFx } from '../webdriver';
 import { getTextWithAlphaOnly } from '../lib/normalizers/alphabet';
 
 import { createdTwitterParse } from '../twitter/twitter_parse';
-import { Tweet } from '../twitter/types';
+import { ParsedTweets, TweetsTabs } from '../twitter/types';
 
 import { OPTIONS, MAX_JOBS_PER_WORKER } from './config';
+import { Send } from '../types';
 
 console.info('Parser connected');
 
@@ -17,12 +18,16 @@ const bayesQueue = new Queue('bayes', OPTIONS);
 const callbackQueue = new Queue('callback', OPTIONS);
 
 parserQueue.process(MAX_JOBS_PER_WORKER, async job => {
-  const { id, options } = job.data;
+  const {
+    id,
+    options,
+    tweetsType,
+  }: { tweetsType: TweetsTabs; id: string; options: Send } = job.data;
 
   await setupWebdriverFx({ options });
   const {
     parsedTweets,
-  }: { parsedTweets: Array<Tweet> } = await createdTwitterParse(null);
+  }: { parsedTweets: ParsedTweets } = await createdTwitterParse(tweetsType);
 
   callbackQueue.add({ jobId: id, options: { parsedTweets } });
 

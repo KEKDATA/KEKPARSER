@@ -30,7 +30,7 @@ const TweetsWrapper = styled(Wrapper)`
   padding: 0 16px;
 `;
 
-export const ParseInfo: React.FC<{
+export const TweetsInfo: React.FC<{
   infoOptions: NormalizedTweetInfo;
   isLoading: boolean;
 }> = ({
@@ -41,6 +41,7 @@ export const ParseInfo: React.FC<{
     isExistMin,
     isExistMax,
     meanSentiment,
+    isMeanSentimentExist,
   },
   isLoading,
 }) => {
@@ -60,7 +61,7 @@ export const ParseInfo: React.FC<{
       )}
       {!isLoading && (
         <>
-          {meanSentiment && (
+          {isMeanSentimentExist && (
             <Grid container justify="center">
               <Typography>
                 Mean Sentiment coefficient: {meanSentiment}

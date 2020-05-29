@@ -1,11 +1,11 @@
 import { createEffect } from 'effector';
 
 import { getParsedTweets } from './parsed_tweets';
-import { Tweet } from '../types';
+import { ParsedTweets } from '../types';
 
 export const parsedTweetsFx = createEffect<any, any>({
   handler: async () => {
-    const parsedTweets: Array<Tweet> = await getParsedTweets(null);
+    const parsedTweets: ParsedTweets = await getParsedTweets(null);
 
     return Promise.resolve({ parsedTweets });
   },
