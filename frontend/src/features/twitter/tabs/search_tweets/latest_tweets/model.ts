@@ -1,14 +1,14 @@
 import { Store, createStore, combine } from 'effector';
 
-import { $socketMessage, sendFx } from '../../../socket';
+import { $tweetsMessage, sendFx } from '../../../../../socket';
 
-import { LATEST_TWEETS } from '../../../constants/tweets_types';
+import { LATEST_TWEETS } from '../../../../../constants/tweets_types';
 
-import { getNormalizedTweetAnalyze } from '../lib/get_normalized_tweets';
-import { NormalizedTweetInfo } from '../../../types/tweets';
-import { initialStore } from '../../../constants/initial_tweets_store';
+import { getNormalizedTweetAnalyze } from '../../../lib/get_normalized_tweets';
+import { NormalizedTweetInfo } from '../../../../../types/tweets';
+import { initialStore } from '../../../../../constants/initial_tweets_store';
 
-const $normalizedTweets: Store<NormalizedTweetInfo> = $socketMessage.map(
+const $normalizedTweets: Store<NormalizedTweetInfo> = $tweetsMessage.map(
   (
     { finalTweets, meanSentiment, minCoefficient, maxCoefficient, tweetsType },
     lastState = initialStore,
@@ -29,10 +29,10 @@ const $normalizedTweets: Store<NormalizedTweetInfo> = $socketMessage.map(
     return normalizedTweets;
   },
 );
-const $isLoadingLatestTweets = createStore<boolean | null>(null);
+export const $isLoadingLatestTweets = createStore<boolean | null>(null);
 
 $isLoadingLatestTweets.on(sendFx, () => true);
-$isLoadingLatestTweets.on($socketMessage, (defaultState, { tweetsType }) => {
+$isLoadingLatestTweets.on($tweetsMessage, (defaultState, { tweetsType }) => {
   if (tweetsType === LATEST_TWEETS) {
     return false;
   }

@@ -4,6 +4,7 @@ import { nanoid } from 'nanoid';
 import { insertionSentimentTweetsSort } from '../twitter/tweets/lib/insertion_sentiment_tweets_sort';
 
 import { OPTIONS, MAX_JOBS_PER_WORKER } from './config';
+import { Send } from '../types';
 
 const callbackQueue = new Queue('callback', OPTIONS);
 const webQueue = new Queue('web', OPTIONS);
@@ -12,7 +13,7 @@ const webQueue = new Queue('web', OPTIONS);
 const jobsProgress = new Map();
 
 callbackQueue.process(MAX_JOBS_PER_WORKER, job => {
-  const { jobId, options } = job.data;
+  const { jobId, options }: { jobId: string; options: Send } = job.data;
 
   const jobOptions = jobsProgress.get(jobId);
 

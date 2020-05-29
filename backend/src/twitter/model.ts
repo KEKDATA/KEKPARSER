@@ -3,7 +3,13 @@ import { Page, Browser } from 'playwright';
 
 import { ProfileTabs } from './types';
 
-import { LIKES, MEDIA, TWEETS_REPLIES_TAB, TWEETS_TAB } from './constants/tabs';
+import {
+  LIKES,
+  MEDIA,
+  TWEETS_REPLIES_TAB,
+  TWEETS_TAB,
+  PROFILE_INFO_TYPE,
+} from './constants/tabs';
 import { setupWebdriverFx } from '../webdriver';
 
 export const $profileTab = createStore<ProfileTabs | ''>('');
@@ -17,6 +23,7 @@ export const $isProfileTarget = $profileTab.map((tab: ProfileTabs) => {
     TWEETS_REPLIES_TAB,
     MEDIA,
     LIKES,
+    PROFILE_INFO_TYPE,
   ].includes(tab);
 
   return isProfileTarget;

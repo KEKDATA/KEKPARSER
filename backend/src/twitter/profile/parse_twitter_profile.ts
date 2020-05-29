@@ -14,29 +14,25 @@ import {
 
 import { checkIsTwitterContentVisible } from '../lib/dom/visible_content_check';
 
-import { getProfileInfo } from './profile_info';
 import { parsedTweetsFx } from '../tweets/analyzed_tweets';
 import { changeProfileNavigation } from './change_profile_navigation';
 
 import { $webdriverPage, setProfileTab } from '../model';
 
-const PROFILE_TAB = process.env.PROFILE_TAB;
-
-export const getParsedTwitterProfile = async () => {
+export const getParsedTwitterProfile = async (tweetsType: string) => {
   const page = $webdriverPage.getState();
 
   await page.waitForSelector(PROFILE_SELECTOR);
   await page.waitForFunction(checkIsTwitterContentVisible, LOADER_SELECTOR);
 
-  const profileInfo = await getProfileInfo();
+  let parsedProfileTweets = {};
 
-  let parsedTweets = {};
-
-  switch (PROFILE_TAB) {
+  switch (tweetsType) {
     case TWEETS_TAB: {
       setProfileTab(TWEETS_TAB);
 
-      parsedTweets = await parsedTweetsFx(null);
+      const { parsedTweets } = await parsedTweetsFx(null);
+      parsedProfileTweets = parsedTweets;
 
       break;
     }
@@ -46,7 +42,8 @@ export const getParsedTwitterProfile = async () => {
 
       await changeProfileNavigation(REPLIES_LINK_SELECTOR, false);
 
-      parsedTweets = await parsedTweetsFx(null);
+      const { parsedTweets } = await parsedTweetsFx(null);
+      parsedProfileTweets = parsedTweets;
 
       break;
     }
@@ -56,7 +53,8 @@ export const getParsedTwitterProfile = async () => {
 
       await changeProfileNavigation(MEDIA_LINK_SELECTOR, true);
 
-      parsedTweets = await parsedTweetsFx(null);
+      const { parsedTweets } = await parsedTweetsFx(null);
+      parsedProfileTweets = parsedTweets;
 
       break;
     }
@@ -66,7 +64,8 @@ export const getParsedTwitterProfile = async () => {
 
       await changeProfileNavigation(LIKES_LINK_SELECTOR, true);
 
-      parsedTweets = await parsedTweetsFx(null);
+      const { parsedTweets } = await parsedTweetsFx(null);
+      parsedProfileTweets = parsedTweets;
 
       break;
     }
@@ -76,7 +75,6 @@ export const getParsedTwitterProfile = async () => {
   }
 
   return {
-    profileInfo,
-    ...parsedTweets,
+    parsedTweets: parsedProfileTweets,
   };
 };

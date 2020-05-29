@@ -10,7 +10,10 @@ const sentimentQueue = new Queue('sentiment', OPTIONS);
 const callbackQueue = new Queue('callback', OPTIONS);
 
 sentimentQueue.process(MAX_JOBS_PER_WORKER, job => {
-  const { normalizedTweetsForAnalysis, id } = job.data;
+  const {
+    normalizedTweetsForAnalysis,
+    id,
+  }: { normalizedTweetsForAnalysis: Array<string>; id: string } = job.data;
 
   const {
     dataWithSentiments: tweetsWithSentiments,

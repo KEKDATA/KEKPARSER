@@ -1,5 +1,4 @@
-import { NormalizedTweetInfo } from '../types/tweets';
-import { FinalTweet } from '../socket';
+import { FinalTweet, NormalizedTweetInfo } from '../types/tweets';
 
 export const initialStore: NormalizedTweetInfo = {
   finalTweets: [],
@@ -7,5 +6,6 @@ export const initialStore: NormalizedTweetInfo = {
   tweetWithMaxCoefficient: <FinalTweet>{},
   isExistMin: false,
   isExistMax: false,
+  isMeanSentimentExist: false,
   meanSentiment: null,
 };

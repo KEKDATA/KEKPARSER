@@ -9,8 +9,8 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import retweetIcon from '../../../assets/icons/retweet.svg';
 import replyIcon from '../../../assets/icons/reply.svg';
 
-import { FinalTweet } from '../../../socket';
 import { checkIsNumberExist } from '../../../lib/is_number_exist';
+import { FinalTweet } from '../../../types/tweets';
 
 const TweetIcon = styled.img`
   width: 24px;
@@ -33,6 +33,10 @@ const OptionTweetContainer = styled(Grid)`
 
 const OptionTweetInfo = styled(Typography)`
   padding: 2px 2px 0 8px;
+`;
+
+const RepliesContainer = styled(Grid)`
+  margin: 10px 0;
 `;
 
 export const Tweet: React.FC<{ tweetOptions: FinalTweet }> = ({
@@ -65,7 +69,14 @@ export const Tweet: React.FC<{ tweetOptions: FinalTweet }> = ({
       </Grid>
       <Typography gutterBottom>{tweetContent}</Typography>
       {replyingUsers && replyingUsers.length > 0 && (
-        <Typography gutterBottom>{replyingUsers.length}</Typography>
+        <RepliesContainer container direction="column">
+          <Typography gutterBottom>
+            Replying users: {replyingUsers.length}
+          </Typography>
+          {replyingUsers.map(({ user, userLink }) => (
+            <Link href={userLink}>{user}</Link>
+          ))}
+        </RepliesContainer>
       )}
       <Grid container spacing={4}>
         {checkIsNumberExist(likes) && (
