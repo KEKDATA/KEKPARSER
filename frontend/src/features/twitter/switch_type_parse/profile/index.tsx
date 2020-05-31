@@ -22,6 +22,7 @@ import {
 } from '../../../../constants/profile_info';
 import { ProfileInfo } from '../../tabs/profile/profile_info';
 import { LikesTweets } from '../../tabs/profile/likes';
+import { MediaTweets } from '../../tabs/profile/media';
 
 export const SwitchTypeProfile: React.FC = () => {
   const profileParseType = useStore($profileParseType);
@@ -79,6 +80,7 @@ export const SwitchTypeProfile: React.FC = () => {
       {profileParseType === TWEETS && <ProfileTweets />}
       {profileParseType === TWEETS_REPLIES && <ProfileTweetsAndReplies />}
       {profileParseType === LIKES && <LikesTweets />}
+      {profileParseType === MEDIA && <MediaTweets />}
       {profileParseType === PROFILE_INFO_TYPE && <ProfileInfo />}
     </>
   );

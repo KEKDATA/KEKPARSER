@@ -1,4 +1,11 @@
-import { Latest, Likes, Top, Tweets, TweetsAndReplies } from './parse_type';
+import {
+  Latest,
+  Likes,
+  Media,
+  Top,
+  Tweets,
+  TweetsAndReplies,
+} from './parse_type';
 
 export type NormalizedTweetInfo = {
   finalTweets: Array<FinalTweet>;
@@ -29,5 +36,5 @@ export type TakenTweetsInfo = {
   meanSentiment: number | null;
   minCoefficient: FinalTweet;
   maxCoefficient: FinalTweet;
-  tweetsType: Top | Latest | Tweets | TweetsAndReplies | Likes | null;
+  tweetsType: Top | Latest | Tweets | TweetsAndReplies | Likes | Media | null;
 };
