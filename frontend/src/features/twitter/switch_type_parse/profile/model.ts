@@ -1,7 +1,7 @@
 import { createEvent, createStore } from 'effector';
 import { MouseEvent } from 'react';
 
-import { ProfileTabs } from '../../../../types/profile';
+import { ProfileTabs } from '../../../../types/parse_type';
 
 export const $profileParseType = createStore<ProfileTabs | ''>('');
 

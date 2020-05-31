@@ -5,7 +5,7 @@ import {
   Likes,
   Latest,
   Top,
-} from '../types/profile';
+} from '../types/parse_type';
 
 export const LATEST_TWEETS: Latest = 'latest';
 export const TOP_TWEETS: Top = 'top';

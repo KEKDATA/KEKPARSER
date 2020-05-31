@@ -8,7 +8,7 @@ import {
   NormalizedTweetInfo,
   TakenTweetsInfo,
 } from '../../../../../types/tweets';
-import { getNormalizedTweetAnalyze } from '../../../lib/get_normalized_tweets';
+import { setNormalizedTweets } from '../../../../../lib/set_normalized_tweets';
 
 export const $profileNormalizedTweetsAndReplies = createStore<
   NormalizedTweetInfo
@@ -18,21 +18,7 @@ const profileTweetsAndRepliesChanged = createEvent<TakenTweetsInfo>();
 
 $profileNormalizedTweetsAndReplies.on(
   profileTweetsAndRepliesChanged,
-  (
-    prevState,
-    { finalTweets, meanSentiment, minCoefficient, maxCoefficient },
-  ) => {
-    const normalizedTweets = {
-      finalTweets,
-      ...getNormalizedTweetAnalyze({
-        maxCoefficient,
-        minCoefficient,
-        meanSentiment,
-      }),
-    };
-
-    return normalizedTweets;
-  },
+  setNormalizedTweets,
 );
 
 guard({

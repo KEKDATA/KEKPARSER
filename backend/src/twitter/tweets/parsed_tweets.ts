@@ -12,7 +12,7 @@ import { scrollToLastTweet } from './lib/scroll_to_last_tweet';
 
 import { ParsedTweets, Tweet } from '../types';
 
-import { attachedTweetInfo } from './model';
+import { getTweetInfo } from './model';
 import { $tweetsCount, $webdriverPage } from '../model';
 
 const MAX_TWEETS_EQUALS = 5;
@@ -39,7 +39,7 @@ const parsedTweetsFx = createEffect<{ page: Page; tweetsCount: number }, any>({
       $(TWEET_SELECTOR).each(async (index, tweet) => {
         const tweetNode = $(tweet);
 
-        const tweetInfo: Tweet | null = await attachedTweetInfo({ tweetNode });
+        const tweetInfo: Tweet | null = await getTweetInfo({ tweetNode });
 
         if (!tweetInfo) {
           return;
