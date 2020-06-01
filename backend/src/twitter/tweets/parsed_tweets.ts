@@ -1,7 +1,7 @@
 import cheerio from 'cheerio';
 import R from 'ramda';
 import { Page } from 'playwright';
-import { createEffect, attach, combine } from 'effector';
+import { createEffect, attach } from 'effector';
 
 import { TWEET_SELECTOR } from './constants/selectors';
 import { LOADER_SELECTOR } from '../constants/selectors';
@@ -84,6 +84,6 @@ const parsedTweetsFx = createEffect<{ page: Page; tweetsCount: number }, any>({
 
 export const getParsedTweets = attach({
   effect: parsedTweetsFx,
-  source: combine({ page: $webdriverPage, tweetsCount: $tweetsCount }),
+  source: { page: $webdriverPage, tweetsCount: $tweetsCount },
   mapParams: (_, sources) => sources,
 });

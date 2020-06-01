@@ -9,6 +9,8 @@ import {
   TakenTweetsInfo,
 } from '../../../../../types/tweets';
 import { setNormalizedTweets } from '../../../../../lib/set_normalized_tweets';
+import { speakMessage } from '../../../../../lib/speech_synthesis';
+import { SUCCESS_LIKES_SPEECH } from '../../../../../constants/speech';
 
 export const $normalizedLikesTweets = createStore<NormalizedTweetInfo>(
   initialStore,
@@ -27,7 +29,10 @@ guard({
 export const $isLoadingLikesTweets = createStore<boolean | null>(null);
 
 $isLoadingLikesTweets.on(sendFx, () => true);
-$isLoadingLikesTweets.on(likesChanged, () => false);
+$isLoadingLikesTweets.on(likesChanged, () => {
+  speakMessage(SUCCESS_LIKES_SPEECH);
+  return false;
+});
 
 export const $likesTweets = combine({
   tweets: $normalizedLikesTweets,

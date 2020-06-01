@@ -7,6 +7,8 @@ import { LATEST_TWEETS } from '../../../../../constants/tweets_types';
 import { getNormalizedTweetAnalyze } from '../../../lib/get_normalized_tweets';
 import { NormalizedTweetInfo } from '../../../../../types/tweets';
 import { initialStore } from '../../../../../constants/initial_tweets_store';
+import { speakMessage } from '../../../../../lib/speech_synthesis';
+import { SUCCESS_LATEST_TWEETS_SPEECH } from '../../../../../constants/speech';
 
 const $normalizedTweets: Store<NormalizedTweetInfo> = $tweetsMessage.map(
   (
@@ -34,6 +36,7 @@ export const $isLoadingLatestTweets = createStore<boolean | null>(null);
 $isLoadingLatestTweets.on(sendFx, () => true);
 $isLoadingLatestTweets.on($tweetsMessage, (defaultState, { tweetsType }) => {
   if (tweetsType === LATEST_TWEETS) {
+    speakMessage(SUCCESS_LATEST_TWEETS_SPEECH);
     return false;
   }
 

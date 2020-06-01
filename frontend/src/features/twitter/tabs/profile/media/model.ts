@@ -9,6 +9,8 @@ import {
   TakenTweetsInfo,
 } from '../../../../../types/tweets';
 import { setNormalizedTweets } from '../../../../../lib/set_normalized_tweets';
+import { speakMessage } from '../../../../../lib/speech_synthesis';
+import { SUCCESS_MEDIA_SPEECH } from '../../../../../constants/speech';
 
 export const $normalizedMediaTweets = createStore<NormalizedTweetInfo>(
   initialStore,
@@ -24,12 +26,15 @@ guard({
   target: mediaChanged,
 });
 
-export const $isLoadingLikesTweets = createStore<boolean | null>(null);
+export const $isLoadingMediaTweets = createStore<boolean | null>(null);
 
-$isLoadingLikesTweets.on(sendFx, () => true);
-$isLoadingLikesTweets.on(mediaChanged, () => false);
+$isLoadingMediaTweets.on(sendFx, () => true);
+$isLoadingMediaTweets.on(mediaChanged, () => {
+  speakMessage(SUCCESS_MEDIA_SPEECH);
+  return false;
+});
 
 export const $mediaTweets = combine({
   tweets: $normalizedMediaTweets,
-  isLoading: $isLoadingLikesTweets,
+  isLoading: $isLoadingMediaTweets,
 });

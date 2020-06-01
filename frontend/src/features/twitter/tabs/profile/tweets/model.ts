@@ -9,6 +9,8 @@ import {
   TakenTweetsInfo,
 } from '../../../../../types/tweets';
 import { setNormalizedTweets } from '../../../../../lib/set_normalized_tweets';
+import { speakMessage } from '../../../../../lib/speech_synthesis';
+import { SUCCESS_PROFILE_TWEETS_SPEECH } from '../../../../../constants/speech';
 
 export const $profileNormalizedTweets = createStore<NormalizedTweetInfo>(
   initialStore,
@@ -27,7 +29,10 @@ guard({
 export const $isLoadingProfileTweets = createStore<boolean | null>(null);
 
 $isLoadingProfileTweets.on(sendFx, () => true);
-$isLoadingProfileTweets.on(profileChanged, () => false);
+$isLoadingProfileTweets.on(profileChanged, () => {
+  speakMessage(SUCCESS_PROFILE_TWEETS_SPEECH);
+  return false;
+});
 
 export const $profileTweets = combine({
   tweets: $profileNormalizedTweets,

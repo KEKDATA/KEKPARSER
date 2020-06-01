@@ -44,7 +44,7 @@ const twitterParseFx = createEffect<
       }
     }
 
-    await browser.close();
+    // await browser.close();
 
     return Promise.resolve({ parsedTweets: tweets });
   },
