@@ -24,7 +24,7 @@ export const getRuSentiment = async (
       dataWithSentiments: { [key: string]: number };
       countOfSentimentCoefficients: number;
     }>((resolve, reject) => {
-      pythonProcess.stdout.on('data', sentiments => {
+      pythonProcess.stdout.on('data', (sentiments: ArrayBuffer) => {
         const result = sentiments.toString();
 
         const normalizedSentiments: { [key: string]: number } = {};
