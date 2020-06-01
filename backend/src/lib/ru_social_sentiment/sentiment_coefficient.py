@@ -1,3 +1,7 @@
+# Данная библиотека имеет приватный дата сет под тональность соц сетей, который показал неплохие результаты
+# В следствии чего - закинул скрипт Python 3.
+# "Говнопалка"
+
 from dostoevsky.tokenization import RegexTokenizer
 from dostoevsky.models import FastTextSocialNetworkModel
 
