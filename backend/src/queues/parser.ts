@@ -31,12 +31,45 @@ parserQueue.process(MAX_JOBS_PER_WORKER, async job => {
 
   callbackQueue.add({ jobId: id, options: { parsedTweets } });
 
-  const normalizedTweetsForAnalysis = parsedTweets.map(({ tweetContent }) => {
-    const tweetWithAlphaOnly = getTextWithAlphaOnly(tweetContent);
+  const normalizedTweetsForBayes = [];
 
-    return tweetWithAlphaOnly;
+  const russianTweets = [];
+  const englishTweets = [];
+
+  for (let i = 0; i < parsedTweets.length; i++) {
+    const { tweetContent } = parsedTweets[i];
+
+    const {
+      text,
+      language,
+    }: {
+      text: string;
+      language: string;
+    } = getTextWithAlphaOnly(tweetContent);
+
+    switch (language) {
+      case 'ru': {
+        russianTweets.push({ text, textIndex: i });
+        break;
+      }
+
+      case 'eng': {
+        englishTweets.push({ text, textIndex: i });
+        break;
+      }
+
+      default: {
+        break;
+      }
+    }
+
+    normalizedTweetsForBayes.push(text);
+  }
+
+  sentimentQueue.add({
+    russianTweets,
+    englishTweets,
+    id,
   });
-
-  sentimentQueue.add({ normalizedTweetsForAnalysis, id });
-  bayesQueue.add({ normalizedTweetsForAnalysis, id });
+  bayesQueue.add({ normalizedTweetsForAnalysis: normalizedTweetsForBayes, id });
 });

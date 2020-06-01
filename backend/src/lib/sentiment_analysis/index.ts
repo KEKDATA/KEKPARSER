@@ -7,24 +7,25 @@ import {
 //@ts-ignore
 import stopword from 'stopword';
 
-export const getTextWithSentimentAnalysis = (data: Array<string>) => {
+export const getTextWithSentimentAnalysis = (
+  data: Array<{ text: string; textIndex: number }>,
+) => {
   const tokenizer = new WordTokenizer();
   const analyzer = new SentimentAnalyzer('English', PorterStemmer, 'afinn');
 
-  const dataWithSentiments = [];
+  const dataWithSentiments: { [key: string]: number } = {};
 
   let countOfSentimentCoefficients = 0;
-  let lengthOfData = data.length;
 
-  for (let i = 0; i < lengthOfData; i++) {
-    const elementOfData = data[i];
+  for (let i = 0; i < data.length; i++) {
+    const { text, textIndex } = data[i];
 
-    const tokenizedData = tokenizer.tokenize(elementOfData);
+    const tokenizedData = tokenizer.tokenize(text);
 
     const dataWithoutStopWords = stopword.removeStopwords(tokenizedData);
 
     if (dataWithoutStopWords.length === 0) {
-      dataWithSentiments.push(0);
+      dataWithSentiments[textIndex] = 0;
       continue;
     }
 
@@ -35,10 +36,8 @@ export const getTextWithSentimentAnalysis = (data: Array<string>) => {
     countOfSentimentCoefficients =
       sentimentCoefficient + countOfSentimentCoefficients;
 
-    dataWithSentiments.push(sentimentCoefficient);
+    dataWithSentiments[textIndex] = sentimentCoefficient;
   }
 
-  const meanSentiment = countOfSentimentCoefficients / lengthOfData;
-
-  return { dataWithSentiments, meanSentiment };
+  return { dataWithSentiments, countOfSentimentCoefficients };
 };

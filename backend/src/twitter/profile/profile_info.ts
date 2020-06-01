@@ -99,12 +99,12 @@ const parseProfileInfoFx = createEffect<{ browser: Browser; page: Page }, any>({
     let classifierData = null;
 
     if (description.length > 0) {
-      const descriptionWithAlphaOnly = getTextWithAlphaOnly(description);
+      const { text } = getTextWithAlphaOnly(description);
 
       const analyzer = new SentimentAnalyzer('English', PorterStemmer, 'afinn');
       const tokenizer = new WordTokenizer();
 
-      const tokenizedData = tokenizer.tokenize(descriptionWithAlphaOnly);
+      const tokenizedData = tokenizer.tokenize(text);
       const dataWithoutStopWords = stopword.removeStopwords(tokenizedData);
 
       sentimentCoefficient = Number(
@@ -112,7 +112,7 @@ const parseProfileInfoFx = createEffect<{ browser: Browser; page: Page }, any>({
       );
 
       const bayesClassifier = getWordsTrigramsBayesClassifier();
-      classifierData = bayesClassifier.classify(descriptionWithAlphaOnly);
+      classifierData = bayesClassifier.classify(text);
     }
 
     await browser.close();
