@@ -37,7 +37,7 @@ const parsedTwitterProfileFx = createEffect<
         case TWEETS_TAB: {
           setProfileTab(TWEETS_TAB);
 
-          const { parsedTweets } = await parsedTweetsFx(null);
+          const { parsedTweets } = await parsedTweetsFx(page);
           parsedProfileTweets = parsedTweets;
 
           break;
@@ -46,9 +46,9 @@ const parsedTwitterProfileFx = createEffect<
         case TWEETS_REPLIES_TAB: {
           setProfileTab(TWEETS_REPLIES_TAB);
 
-          await changeProfileNavigation(REPLIES_LINK_SELECTOR, false, page);
+          await page.click(REPLIES_LINK_SELECTOR);
 
-          const { parsedTweets } = await parsedTweetsFx(null);
+          const { parsedTweets } = await parsedTweetsFx(page);
           parsedProfileTweets = parsedTweets;
 
           break;
@@ -58,7 +58,7 @@ const parsedTwitterProfileFx = createEffect<
           setProfileTab(MEDIA);
           await changeProfileNavigation(MEDIA_LINK_SELECTOR, true, page);
 
-          const { parsedTweets } = await parsedTweetsFx(null);
+          const { parsedTweets } = await parsedTweetsFx(page);
           parsedProfileTweets = parsedTweets;
 
           break;
@@ -68,7 +68,7 @@ const parsedTwitterProfileFx = createEffect<
           setProfileTab(LIKES);
           await changeProfileNavigation(LIKES_LINK_SELECTOR, true, page);
 
-          const { parsedTweets } = await parsedTweetsFx(null);
+          const { parsedTweets } = await parsedTweetsFx(page);
           parsedProfileTweets = parsedTweets;
 
           break;

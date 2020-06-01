@@ -1,4 +1,4 @@
-import { Browser } from 'playwright';
+import { Browser, Page } from 'playwright';
 import { createEffect, attach, combine } from 'effector';
 
 import {
@@ -12,10 +12,10 @@ import { $parseTarget, $webdriverBrowser } from './model';
 import { ParsedTweets } from './types';
 
 const twitterParseFx = createEffect<
-  { browser: Browser; parseTarget: string; tweetsType: string },
+  { browser: Browser; parseTarget: string; tweetsType: string; page: Page },
   any
 >({
-  handler: async ({ browser, parseTarget, tweetsType }) => {
+  handler: async ({ browser, parseTarget, tweetsType, page }) => {
     let tweets = {};
 
     switch (parseTarget) {
@@ -32,7 +32,7 @@ const twitterParseFx = createEffect<
       case SEARCH_TWEETS_TARGET: {
         const {
           parsedTweets,
-        }: { parsedTweets: {} | ParsedTweets } = await parsedTweetsFx(null);
+        }: { parsedTweets: {} | ParsedTweets } = await parsedTweetsFx(page);
         tweets = parsedTweets;
 
         break;
@@ -44,7 +44,7 @@ const twitterParseFx = createEffect<
       }
     }
 
-    // await browser.close();
+    await browser.close();
 
     return Promise.resolve({ parsedTweets: tweets });
   },
@@ -56,9 +56,10 @@ export const createdTwitterParse = attach({
     browser: $webdriverBrowser,
     parseTarget: $parseTarget,
   }),
-  mapParams: (tweetsType: string, { browser, parseTarget }) => ({
+  mapParams: ({ tweetsType, page }, { browser, parseTarget }) => ({
     browser,
     parseTarget,
     tweetsType,
+    page,
   }),
 });

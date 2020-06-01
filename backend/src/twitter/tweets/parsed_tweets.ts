@@ -13,7 +13,7 @@ import { scrollToLastTweet } from './lib/scroll_to_last_tweet';
 import { ParsedTweets, Tweet } from '../types';
 
 import { getTweetInfo } from './model';
-import { $tweetsCount, $webdriverPage } from '../model';
+import { $tweetsCount } from '../model';
 
 const MAX_TWEETS_EQUALS = 5;
 
@@ -84,6 +84,7 @@ const parsedTweetsFx = createEffect<{ page: Page; tweetsCount: number }, any>({
 
 export const getParsedTweets = attach({
   effect: parsedTweetsFx,
-  source: { page: $webdriverPage, tweetsCount: $tweetsCount },
-  mapParams: (_, sources) => sources,
+  source: { tweetsCount: $tweetsCount },
+  // @ts-ignore
+  mapParams: (page, sources) => ({ page, tweetsCount: sources.tweetsCount }),
 });

@@ -25,10 +25,13 @@ parserQueue.process(MAX_JOBS_PER_WORKER, async job => {
     tweetsType,
   }: { tweetsType: TweetsTabs; id: string; options: Send } = job.data;
 
-  await setupWebdriverFx({ options });
+  const { page } = await setupWebdriverFx({ options });
   const {
     parsedTweets,
-  }: { parsedTweets: ParsedTweets } = await createdTwitterParse(tweetsType);
+  }: { parsedTweets: ParsedTweets } = await createdTwitterParse({
+    tweetsType,
+    page,
+  });
 
   mergeQueue.add({ jobId: id, options: { parsedTweets } });
 
