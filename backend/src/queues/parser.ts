@@ -9,13 +9,14 @@ import { ParsedTweets, TweetsTabs } from '../twitter/types';
 
 import { OPTIONS, MAX_JOBS_PER_WORKER } from './config';
 import { Send } from '../types';
+import { ENG, RU } from '../constants/language';
 
 console.info('Parser connected');
 
 const parserQueue = new Queue('parser', OPTIONS);
 const sentimentQueue = new Queue('sentiment', OPTIONS);
 const bayesQueue = new Queue('bayes', OPTIONS);
-const callbackQueue = new Queue('callback', OPTIONS);
+const mergeQueue = new Queue('merge', OPTIONS);
 
 parserQueue.process(MAX_JOBS_PER_WORKER, async job => {
   const {
@@ -29,7 +30,7 @@ parserQueue.process(MAX_JOBS_PER_WORKER, async job => {
     parsedTweets,
   }: { parsedTweets: ParsedTweets } = await createdTwitterParse(tweetsType);
 
-  callbackQueue.add({ jobId: id, options: { parsedTweets } });
+  mergeQueue.add({ jobId: id, options: { parsedTweets } });
 
   const normalizedTweetsForBayes = [];
 
@@ -48,12 +49,12 @@ parserQueue.process(MAX_JOBS_PER_WORKER, async job => {
     } = getTextWithAlphaOnly(tweetContent);
 
     switch (language) {
-      case 'ru': {
+      case RU: {
         russianTweets.push({ text, textIndex: i });
         break;
       }
 
-      case 'eng': {
+      case ENG: {
         englishTweets.push({ text, textIndex: i });
         break;
       }

@@ -31,6 +31,8 @@ import { LOADER_SELECTOR } from '../constants/selectors';
 import { checkIsLink } from '../../lib/regex/check_is_link';
 import { TWITTER_URL } from '../tweets/lib/tweet_info/constants';
 import { NormalizedDescription } from '../../types';
+import { ENG, RU } from '../../constants/language';
+import { getRuSentiment } from '../../lib/ru_social_sentiment';
 
 const parseProfileInfoFx = createEffect<{ browser: Browser; page: Page }, any>({
   handler: async ({ browser, page }) => {
@@ -99,17 +101,38 @@ const parseProfileInfoFx = createEffect<{ browser: Browser; page: Page }, any>({
     let classifierData = null;
 
     if (description.length > 0) {
-      const { text } = getTextWithAlphaOnly(description);
+      const { text, language } = getTextWithAlphaOnly(description);
 
-      const analyzer = new SentimentAnalyzer('English', PorterStemmer, 'afinn');
-      const tokenizer = new WordTokenizer();
+      switch (language) {
+        case RU: {
+          const { countOfSentimentCoefficients } = await getRuSentiment([
+            { text, textIndex: 1 },
+          ]);
+          sentimentCoefficient = countOfSentimentCoefficients;
+          break;
+        }
 
-      const tokenizedData = tokenizer.tokenize(text);
-      const dataWithoutStopWords = stopword.removeStopwords(tokenizedData);
+        case ENG: {
+          const analyzer = new SentimentAnalyzer(
+            'English',
+            PorterStemmer,
+            'afinn',
+          );
+          const tokenizer = new WordTokenizer();
 
-      sentimentCoefficient = Number(
-        analyzer.getSentiment(dataWithoutStopWords),
-      );
+          const tokenizedData = tokenizer.tokenize(text);
+          const dataWithoutStopWords = stopword.removeStopwords(tokenizedData);
+
+          sentimentCoefficient = Number(
+            analyzer.getSentiment(dataWithoutStopWords),
+          );
+          break;
+        }
+
+        default: {
+          break;
+        }
+      }
 
       const bayesClassifier = getWordsTrigramsBayesClassifier();
       classifierData = bayesClassifier.classify(text);

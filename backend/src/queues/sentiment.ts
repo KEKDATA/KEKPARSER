@@ -8,7 +8,7 @@ import { getRuSentiment } from '../lib/ru_social_sentiment';
 console.info('Sentiment connected');
 
 const sentimentQueue = new Queue('sentiment', OPTIONS);
-const callbackQueue = new Queue('callback', OPTIONS);
+const mergeQueue = new Queue('merge', OPTIONS);
 
 sentimentQueue.process(MAX_JOBS_PER_WORKER, async job => {
   const {
@@ -51,7 +51,7 @@ sentimentQueue.process(MAX_JOBS_PER_WORKER, async job => {
 
   meanSentiment = totalSentimentCoefficient / summaryLength;
 
-  callbackQueue.add({
+  mergeQueue.add({
     jobId: id,
     options: { tweetsWithSentiments, meanSentiment, isSentiment: true },
   });

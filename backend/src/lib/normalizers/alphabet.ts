@@ -1,4 +1,5 @@
 import { aposToLexForm } from '../lex_form_convert/apos_to_lex_form';
+import { ENG, RU } from '../../constants/language';
 
 export const getTextWithAlphaOnly = (text: string) => {
   const textLexicalForm = aposToLexForm(text);
@@ -10,20 +11,20 @@ export const getTextWithAlphaOnly = (text: string) => {
   let language = '';
 
   if (russianText.length > englishText.length) {
-    language = 'ru';
+    language = RU;
   } else {
-    language = 'eng';
+    language = ENG;
   }
 
   let normalizedText = '';
 
   switch (language) {
-    case 'ru': {
+    case RU: {
       normalizedText = russianText;
       break;
     }
 
-    case 'eng': {
+    case ENG: {
       normalizedText = englishText;
       break;
     }

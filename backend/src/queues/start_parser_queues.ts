@@ -20,7 +20,7 @@ import {
 } from '../twitter/constants/tabs';
 
 const parserQueue = new Queue(`parser`, OPTIONS);
-const callbackQueue = new Queue('callback', OPTIONS);
+const mergeQueue = new Queue('merge', OPTIONS);
 const webQueue = new Queue('web', OPTIONS);
 const profileQueue = new Queue('profile', OPTIONS);
 
@@ -58,7 +58,7 @@ export const startParserQueues = (message: { options: Send; id: string }) => {
       setTimeout(() => {
         const jobId = nanoid();
 
-        callbackQueue.add({
+        mergeQueue.add({
           jobId,
           options: { tweetsType, id },
         });
@@ -78,7 +78,7 @@ export const startParserQueues = (message: { options: Send; id: string }) => {
       setTimeout(() => {
         const jobId = nanoid();
 
-        callbackQueue.add({
+        mergeQueue.add({
           jobId,
           options: { tweetsType, id },
         });
@@ -98,7 +98,7 @@ export const startParserQueues = (message: { options: Send; id: string }) => {
       setTimeout(() => {
         const jobId = nanoid();
 
-        callbackQueue.add({
+        mergeQueue.add({
           jobId,
           options: { tweetsType, id },
         });
@@ -118,7 +118,7 @@ export const startParserQueues = (message: { options: Send; id: string }) => {
       setTimeout(() => {
         const jobId = nanoid();
 
-        callbackQueue.add({
+        mergeQueue.add({
           jobId,
           options: { tweetsType, id },
         });
@@ -140,7 +140,7 @@ export const startParserQueues = (message: { options: Send; id: string }) => {
       setTimeout(() => {
         const jobId = nanoid();
 
-        callbackQueue.add({
+        mergeQueue.add({
           jobId,
           options: { tweetsType, id },
         });
@@ -165,7 +165,7 @@ export const startParserQueues = (message: { options: Send; id: string }) => {
       setTimeout(() => {
         const jobId = nanoid();
 
-        callbackQueue.add({
+        mergeQueue.add({
           jobId,
           options: { tweetsType, id },
         });

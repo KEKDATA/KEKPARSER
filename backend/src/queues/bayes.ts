@@ -7,7 +7,7 @@ import { OPTIONS, MAX_JOBS_PER_WORKER } from './config';
 console.info('Bayes connected');
 
 const bayesQueue = new Queue('bayes', OPTIONS);
-const callbackQueue = new Queue('callback', OPTIONS);
+const mergeQueue = new Queue('merge', OPTIONS);
 
 bayesQueue.process(MAX_JOBS_PER_WORKER, job => {
   const {
@@ -19,7 +19,7 @@ bayesQueue.process(MAX_JOBS_PER_WORKER, job => {
     normalizedTweetsForAnalysis,
   );
 
-  callbackQueue.add({
+  mergeQueue.add({
     jobId: id,
     options: { tweetsWithBayesClassifier, isBayes: true },
   });
