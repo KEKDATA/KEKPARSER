@@ -73,8 +73,10 @@ export const Tweet: React.FC<{ tweetOptions: FinalTweet }> = ({
           <Typography gutterBottom>
             Replying users: {replyingUsers.length}
           </Typography>
-          {replyingUsers.map(({ user, userLink }) => (
-            <Link href={userLink}>{user}</Link>
+          {replyingUsers.map(({ user, userLink, id }) => (
+            <Link key={id} href={userLink}>
+              {user}
+            </Link>
           ))}
         </RepliesContainer>
       )}

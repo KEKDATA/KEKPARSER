@@ -5,6 +5,7 @@ export type ProfileSettings = {
   isTweets: boolean;
   isTweetsAndReplies: boolean;
   isMedia: boolean;
+  isProfileInfo: boolean;
 };
 
 export type TweetsSettings = {

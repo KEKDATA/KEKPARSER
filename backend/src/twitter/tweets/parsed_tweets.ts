@@ -1,7 +1,7 @@
 import cheerio from 'cheerio';
 import R from 'ramda';
 import { Page } from 'playwright';
-import { createEffect, attach, combine } from 'effector';
+import { createEffect, attach } from 'effector';
 
 import { TWEET_SELECTOR } from './constants/selectors';
 import { LOADER_SELECTOR } from '../constants/selectors';
@@ -12,8 +12,8 @@ import { scrollToLastTweet } from './lib/scroll_to_last_tweet';
 
 import { ParsedTweets, Tweet } from '../types';
 
-import { attachedTweetInfo } from './model';
-import { $tweetsCount, $webdriverPage } from '../model';
+import { getTweetInfo } from './model';
+import { $tweetsCount } from '../model';
 
 const MAX_TWEETS_EQUALS = 5;
 
@@ -39,7 +39,7 @@ const parsedTweetsFx = createEffect<{ page: Page; tweetsCount: number }, any>({
       $(TWEET_SELECTOR).each(async (index, tweet) => {
         const tweetNode = $(tweet);
 
-        const tweetInfo: Tweet | null = await attachedTweetInfo({ tweetNode });
+        const tweetInfo: Tweet | null = await getTweetInfo({ tweetNode });
 
         if (!tweetInfo) {
           return;
@@ -84,6 +84,7 @@ const parsedTweetsFx = createEffect<{ page: Page; tweetsCount: number }, any>({
 
 export const getParsedTweets = attach({
   effect: parsedTweetsFx,
-  source: combine({ page: $webdriverPage, tweetsCount: $tweetsCount }),
-  mapParams: (_, sources) => sources,
+  source: { tweetsCount: $tweetsCount },
+  // @ts-ignore
+  mapParams: (page, sources) => ({ page, tweetsCount: sources.tweetsCount }),
 });
