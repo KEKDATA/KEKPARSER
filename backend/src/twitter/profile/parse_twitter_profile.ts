@@ -1,3 +1,6 @@
+import { createEffect, attach } from 'effector';
+import { Page } from 'playwright';
+
 import { LOADER_SELECTOR } from '../constants/selectors';
 import {
   LIKES_LINK_SELECTOR,
@@ -19,62 +22,73 @@ import { changeProfileNavigation } from './change_profile_navigation';
 
 import { $webdriverPage, setProfileTab } from '../model';
 
-export const getParsedTwitterProfile = async (tweetsType: string) => {
-  const page = $webdriverPage.getState();
+const parsedTwitterProfileFx = createEffect<
+  { page: Page; tweetsType: string },
+  any
+>({
+  handler: async ({ page, tweetsType }) => {
+    await page.waitForSelector(PROFILE_SELECTOR);
+    await page.waitForFunction(checkIsTwitterContentVisible, LOADER_SELECTOR);
 
-  await page.waitForSelector(PROFILE_SELECTOR);
-  await page.waitForFunction(checkIsTwitterContentVisible, LOADER_SELECTOR);
+    let parsedProfileTweets = {};
 
-  let parsedProfileTweets = {};
+    try {
+      switch (tweetsType) {
+        case TWEETS_TAB: {
+          setProfileTab(TWEETS_TAB);
 
-  switch (tweetsType) {
-    case TWEETS_TAB: {
-      setProfileTab(TWEETS_TAB);
+          const { parsedTweets } = await parsedTweetsFx(page);
+          parsedProfileTweets = parsedTweets;
 
-      const { parsedTweets } = await parsedTweetsFx(null);
-      parsedProfileTweets = parsedTweets;
+          break;
+        }
 
-      break;
+        case TWEETS_REPLIES_TAB: {
+          setProfileTab(TWEETS_REPLIES_TAB);
+
+          await page.click(REPLIES_LINK_SELECTOR);
+
+          const { parsedTweets } = await parsedTweetsFx(page);
+          parsedProfileTweets = parsedTweets;
+
+          break;
+        }
+
+        case MEDIA: {
+          setProfileTab(MEDIA);
+          await changeProfileNavigation(MEDIA_LINK_SELECTOR, true, page);
+
+          const { parsedTweets } = await parsedTweetsFx(page);
+          parsedProfileTweets = parsedTweets;
+
+          break;
+        }
+
+        case LIKES: {
+          setProfileTab(LIKES);
+          await changeProfileNavigation(LIKES_LINK_SELECTOR, true, page);
+
+          const { parsedTweets } = await parsedTweetsFx(page);
+          parsedProfileTweets = parsedTweets;
+
+          break;
+        }
+
+        default:
+          break;
+      }
+    } catch (err) {
+      console.error('Parse twitter profile error!:', err);
     }
 
-    case TWEETS_REPLIES_TAB: {
-      setProfileTab(TWEETS_REPLIES_TAB);
+    return Promise.resolve({
+      parsedTweets: parsedProfileTweets,
+    });
+  },
+});
 
-      await changeProfileNavigation(REPLIES_LINK_SELECTOR, false);
-
-      const { parsedTweets } = await parsedTweetsFx(null);
-      parsedProfileTweets = parsedTweets;
-
-      break;
-    }
-
-    case MEDIA: {
-      setProfileTab(MEDIA);
-
-      await changeProfileNavigation(MEDIA_LINK_SELECTOR, true);
-
-      const { parsedTweets } = await parsedTweetsFx(null);
-      parsedProfileTweets = parsedTweets;
-
-      break;
-    }
-
-    case LIKES: {
-      setProfileTab(LIKES);
-
-      await changeProfileNavigation(LIKES_LINK_SELECTOR, true);
-
-      const { parsedTweets } = await parsedTweetsFx(null);
-      parsedProfileTweets = parsedTweets;
-
-      break;
-    }
-
-    default:
-      break;
-  }
-
-  return {
-    parsedTweets: parsedProfileTweets,
-  };
-};
+export const getParsedTwitterProfile = attach({
+  effect: parsedTwitterProfileFx,
+  source: { page: $webdriverPage },
+  mapParams: (tweetsType: string, { page }) => ({ page, tweetsType }),
+});

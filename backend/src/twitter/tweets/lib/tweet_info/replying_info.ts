@@ -1,3 +1,5 @@
+import { nanoid } from 'nanoid';
+
 import { TWEET_REPLYING_SELECTOR } from '../../constants/selectors';
 import { TWITTER_URL } from './constants';
 
@@ -24,6 +26,7 @@ export const getReplyingInfo = (tweetNode: Cheerio) => {
         replyingUsers.push({
           userLink,
           user,
+          id: nanoid(),
         });
       }
     }

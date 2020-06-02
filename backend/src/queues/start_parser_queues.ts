@@ -13,14 +13,14 @@ import {
   TWEETS_TAB,
   TWEETS_REPLIES_TAB,
   PROFILE_INFO_TYPE,
+  LIKES,
+  MEDIA,
+  TOP,
+  LATEST,
 } from '../twitter/constants/tabs';
-import {
-  LATEST_TWEETS,
-  TOP_TWEETS,
-} from '../../../frontend/src/constants/tweets_types';
 
 const parserQueue = new Queue(`parser`, OPTIONS);
-const callbackQueue = new Queue('callback', OPTIONS);
+const mergeQueue = new Queue('merge', OPTIONS);
 const webQueue = new Queue('web', OPTIONS);
 const profileQueue = new Queue('profile', OPTIONS);
 
@@ -42,11 +42,13 @@ export const startParserQueues = (message: { options: Send; id: string }) => {
   const processName = `parse:${id}`;
 
   if (parseTarget === PROFILE_TARGET) {
-    profileQueue.add({
-      id,
-      options,
-      tweetsType: PROFILE_INFO_TYPE,
-    });
+    if (profileSettings && profileSettings.isProfileInfo) {
+      profileQueue.add({
+        id,
+        options,
+        tweetsType: PROFILE_INFO_TYPE,
+      });
+    }
 
     if (profileSettings && profileSettings.isTweets) {
       const tweetsType = TWEETS_TAB;
@@ -56,7 +58,7 @@ export const startParserQueues = (message: { options: Send; id: string }) => {
       setTimeout(() => {
         const jobId = nanoid();
 
-        callbackQueue.add({
+        mergeQueue.add({
           jobId,
           options: { tweetsType, id },
         });
@@ -76,7 +78,47 @@ export const startParserQueues = (message: { options: Send; id: string }) => {
       setTimeout(() => {
         const jobId = nanoid();
 
-        callbackQueue.add({
+        mergeQueue.add({
+          jobId,
+          options: { tweetsType, id },
+        });
+        parserQueue.add({
+          id: jobId,
+          options,
+          tweetsType,
+        });
+      });
+    }
+
+    if (profileSettings && profileSettings.isLikes) {
+      const tweetsType = LIKES;
+
+      console.log(`${processName}, ${tweetsType}`);
+
+      setTimeout(() => {
+        const jobId = nanoid();
+
+        mergeQueue.add({
+          jobId,
+          options: { tweetsType, id },
+        });
+        parserQueue.add({
+          id: jobId,
+          options,
+          tweetsType,
+        });
+      });
+    }
+
+    if (profileSettings && profileSettings.isMedia) {
+      const tweetsType = MEDIA;
+
+      console.log(`${processName}, ${tweetsType}`);
+
+      setTimeout(() => {
+        const jobId = nanoid();
+
+        mergeQueue.add({
           jobId,
           options: { tweetsType, id },
         });
@@ -91,14 +133,14 @@ export const startParserQueues = (message: { options: Send; id: string }) => {
 
   if (parseTarget === SEARCH_TWEETS_TARGET) {
     if (tweetsSettings && tweetsSettings.isTop) {
-      const tweetsType = TOP_TWEETS;
+      const tweetsType = TOP;
 
       console.log(`${processName}, ${tweetsType}`);
 
       setTimeout(() => {
         const jobId = nanoid();
 
-        callbackQueue.add({
+        mergeQueue.add({
           jobId,
           options: { tweetsType, id },
         });
@@ -112,7 +154,7 @@ export const startParserQueues = (message: { options: Send; id: string }) => {
 
     if (tweetsSettings && tweetsSettings.isLatest) {
       const actualParseUrl = `${parseUrl}&f=live`;
-      const tweetsType = LATEST_TWEETS;
+      const tweetsType = LATEST;
       const actualOptions = {
         ...options,
         parseUrl: actualParseUrl,
@@ -123,7 +165,7 @@ export const startParserQueues = (message: { options: Send; id: string }) => {
       setTimeout(() => {
         const jobId = nanoid();
 
-        callbackQueue.add({
+        mergeQueue.add({
           jobId,
           options: { tweetsType, id },
         });

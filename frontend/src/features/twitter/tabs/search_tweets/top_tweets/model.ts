@@ -5,6 +5,8 @@ import { TOP_TWEETS } from '../../../../../constants/tweets_types';
 import { getNormalizedTweetAnalyze } from '../../../lib/get_normalized_tweets';
 import { initialStore } from '../../../../../constants/initial_tweets_store';
 import { NormalizedTweetInfo } from '../../../../../types/tweets';
+import { speakMessage } from '../../../../../lib/speech_synthesis';
+import { SUCCESS_TOP_TWEETS_SPEECH } from '../../../../../constants/speech';
 
 const $normalizedTweets: Store<NormalizedTweetInfo> = $tweetsMessage.map(
   (
@@ -32,6 +34,7 @@ export const $isLoadingTopTweets = createStore<boolean | null>(null);
 $isLoadingTopTweets.on(sendFx, () => true);
 $isLoadingTopTweets.on($tweetsMessage, (defaultState, { tweetsType }) => {
   if (tweetsType === TOP_TWEETS) {
+    speakMessage(SUCCESS_TOP_TWEETS_SPEECH);
     return false;
   }
 

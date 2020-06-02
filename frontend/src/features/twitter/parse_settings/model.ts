@@ -1,6 +1,6 @@
 import { attach, combine } from 'effector';
 
-import { onMessage, sendFx } from '../../../socket';
+import { sendFx } from '../../../socket';
 
 import { $controls } from '../controls/model';
 import { $parseTargets } from '../parse_target/model';
@@ -13,6 +13,8 @@ import { $isLoadingTopTweets } from '../tabs/search_tweets/top_tweets/model';
 import { $isLoadingProfileInfo } from '../tabs/profile/profile_info/model';
 import { $isLoadingProfileTweets } from '../tabs/profile/tweets/model';
 import { $isLoadingTweetsAndReplies } from '../tabs/profile/tweets_and_replies/model';
+import { $isLoadingMediaTweets } from '../tabs/profile/media/model';
+import { $isLoadingLikesTweets } from '../tabs/profile/likes/model';
 
 const $requestParams = combine({
   controls: $controls,
@@ -66,6 +68,8 @@ const $isLoadedTweets = combine({
   isLoadingProfileInfo: $isLoadingProfileInfo,
   isLoadingProfileTweets: $isLoadingProfileTweets,
   isLoadingTweetsAndReplies: $isLoadingTweetsAndReplies,
+  isLoadingMediaTweets: $isLoadingMediaTweets,
+  isLoadingLikes: $isLoadingLikesTweets,
   profileSettings: $profileSettings,
   searchTweetsSettings: $searchTweetsSettings,
   controls: $controls,
@@ -91,8 +95,16 @@ $isDisabled.on(
           isLoadingTweetsAndReplies,
           isLoadingProfileInfo,
           isLoadingProfileTweets,
+          isLoadingMediaTweets,
+          isLoadingLikes,
         } = loadingTweets;
-        const { isTweets, isTweetsAndReplies, isProfileInfo } = profileSettings;
+        const {
+          isTweets,
+          isTweetsAndReplies,
+          isProfileInfo,
+          isMedia,
+          isLikes,
+        } = profileSettings;
 
         const loaders = [
           {
@@ -101,6 +113,8 @@ $isDisabled.on(
           },
           { loader: isLoadingProfileInfo, isOptionActive: isProfileInfo },
           { loader: isLoadingProfileTweets, isOptionActive: isTweets },
+          { loader: isLoadingMediaTweets, isOptionActive: isMedia },
+          { loader: isLoadingLikes, isOptionActive: isLikes },
         ];
 
         isLoaded = loaders

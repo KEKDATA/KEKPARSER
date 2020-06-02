@@ -1,3 +1,5 @@
+import { Page } from 'playwright';
+
 import { AUTH_PASSWORD, AUTH_NICK_NAME } from '../../../private_test_data';
 
 import { checkIsTwitterContentVisible } from '../lib/dom/visible_content_check';
@@ -12,12 +14,9 @@ import {
   LOG_IN_SELECTOR,
 } from './constants';
 
-import { $webdriverPage } from '../model';
+export const logIn = async ({ page }: { page: Page }) => {
+  await page.waitForSelector(AUTH_NAV_SELECTOR);
 
-export const logIn = async () => {
-  const page = $webdriverPage.getState();
-
-  await page.waitForSelector(AUTH_NAV_SELECTOR, { timeout: 1000 });
   await page.click(LOG_IN_SELECTOR);
 
   await page.fill(INPUT_NAME_SELECTOR, AUTH_NICK_NAME);

@@ -6,13 +6,15 @@ import { insertionSentimentTweetsSort } from '../twitter/tweets/lib/insertion_se
 import { OPTIONS, MAX_JOBS_PER_WORKER } from './config';
 import { Send } from '../types';
 
-const callbackQueue = new Queue('callback', OPTIONS);
+console.info('Merge connected');
+
+const mergeQueue = new Queue('merge', OPTIONS);
 const webQueue = new Queue('web', OPTIONS);
 
 // TODO: Чистить со временем или после завершения работы нужных процессов.
 const jobsProgress = new Map();
 
-callbackQueue.process(MAX_JOBS_PER_WORKER, job => {
+mergeQueue.process(MAX_JOBS_PER_WORKER, job => {
   const { jobId, options }: { jobId: string; options: Send } = job.data;
 
   const jobOptions = jobsProgress.get(jobId);

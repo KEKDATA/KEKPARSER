@@ -24,7 +24,7 @@ const tweetInfoFx: Effect<
   any
 > = createEffect();
 
-export const attachedTweetInfo = attach({
+export const getTweetInfo = attach({
   effect: tweetInfoFx,
   source: $isProfileTarget,
   mapParams: ({ tweetNode }, isProfileTarget) => ({

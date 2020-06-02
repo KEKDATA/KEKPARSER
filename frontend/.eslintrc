@@ -13,7 +13,8 @@
     "Audio": true,
     "FileReader": true,
     "Blob": true,
-    "WebSocket": true
+    "WebSocket": true,
+    "SpeechSynthesisUtterance": true
   },
   "plugins": ["react", "prettier", "react-hooks"],
   "rules": {
