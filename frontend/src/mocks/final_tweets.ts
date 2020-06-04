@@ -1,4 +1,4 @@
-export const finalTweets = [
+export const finalTweetsMock = [
   {
     userUrl: 'https://twitter.com/_harrisonJNR',
     name: 'HARRISON ❁',

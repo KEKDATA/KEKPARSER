@@ -6,11 +6,18 @@ import { $mediaTweets } from './model';
 import { TweetsInfo } from '../../../tweets_info';
 
 export const MediaTweets: React.FC = () => {
-  const { tweets, isLoading } = useStore($mediaTweets);
+  const { tweets, isLoading, tweetsToConvert } = useStore($mediaTweets);
 
   if (isLoading === null) {
     return null;
   }
 
-  return <TweetsInfo infoOptions={tweets} isLoading={isLoading} />;
+  return (
+    <TweetsInfo
+      infoOptions={tweets}
+      isLoading={isLoading}
+      tweetsToConvert={tweetsToConvert}
+      convertText="Media to CSV"
+    />
+  );
 };

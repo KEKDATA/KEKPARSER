@@ -26,7 +26,21 @@ export type FinalTweet = {
   likes: number;
   retweets: number;
   replies: number;
-  replyingUsers?: Array<{ user: string; userLink: string; id: string }>;
+  replyingUsers: Array<{ user: string; userLink: string; id: string }> | [];
+  tweetSentiment: number;
+  tweetBayes: string;
+};
+
+export type FinalConvertedTweet = {
+  id: string;
+  userUrl: string;
+  name: string;
+  tweetName: string;
+  tweetContent: string;
+  likes: number;
+  retweets: number;
+  replies: number;
+  replyingUsers: string;
   tweetSentiment: number;
   tweetBayes: string;
 };
