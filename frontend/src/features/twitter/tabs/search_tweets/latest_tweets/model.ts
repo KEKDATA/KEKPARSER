@@ -1,49 +1,49 @@
-import { Store, createStore, combine } from 'effector';
+import { createStore, combine, guard, createEvent } from 'effector';
 
 import { $tweetsMessage, sendFx } from '../../../../../socket';
 
 import { LATEST_TWEETS } from '../../../../../constants/tweets_types';
 
-import { getNormalizedTweetAnalyze } from '../../../lib/get_normalized_tweets';
-import { NormalizedTweetInfo } from '../../../../../types/tweets';
+import {
+  FinalConvertedTweet,
+  NormalizedTweetInfo,
+  TakenTweetsInfo,
+} from '../../../../../types/tweets';
 import { initialStore } from '../../../../../constants/initial_tweets_store';
 import { speakMessage } from '../../../../../lib/speech_synthesis';
 import { SUCCESS_LATEST_TWEETS_SPEECH } from '../../../../../constants/speech';
+import { setNormalizedTweets } from '../../../../../lib/set_normalized_tweets';
+import { getConvertedTweets } from '../../../../../lib/convert_tweets';
 
-const $normalizedTweets: Store<NormalizedTweetInfo> = $tweetsMessage.map(
-  (
-    { finalTweets, meanSentiment, minCoefficient, maxCoefficient, tweetsType },
-    lastState = initialStore,
-  ) => {
-    if (tweetsType !== LATEST_TWEETS) {
-      return lastState;
-    }
-
-    const normalizedTweets = {
-      finalTweets,
-      ...getNormalizedTweetAnalyze({
-        maxCoefficient,
-        minCoefficient,
-        meanSentiment,
-      }),
-    };
-
-    return normalizedTweets;
-  },
+export const $normalizedLatestTweets = createStore<NormalizedTweetInfo>(
+  initialStore,
 );
+export const $latestTweetsForConvert = createStore<Array<FinalConvertedTweet>>(
+  [],
+);
+
+const latestChanged = createEvent<TakenTweetsInfo>();
+
+$normalizedLatestTweets.on(latestChanged, setNormalizedTweets);
+// @ts-ignore  ¯\_(ツ)_/¯
+$latestTweetsForConvert.on(latestChanged, getConvertedTweets);
+
+guard({
+  source: $tweetsMessage,
+  filter: message => message.tweetsType === LATEST_TWEETS,
+  target: latestChanged,
+});
+
 export const $isLoadingLatestTweets = createStore<boolean | null>(null);
 
 $isLoadingLatestTweets.on(sendFx, () => true);
-$isLoadingLatestTweets.on($tweetsMessage, (defaultState, { tweetsType }) => {
-  if (tweetsType === LATEST_TWEETS) {
-    speakMessage(SUCCESS_LATEST_TWEETS_SPEECH);
-    return false;
-  }
-
-  return defaultState;
+$isLoadingLatestTweets.on(latestChanged, () => {
+  speakMessage(SUCCESS_LATEST_TWEETS_SPEECH);
+  return false;
 });
 
 export const $latestTweets = combine({
-  tweets: $normalizedTweets,
+  tweets: $normalizedLatestTweets,
+  tweetsToConvert: $latestTweetsForConvert,
   isLoading: $isLoadingLatestTweets,
 });
