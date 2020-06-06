@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { $profileInfo } from './model';
 import { checkIsNumberExist } from '../../../../../lib/is_number_exist';
 import { ProfileSkeleton } from '../../../../../UI/skeleton/profile';
+import { CsvConvert } from '../../../../csv_convert';
 
 const Info = styled(Typography)`
   padding-right: 10px;
@@ -34,7 +35,9 @@ const DescriptionPart = styled.span`
 `;
 
 export const ProfileInfo: React.FC = () => {
-  const { profileInfo, isLoading } = useStore($profileInfo);
+  const { profileInfo, profileInfoForConvert, isLoading } = useStore(
+    $profileInfo,
+  );
 
   if (isLoading === null) {
     return null;
@@ -55,48 +58,55 @@ export const ProfileInfo: React.FC = () => {
     <Grid container justify="center" direction="column" alignItems="center">
       {isLoading && <ProfileSkeleton />}
       {!isLoading && (
-        <Container container direction="column">
-          <TwitterAvatar src={avatarUrl} alt={name} />
-          <Grid container direction="column">
-            {name && <Typography variant="h6">{name}</Typography>}
-            {tweetName && (
-              <Typography variant="subtitle1" gutterBottom>
-                {tweetName}
-              </Typography>
+        <>
+          <CsvConvert
+            convertData={profileInfoForConvert}
+            text="Profile info to CSV"
+          />
+
+          <Container container direction="column">
+            <TwitterAvatar src={avatarUrl} alt={name} />
+            <Grid container direction="column">
+              {name && <Typography variant="h6">{name}</Typography>}
+              {tweetName && (
+                <Typography variant="subtitle1" gutterBottom>
+                  {tweetName}
+                </Typography>
+              )}
+            </Grid>
+            {description.length > 0 && (
+              <Description container direction="row">
+                {description.map(({ text, isUrl, url, id }) => (
+                  <DescriptionPart key={id}>
+                    {isUrl ? <Link href={url}>{text}</Link> : text}
+                  </DescriptionPart>
+                ))}
+              </Description>
             )}
-          </Grid>
-          {description.length > 0 && (
-            <Description container direction="row">
-              {description.map(({ text, isUrl, url, id }) => (
-                <DescriptionPart key={id}>
-                  {isUrl ? <Link href={url}>{text}</Link> : text}
-                </DescriptionPart>
+            <Grid container direction="row">
+              {contactInfo.map(({ id, info }) => (
+                <Info key={id} gutterBottom>
+                  {info}
+                </Info>
               ))}
-            </Description>
-          )}
-          <Grid container direction="row">
-            {contactInfo.map(({ id, info }) => (
-              <Info key={id} gutterBottom>
-                {info}
-              </Info>
-            ))}
-          </Grid>
-          <Grid container direction="row">
-            {activityInfo.map(({ id, info }) => (
-              <Info key={id} gutterBottom>
-                {info}
-              </Info>
-            ))}
-          </Grid>
-          <Grid container direction="column">
-            {checkIsNumberExist(sentimentCoefficient) && (
-              <Info gutterBottom>Sentiment: {sentimentCoefficient}</Info>
-            )}
-            {classifierData && (
-              <Info gutterBottom>Naive Bayes: {classifierData}</Info>
-            )}
-          </Grid>
-        </Container>
+            </Grid>
+            <Grid container direction="row">
+              {activityInfo.map(({ id, info }) => (
+                <Info key={id} gutterBottom>
+                  {info}
+                </Info>
+              ))}
+            </Grid>
+            <Grid container direction="column">
+              {checkIsNumberExist(sentimentCoefficient) && (
+                <Info gutterBottom>Sentiment: {sentimentCoefficient}</Info>
+              )}
+              {classifierData && (
+                <Info gutterBottom>Naive Bayes: {classifierData}</Info>
+              )}
+            </Grid>
+          </Container>
+        </>
       )}
     </Grid>
   );

@@ -11,7 +11,11 @@ import { Tweet } from '../tweet';
 import { TweetSkeleton } from '../../../UI/skeleton/tweet';
 import { TweetsSkeleton } from '../../../UI/skeleton/tweets';
 
-import { NormalizedTweetInfo } from '../../../types/tweets';
+import {
+  FinalConvertedTweet,
+  NormalizedTweetInfo,
+} from '../../../types/tweets';
+import { CsvConvert } from '../../csv_convert';
 
 const ParseInfoContainer = styled.div`
   display: grid;
@@ -30,9 +34,15 @@ const TweetsWrapper = styled(Wrapper)`
   padding: 0 16px;
 `;
 
+const ConvertContainer = styled(Grid)`
+  margin-bottom: 10px;
+`;
+
 export const TweetsInfo: React.FC<{
   infoOptions: NormalizedTweetInfo;
+  tweetsToConvert: Array<FinalConvertedTweet>;
   isLoading: boolean;
+  convertText: string;
 }> = ({
   infoOptions: {
     finalTweets,
@@ -44,6 +54,8 @@ export const TweetsInfo: React.FC<{
     isMeanSentimentExist,
   },
   isLoading,
+  convertText,
+  tweetsToConvert,
 }) => {
   return (
     <Grid container justify="center" direction="column">
@@ -61,6 +73,9 @@ export const TweetsInfo: React.FC<{
       )}
       {!isLoading && (
         <>
+          <ConvertContainer container justify="center">
+            <CsvConvert convertData={tweetsToConvert} text={convertText} />
+          </ConvertContainer>
           {isMeanSentimentExist && (
             <Grid container justify="center">
               <Typography>
