@@ -1,7 +1,7 @@
 {
   "name": "KEKPARSER",
   "version": "1.0.0",
-  "description": "How to perform web-scrapping using Node.Js",
+  "description": "KEKPARSER by KEKDATA TEAM (Daniil Krokhmal/Tchernyavsky)",
   "main": "index.js",
   "scripts": {
     "start": "nf start",

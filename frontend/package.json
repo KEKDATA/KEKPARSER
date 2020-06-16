@@ -1,7 +1,7 @@
 {
   "name": "KEKPARSER",
   "version": "1.0.0",
-  "description": "KEKPARSER by KEKDATA TEAM",
+  "description": "KEKPARSER by KEKDATA TEAM (Daniil Krokhmal/Tchernyavsky)",
   "main": "app.js",
   "scripts": {
     "dev": "webpack-dev-server --mode development --open --color --history-api-fallback --port 3000 --env.file=development --hot --hotOnly",

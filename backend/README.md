@@ -1,8 +1,9 @@
 Диаграмма процессов API, парсинга
 <img src="https://d.radikal.ru/d32/2005/e4/57263917df9b.jpg" />
 
-Download Node.js https://nodejs.org/en/download/
-Download Python 3 https://www.python.org/downloads/
+Download Node.js https://nodejs.org/en/download/  
+Download Python 3 https://www.python.org/downloads/  
+Download and start Redis https://redis.io/topics/quickstart
 
 Open dir backend
 
