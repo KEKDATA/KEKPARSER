@@ -33,7 +33,7 @@
     "spelling-corrector": "^3.0.0",
     "sqlite3": "^4.2.0",
     "stopword": "^1.0.1",
-    "ws": "^7.3.0"
+    "ws": "^7.4.6"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.1",
