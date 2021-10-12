@@ -63,7 +63,7 @@
     "@types/cheerio": "^0.22.18",
     "@types/natural": "^0.6.3",
     "@types/ramda": "^0.27.6",
-    "electron": "^9.0.2"
+    "electron": "^11.5.0"
   },
   "husky": {
     "hooks": {
